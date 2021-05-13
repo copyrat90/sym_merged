@@ -1,0 +1,9 @@
+
+# build output 
+build/
+*.elf
+*.elfbin
+*.gba
+
+# save file for testing
+*.sav
