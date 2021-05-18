@@ -4,5 +4,5 @@
 
 namespace sym::constants
 {
-constexpr const bn::color TRANSPARENT_BG_COLOR(4, 4, 6);
+constexpr bn::color TRANSPARENT_BG_COLOR(4, 4, 6);
 }

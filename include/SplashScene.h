@@ -4,12 +4,13 @@
 
 #include <bn_array.h>
 #include <bn_blending_actions.h>
+#include <bn_keypad.h>
 #include <bn_regular_bg_ptr.h>
 
 namespace sym
 {
 
-class SplashScene : public Scene
+class SplashScene final : public Scene
 {
 public:
     SplashScene();
@@ -17,25 +18,49 @@ public:
     [[nodiscard]] bn::optional<SceneType> Update() final;
 
 private:
-    void SwapBgWhenNeeded();
-    void SwapBg();
-    /**
-     * @brief Update the alpha transition action
-     *
-     * @return bn::optional<SceneType> Next scene type when transition is done, otherwise bn::nullopt
-     */
-    [[nodiscard]] bn::optional<SceneType> Transition();
+    bn::array<bn::regular_bg_ptr, 2> bgs_;
+    bn::optional<bn::blending_transparency_alpha_to_action> transparentAction_;
 
     static constexpr int BG_SWAP_UPDATE_COUNT = 30;
-    static constexpr int BG_SWAP_COUNT = 8;
-    static constexpr int FADE_UPDATE_COUNT = 60;
+    static constexpr int FADE_OUT_START_COUNT = 8;
+    static constexpr int FADE_IN_UPDATE_COUNT = 60;
+    static constexpr int FADE_OUT_UPDATE_COUNT = 60;
 
-    bn::array<bn::regular_bg_ptr, 2> bgs_;
-    int bgSwapCounter_ = BG_SWAP_COUNT;
+    enum class SplashState
+    {
+        FADE_IN,
+        PRESENT,
+        FADE_OUT,
+        DONE
+    };
+    SplashState state_ = SplashState::FADE_IN;
+    int fadeOutStartCounter_ = FADE_OUT_START_COUNT;
     int bgSwapUpdateCounter_ = BG_SWAP_UPDATE_COUNT;
     bool isShowingFirstBg_ = false;
-    bool isFadeDone_ = false;
-    bn::optional<bn::blending_transparency_alpha_to_action> transparentAction_;
+    bool isPressedKey_ = false;
+
+    void SwapBgWhenNeeded_();
+    void SwapBg_();
+
+    void FetchPressAnyOfTheseKeys_(bn::keypad::key_type theseKeys);
+
+    /**
+     * @brief Update when state_ is SplashState::FADE_IN
+     *
+     */
+    void UpdateFadeIn_();
+
+    /**
+     * @brief Update when state_ is SplashState::FADE_OUT
+     *
+     */
+    void UpdateFadeOut_();
+
+    /**
+     * @brief Update when state_ is SplashState::PRESENT
+     *
+     */
+    void UpdatePresent_();
 };
 
 } // namespace sym
