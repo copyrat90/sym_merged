@@ -2,10 +2,10 @@
 
 #include <bn_optional.h>
 
-namespace sym
+namespace sym::scene
 {
 
-enum class SceneType
+enum class Type
 {
     SPLASH,
     TITLE,
@@ -17,10 +17,10 @@ class Scene
 {
 public:
     virtual ~Scene() = default;
-    [[nodiscard]] virtual bn::optional<SceneType> Update() = 0;
+    [[nodiscard]] virtual bn::optional<Type> Update() = 0;
 
 protected:
     Scene() = default;
 };
 
-} // namespace sym
+} // namespace sym::scene
