@@ -84,16 +84,16 @@ struct TextGenManager
         switch (lang)
         {
         case setting::Lang::ENG:
-            if (!latin)
-                latin = new bn::sprite_text_generator(font::variable_8x16_m6x11);
             if (hangeul)
                 delete hangeul;
+            if (!latin)
+                latin = new bn::sprite_text_generator(font::variable_8x16_m6x11);
             break;
         case setting::Lang::KOR:
-            if (!hangeul)
-                hangeul = new bn::sprite_text_generator(font::fixed_16x16_galmuri);
             if (latin)
                 delete latin;
+            if (!hangeul)
+                hangeul = new bn::sprite_text_generator(font::fixed_16x16_galmuri);
             break;
         default:
             BN_ERROR("Unknown setting::Lang : ", static_cast<int>(lang));
