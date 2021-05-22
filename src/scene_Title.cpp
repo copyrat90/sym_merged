@@ -36,7 +36,7 @@ bn::optional<Type> Title::Update()
     switch (fadeIn_.GetState())
     {
     case Transition::State::NOT_READY:
-        BN_ERROR("fadeIn_ somehow not initialized. shoud not reach here...");
+        BN_ERROR("fadeIn_ somehow not initialized. should not reach here...");
         break;
     case Transition::State::ONGOING:
         fadeIn_.Update();
