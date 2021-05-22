@@ -19,6 +19,7 @@ public:
     /**
      * @brief Transition Type.
      * Keep in mind that FADE and other blendings cannot be enabled at the same time.
+     * (but MOSAIC is not a blending, so it can be used with FADE without any issue.)
      *
      */
     enum class Types
