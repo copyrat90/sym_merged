@@ -104,6 +104,8 @@ struct TextGenManager
 
 TextGenManager textGenManager_;
 
+bool isInitialized_ = false;
+
 } // anonymous namespace
 
 namespace setting
@@ -111,6 +113,8 @@ namespace setting
 
 void Init()
 {
+    isInitialized_ = true;
+
     if (!sramSave_.Read())
     {
         sramSave_.Init();
@@ -124,6 +128,7 @@ void Init()
 
 void SetLang(Lang lang)
 {
+    BN_ASSERT(isInitialized_, "setting::Init() must be called before using global functions");
     sramSave_.currentLang = lang;
     sramSave_.Write();
 
@@ -132,6 +137,7 @@ void SetLang(Lang lang)
 
 Lang GetLang()
 {
+    BN_ASSERT(isInitialized_, "setting::Init() must be called before using global functions");
     return sramSave_.currentLang;
 }
 
@@ -139,11 +145,13 @@ Lang GetLang()
 
 bn::sprite_text_generator* GetCurrentLangTextGen()
 {
+    BN_ASSERT(isInitialized_, "setting::Init() must be called before using global functions");
     return GetTextGen(setting::GetLang());
 }
 
 bn::sprite_text_generator* GetTextGen(setting::Lang lang)
 {
+    BN_ASSERT(isInitialized_, "setting::Init() must be called before using global functions");
     switch (lang)
     {
     case setting::Lang::ENG:
