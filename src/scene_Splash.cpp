@@ -39,28 +39,28 @@ bn::optional<Type> Splash::Update()
     using sym::helper::keypad::operator|;
     FetchPressAnyOfTheseKeys_(kt::A | kt::B | kt::START);
 
-    using State = effect::Transition::State;
+    using Transition = effect::Transition;
     switch (fadeIn_.GetState())
     {
-    case State::NOT_READY:
+    case Transition::State::NOT_READY:
         BN_ERROR("fadeIn_ somehow not initialized. should not reach here...");
         break;
-    case State::ONGOING:
+    case Transition::State::ONGOING:
         fadeIn_.Update();
         break;
-    case State::DONE:
+    case Transition::State::DONE:
         switch (fadeOut_.GetState())
         {
-        case State::NOT_READY:
+        case Transition::State::NOT_READY:
             if (isPressedKey_ || fadeOutStartCounter_ <= 0)
             {
                 fadeOut_.Init();
             }
             break;
-        case State::ONGOING:
+        case Transition::State::ONGOING:
             fadeOut_.Update();
             break;
-        case State::DONE:
+        case Transition::State::DONE:
             return Type::TITLE;
             break;
         default:

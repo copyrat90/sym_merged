@@ -32,17 +32,17 @@ Title::Title()
 
 bn::optional<Type> Title::Update()
 {
-    using State = effect::Transition::State;
+    using Transition = effect::Transition;
     switch (fadeIn_.GetState())
     {
-    case State::NOT_READY:
+    case Transition::State::NOT_READY:
         BN_ERROR("fadeIn_ somehow not initialized. shoud not reach here...");
         break;
-    case State::ONGOING:
+    case Transition::State::ONGOING:
         fadeIn_.Update();
         // TODO
         break;
-    case State::DONE:
+    case Transition::State::DONE:
         // TODO
         break;
     default:
