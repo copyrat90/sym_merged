@@ -17,8 +17,6 @@
 #include "constant.h"
 #include "global.h"
 
-#include "font_galmuri15.h"
-#include "font_m6x11.h"
 #include "scene_Splash.h"
 #include "scene_Title.h"
 
@@ -27,13 +25,12 @@ using namespace sym;
 int main()
 {
     bn::core::init();
+    sym::global::setting::Init();
     bn::bg_palettes::set_transparent_color(constant::TRANSPARENT_BG_COLOR);
 
     bn::unique_ptr<scene::Scene> scene(new scene::Splash);
     bn::optional<scene::Type> nextScene;
 
-    global::textGenPtr_g = new global::TextGen(new bn::sprite_text_generator(font::fixed_16x16_galmuri),
-                                               new bn::sprite_text_generator(font::variable_8x16_m6x11));
 #ifndef NDEBUG
     int cpuUsageUpdateCountDown = 1;
     bn::vector<bn::sprite_ptr, 4> cpuUsageSprites;
@@ -50,11 +47,11 @@ int main()
         if (--cpuUsageUpdateCountDown <= 0)
         {
             cpuUsageSprites.clear();
-            auto* latin = global::textGenPtr_g->latin;
-            auto prevAlignment = latin->alignment();
-            latin->set_right_alignment();
-            latin->generate({120, -70}, bn::to_string<15>(bn::core::last_cpu_usage()) + "%", cpuUsageSprites);
-            latin->set_alignment(prevAlignment);
+            auto* const textGen = sym::global::GetTextGen();
+            auto prevAlignment = textGen->alignment();
+            textGen->set_right_alignment();
+            textGen->generate({120, -70}, bn::to_string<15>(bn::core::last_cpu_usage()) + "%", cpuUsageSprites);
+            textGen->set_alignment(prevAlignment);
             cpuUsageUpdateCountDown = 5;
         }
 #endif
