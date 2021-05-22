@@ -11,9 +11,9 @@ namespace sym::effect
 Transition::Transition(Types types, Direction direction, int updateCount)
     : types_(types), direction_(direction), updateCountDown_(updateCount)
 {
-    if ((static_cast<int>(types & Types::FADE) > 0) &&
-        ((static_cast<int>(types & Types::TRANSPARENCY) > 0) || (static_cast<int>(types & Types::INTENSITY))))
-        BN_ERROR("FADE and other blendings cannot be enabled at the same time!");
+    BN_ASSERT(!((static_cast<int>(types & Types::FADE) > 0) &&
+                ((static_cast<int>(types & Types::TRANSPARENCY) > 0) || (static_cast<int>(types & Types::INTENSITY)))),
+              "FADE and other blendings cannot be enabled at the same time!");
 }
 
 Transition::~Transition()
@@ -59,10 +59,8 @@ void Transition::Init()
 
 void Transition::Update()
 {
-    if (state_ == State::NOT_READY)
-        BN_ERROR("Cannot update Transition when it is not initialized");
-    if (state_ == State::DONE)
-        BN_ERROR("Cannot update Transition when it is done");
+    BN_ASSERT(state_ != State::NOT_READY, "Cannot update Transition when it is not initialized");
+    BN_ASSERT(state_ != State::DONE, "Cannot update Transition when it is done");
 
     if (transparencyAction_)
         transparencyAction_->update();
