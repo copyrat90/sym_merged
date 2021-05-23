@@ -2,10 +2,15 @@
 
 #include "scene_Scene.h"
 
+#include "global.h"
+
 #include <bn_array.h>
+#include <bn_fixed_point.h>
 #include <bn_optional.h>
 #include <bn_regular_bg_ptr.h>
 #include <bn_sprite_ptr.h>
+#include <bn_string_view.h>
+#include <bn_vector.h>
 
 #include "effect_Transition.h"
 
@@ -20,15 +25,60 @@ public:
     [[nodiscard]] bn::optional<Type> Update() final;
 
 private:
+    enum class MenuOption
+    {
+        START,
+        LANGUAGE,
+        CREDIT,
+        MENU_OPTION_TOTAL_COUNT
+    };
+    static constexpr int MENU_OPTION_TOTAL_COUNT = static_cast<int>(MenuOption::MENU_OPTION_TOTAL_COUNT);
+    static constexpr int LANG_TOTAL_COUNT = static_cast<int>(global::setting::Lang::LANG_TOTAL_COUNT);
+
     bn::array<bn::sprite_ptr, 2> cursor_;
     bn::regular_bg_ptr bg_;
+    bn::array<bn::vector<bn::sprite_ptr, 4>, MENU_OPTION_TOTAL_COUNT> menuTextSprites_;
     effect::Transition fadeIn_;
     effect::Transition fadeOut_;
 
-    static constexpr int CURSOR_HORIZONTAL_OFFSET = 30;
-    static constexpr int BUTTON_WIDTH = 20;
+    static constexpr bn::string_view MENU_STRINGS[LANG_TOTAL_COUNT][MENU_OPTION_TOTAL_COUNT] = {
+        {"Start", "언 어 : English", "Credit"}, {"시작", "Lang:한국어", "크레딧"}};
+    static constexpr bn::fixed_point MENU_STRING_POS[LANG_TOTAL_COUNT][MENU_OPTION_TOTAL_COUNT] = {
+        {{0, 20}, {0, 40}, {0, 60}}, {{0, 20}, {0, 40}, {0, 60}}};
+    static constexpr bn::fixed_point CURSOR_OFFSET[LANG_TOTAL_COUNT] = {{-13, -2}, {-13, -1}};
     static constexpr int FADE_IN_UPDATE_COUNT = 30;
     static constexpr int FADE_OUT_UPDATE_COUNT = 30;
+
+    MenuOption cursorPointingOption_ = MenuOption::START;
+    bn::optional<scene::Type> reservedNextScene_ = bn::nullopt;
+
+    /**
+     * @brief Handle Up or Down press by moving cursorPointingOption_
+     *
+     */
+    void HandleUpDownPress();
+
+    /**
+     * @brief Handle Start or A press by setting reservedNextScene_
+     *
+     */
+    void HandleStartAPress();
+
+    /**
+     * @brief Advance cursorPointingOption_
+     *
+     * can advance backwards.
+     */
+    void AdvanceCursorPointingOption(int amount);
+
+    void UpdateCursorSpritePosition();
+
+    /**
+     * @brief Clears and redraws menu text sprites.
+     * Also sets the blending of the sprites enabled.
+     *
+     */
+    void RedrawMenuTextSprites();
 };
 
 } // namespace sym::scene

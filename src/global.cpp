@@ -5,6 +5,7 @@
 #include <bn_sram.h>
 #include <bn_sstream.h>
 #include <bn_string_view.h>
+#include <stdint.h>
 
 #include "constant.h"
 
@@ -23,6 +24,16 @@ struct SramSave
 
     char magicBytes[8];
     setting::Lang currentLang;
+
+    /**
+     * @brief Miscellaneous game flags.
+     *
+     * @details from LSB to MSB
+     * bit 0 : already seen intro
+     *     1 : (reserved)
+     *
+     */
+    uint8_t flags;
 
     /**
      * @brief Resets some save properties.
@@ -85,15 +96,27 @@ struct TextGenManager
         {
         case setting::Lang::ENG:
             if (hangeul)
+            {
                 delete hangeul;
+                hangeul = nullptr;
+            }
             if (!latin)
+            {
                 latin = new bn::sprite_text_generator(font::variable_8x16_m6x11);
+                latin->set_alignment(constant::DEFAULT_TEXT_GEN_ALIGN);
+            }
             break;
         case setting::Lang::KOR:
             if (latin)
+            {
                 delete latin;
+                latin = nullptr;
+            }
             if (!hangeul)
+            {
                 hangeul = new bn::sprite_text_generator(font::fixed_16x16_galmuri);
+                hangeul->set_alignment(constant::DEFAULT_TEXT_GEN_ALIGN);
+            }
             break;
         default:
             BN_ERROR("Unknown setting::Lang : ", static_cast<int>(lang));
@@ -143,25 +166,30 @@ Lang GetLang()
 
 } // namespace setting
 
-bn::sprite_text_generator* GetCurrentLangTextGen()
+bn::sprite_text_generator* GetTextGen()
 {
     BN_ASSERT(isInitialized_, "setting::Init() must be called before using global functions");
-    return GetTextGen(setting::GetLang());
-}
-
-bn::sprite_text_generator* GetTextGen(setting::Lang lang)
-{
-    BN_ASSERT(isInitialized_, "setting::Init() must be called before using global functions");
-    switch (lang)
+    switch (setting::GetLang())
     {
     case setting::Lang::ENG:
         return textGenManager_.latin;
     case setting::Lang::KOR:
         return textGenManager_.hangeul;
     default:
-        BN_ERROR("Unknown setting::Lang : ", static_cast<int>(lang));
+        BN_ERROR("Unknown setting::Lang : ", static_cast<int>(setting::GetLang()));
     }
     return nullptr;
+}
+
+bool IsSeenIntro()
+{
+    return sramSave_.flags & (1 << 0);
+}
+
+void SetSeenIntro()
+{
+    sramSave_.flags |= (1 << 0);
+    sramSave_.Write();
 }
 
 } // namespace sym::global

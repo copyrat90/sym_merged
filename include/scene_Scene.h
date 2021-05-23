@@ -9,8 +9,11 @@ enum class Type
 {
     SPLASH,
     TITLE,
-    GAME,
-    LICENSE
+    INTRO,
+    SELECT_STAGE,
+    STAGE,
+    ENDING,
+    CREDIT
 };
 
 class Scene

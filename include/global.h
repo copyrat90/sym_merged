@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bn_sprite_text_generator.h>
+#include <stdint.h>
 
 namespace sym::global
 {
@@ -8,10 +9,11 @@ namespace sym::global
 namespace setting
 {
 
-enum class Lang
+enum class Lang : uint8_t
 {
     ENG,
-    KOR
+    KOR,
+    LANG_TOTAL_COUNT
 };
 
 /**
@@ -35,21 +37,9 @@ Lang GetLang();
  * @brief Get the sprite_text_generator of the current language.
  *
  */
-bn::sprite_text_generator* GetCurrentLangTextGen();
+bn::sprite_text_generator* GetTextGen();
 
-/**
- * @brief Get the sprite_text_generator of the current language.
- *
- */
-inline bn::sprite_text_generator* GetTextGen()
-{
-    return GetCurrentLangTextGen();
-}
-
-/**
- * @brief Get the sprite_text_generator of the specified language.
- *
- */
-bn::sprite_text_generator* GetTextGen(setting::Lang);
+bool IsSeenIntro();
+void SetSeenIntro();
 
 } // namespace sym::global

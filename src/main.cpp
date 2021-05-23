@@ -50,7 +50,8 @@ int main()
             auto* const textGen = sym::global::GetTextGen();
             auto prevAlignment = textGen->alignment();
             textGen->set_right_alignment();
-            textGen->generate({120, -70}, bn::to_string<15>(bn::core::last_cpu_usage()) + "%", cpuUsageSprites);
+            textGen->generate({120, -70}, bn::to_string<15>(bn::core::last_cpu_usage().integer()) + "%",
+                              cpuUsageSprites);
             textGen->set_alignment(prevAlignment);
             cpuUsageUpdateCountDown = 5;
         }
