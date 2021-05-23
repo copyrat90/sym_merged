@@ -44,7 +44,7 @@ private:
     static constexpr bn::string_view MENU_STRINGS[LANG_TOTAL_COUNT][MENU_OPTION_TOTAL_COUNT] = {
         {"Start", "언 어 : English", "Credit"}, {"시작", "Lang:한국어", "크레딧"}};
     static constexpr bn::fixed_point MENU_STRING_POS[LANG_TOTAL_COUNT][MENU_OPTION_TOTAL_COUNT] = {
-        {{0, 20}, {0, 40}, {0, 60}}, {{0, 20}, {0, 40}, {0, 60}}};
+        {{0, 0}, {0, 20}, {0, 40}}, {{0, 0}, {0, 20}, {0, 40}}};
     static constexpr bn::fixed_point CURSOR_OFFSET[LANG_TOTAL_COUNT] = {{-13, -2}, {-13, -1}};
     static constexpr int FADE_IN_UPDATE_COUNT = 30;
     static constexpr int FADE_OUT_UPDATE_COUNT = 30;
