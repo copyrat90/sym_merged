@@ -1,0 +1,7 @@
+Font Name : 함초롬돋움
+Copyright holder : 한글과컴퓨터
+Link : https://www.hancom.com/board/noticeView.do?board_seq=3&artcl_seq=6124
+
+
+본 프로그램(sym_merged)은 함초롬돋음 한글 서체를
+비트맵 이미지(font_hamchorom.bmp)로 만들어 임베딩하였음을 밝힙니다.

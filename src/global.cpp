@@ -9,7 +9,7 @@
 
 #include "constant.h"
 
-#include "font_galmuri15.h"
+#include "font_hamchorom.h"
 #include "font_m6x11.h"
 
 namespace sym::global
@@ -114,7 +114,7 @@ struct TextGenManager
             }
             if (!hangeul)
             {
-                hangeul = new bn::sprite_text_generator(font::fixed_16x16_galmuri);
+                hangeul = new bn::sprite_text_generator(font::fixed_16x16_hamchorom);
                 hangeul->set_alignment(constant::DEFAULT_TEXT_GEN_ALIGN);
             }
             break;

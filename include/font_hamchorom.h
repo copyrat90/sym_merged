@@ -2,12 +2,12 @@
 
 #include <bn_sprite_font.h>
 
-#include "bn_sprite_items_font_galmuri15.h"
+#include "bn_sprite_items_font_hamchorom.h"
 
 namespace sym::font
 {
 
-constexpr bn::string_view fixed_16x16_galmuri_utf8_chars[] = {
+constexpr bn::string_view fixed_16x16_hamchorom_utf8_chars[] = {
     "가", "각", "간", "갇", "갈", "갉", "갊", "감", "갑", "값", "갓", "갔", "강", "갖", "갗", "같", "갚", "갛", "개",
     "객", "갠", "갤", "갬", "갭", "갯", "갰", "갱", "갸", "갹", "갼", "걀", "걋", "걍", "걔", "걘", "걜", "거", "걱",
     "건", "걷", "걸", "걺", "검", "겁", "것", "겄", "겅", "겆", "겉", "겊", "겋", "게", "겐", "겔", "겜", "겝", "겟",
@@ -131,8 +131,9 @@ constexpr bn::string_view fixed_16x16_galmuri_utf8_chars[] = {
     "홱", "홴", "횃", "횅", "회", "획", "횐", "횔", "횝", "횟", "횡", "효", "횬", "횰", "횹", "횻", "후", "훅", "훈",
     "훌", "훑", "훔", "훗", "훙", "훠", "훤", "훨", "훰", "훵", "훼", "훽", "휀", "휄", "휑", "휘", "휙", "휜", "휠",
     "휨", "휩", "휫", "휭", "휴", "휵", "휸", "휼", "흄", "흇", "흉", "흐", "흑", "흔", "흖", "흗", "흘", "흙", "흠",
-    "흡", "흣", "흥", "흩", "희", "흰", "흴", "흼", "흽", "힁", "히", "힉", "힌", "힐", "힘", "힙", "힛", "힝"};
+    "흡", "흣", "흥", "흩", "희", "흰", "흴", "흼", "흽", "힁", "히", "힉", "힌", "힐", "힘", "힙", "힛", "힝", "뷁",
+    "웱"};
 
-constexpr bn::sprite_font fixed_16x16_galmuri(bn::sprite_items::font_galmuri15, fixed_16x16_galmuri_utf8_chars);
+constexpr bn::sprite_font fixed_16x16_hamchorom(bn::sprite_items::font_hamchorom, fixed_16x16_hamchorom_utf8_chars);
 
 } // namespace sym::font

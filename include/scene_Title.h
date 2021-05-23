@@ -42,7 +42,7 @@ private:
     effect::Transition fadeOut_;
 
     static constexpr bn::string_view MENU_STRINGS[LANG_TOTAL_COUNT][MENU_OPTION_TOTAL_COUNT] = {
-        {"Start", "언 어 : English", "Credit"}, {"시작", "Lang:한국어", "크레딧"}};
+        {"Start", "언 어 : English", "Credit"}, {"시작", "뷁웱:한국어", "크레딧"}};
     static constexpr bn::fixed_point MENU_STRING_POS[LANG_TOTAL_COUNT][MENU_OPTION_TOTAL_COUNT] = {
         {{0, 0}, {0, 20}, {0, 40}}, {{0, 0}, {0, 20}, {0, 40}}};
     static constexpr bn::fixed_point CURSOR_OFFSET[LANG_TOTAL_COUNT] = {{-13, -2}, {-13, -1}};
