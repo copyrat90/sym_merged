@@ -7,7 +7,10 @@
 namespace sym::font
 {
 
-constexpr bn::string_view fixed_16x16_hamchorom_utf8_chars[] = {
+namespace
+{
+
+inline constexpr bn::string_view fixed_16x16_hamchorom_utf8_chars[] = {
     "가", "각", "간", "갇", "갈", "갉", "갊", "감", "갑", "값", "갓", "갔", "강", "갖", "갗", "같", "갚", "갛", "개",
     "객", "갠", "갤", "갬", "갭", "갯", "갰", "갱", "갸", "갹", "갼", "걀", "걋", "걍", "걔", "걘", "걜", "거", "걱",
     "건", "걷", "걸", "걺", "검", "겁", "것", "겄", "겅", "겆", "겉", "겊", "겋", "게", "겐", "겔", "겜", "겝", "겟",
@@ -134,6 +137,9 @@ constexpr bn::string_view fixed_16x16_hamchorom_utf8_chars[] = {
     "흡", "흣", "흥", "흩", "희", "흰", "흴", "흼", "흽", "힁", "히", "힉", "힌", "힐", "힘", "힙", "힛", "힝", "뷁",
     "웱"};
 
-constexpr bn::sprite_font fixed_16x16_hamchorom(bn::sprite_items::font_hamchorom, fixed_16x16_hamchorom_utf8_chars);
+} // anonymous namespace
+
+inline constexpr bn::sprite_font fixed_16x16_hamchorom(bn::sprite_items::font_hamchorom,
+                                                       fixed_16x16_hamchorom_utf8_chars);
 
 } // namespace sym::font
