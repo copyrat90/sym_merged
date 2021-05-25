@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scene_Scene.h"
+#include "scene_IScene.h"
 
 #include <bn_array.h>
 #include <bn_keypad.h>
@@ -11,7 +11,7 @@
 namespace sym::scene
 {
 
-class Splash final : public Scene
+class Splash final : public IScene
 {
 public:
     Splash();

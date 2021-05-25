@@ -16,14 +16,14 @@ enum class Type
     CREDIT
 };
 
-class Scene
+class IScene
 {
 public:
-    virtual ~Scene() = default;
+    virtual ~IScene() = default;
     [[nodiscard]] virtual bn::optional<Type> Update() = 0;
 
 protected:
-    Scene() = default;
+    IScene() = default;
 };
 
 } // namespace sym::scene

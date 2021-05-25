@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scene_Scene.h"
+#include "scene_IScene.h"
 
 #include "global.h"
 
@@ -17,7 +17,7 @@
 namespace sym::scene
 {
 
-class Title final : public Scene
+class Title final : public IScene
 {
 public:
     Title();

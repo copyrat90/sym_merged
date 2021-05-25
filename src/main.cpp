@@ -28,7 +28,7 @@ int main()
     sym::global::setting::Init();
     bn::bg_palettes::set_transparent_color(constant::TRANSPARENT_BG_COLOR);
 
-    bn::unique_ptr<scene::Scene> scene(new scene::Splash);
+    bn::unique_ptr<scene::IScene> scene(new scene::Splash);
     bn::optional<scene::Type> nextScene;
 
 #ifndef NDEBUG
