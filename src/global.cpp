@@ -29,7 +29,7 @@ struct SramSave
      * @brief Miscellaneous game flags.
      *
      * @details from LSB to MSB
-     * bit 0 : already seen intro
+     * bit 0 : already seen opening
      *     1 : (reserved)
      *
      */
@@ -181,12 +181,12 @@ bn::sprite_text_generator* GetTextGen()
     return nullptr;
 }
 
-bool IsSeenIntro()
+bool IsSeenOpening()
 {
     return sramSave_.flags & (1 << 0);
 }
 
-void SetSeenIntro()
+void SetSeenOpening()
 {
     sramSave_.flags |= (1 << 0);
     sramSave_.Write();

@@ -17,8 +17,11 @@
 #include "constant.h"
 #include "global.h"
 
+#include "scene_Game.h"
 #include "scene_Splash.h"
 #include "scene_Title.h"
+
+#include "game_Status.h"
 
 using namespace sym;
 
@@ -28,7 +31,10 @@ int main()
     sym::global::setting::Init();
     bn::bg_palettes::set_transparent_color(constant::TRANSPARENT_BG_COLOR);
 
-    bn::unique_ptr<scene::IScene> scene(new scene::Splash);
+    game::Status status;
+    // Test
+    // bn::unique_ptr<scene::IScene> scene(new scene::Splash);
+    bn::unique_ptr<scene::IScene> scene(new scene::Game(status));
     bn::optional<scene::Type> nextScene;
 
 #ifndef NDEBUG

@@ -39,7 +39,7 @@ Lang GetLang();
  */
 bn::sprite_text_generator* GetTextGen();
 
-bool IsSeenIntro();
-void SetSeenIntro();
+bool IsSeenOpening();
+void SetSeenOpening();
 
 } // namespace sym::global

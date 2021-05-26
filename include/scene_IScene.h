@@ -2,19 +2,10 @@
 
 #include <bn_optional.h>
 
+#include "scene_Type.h"
+
 namespace sym::scene
 {
-
-enum class Type
-{
-    SPLASH,
-    TITLE,
-    INTRO,
-    SELECT_STAGE,
-    STAGE,
-    ENDING,
-    CREDIT
-};
 
 class IScene
 {
