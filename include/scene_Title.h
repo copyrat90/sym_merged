@@ -56,29 +56,29 @@ private:
      * @brief Handle Up or Down press by moving cursorPointingOption_
      *
      */
-    void HandleUpDownPress();
+    void HandleUpDownPress_();
 
     /**
      * @brief Handle Start or A press by setting reservedNextScene_
      *
      */
-    void HandleStartAPress();
+    void HandleStartAPress_();
 
     /**
      * @brief Advance cursorPointingOption_
      *
      * can advance backwards.
      */
-    void AdvanceCursorPointingOption(int amount);
+    void AdvanceCursorPointingOption_(int amount);
 
-    void UpdateCursorSpritePosition();
+    void UpdateCursorSpritePosition_();
 
     /**
      * @brief Clears and redraws menu text sprites.
      * Also sets the blending of the sprites enabled.
      *
      */
-    void RedrawMenuTextSprites();
+    void RedrawMenuTextSprites_();
 };
 
 } // namespace sym::scene

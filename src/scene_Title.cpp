@@ -32,8 +32,8 @@ Title::Title()
         cursor.set_mosaic_enabled(true);
     }
 
-    RedrawMenuTextSprites();
-    UpdateCursorSpritePosition();
+    RedrawMenuTextSprites_();
+    UpdateCursorSpritePosition_();
     fadeIn_.Init();
 }
 
@@ -47,14 +47,14 @@ bn::optional<Type> Title::Update()
         break;
     case Transition::State::ONGOING:
         fadeIn_.Update();
-        HandleUpDownPress();
+        HandleUpDownPress_();
         break;
     case Transition::State::DONE:
         switch (fadeOut_.GetState())
         {
         case Transition::State::NOT_READY:
-            HandleUpDownPress();
-            HandleStartAPress();
+            HandleUpDownPress_();
+            HandleStartAPress_();
             break;
         case Transition::State::ONGOING:
             break;
@@ -73,7 +73,7 @@ bn::optional<Type> Title::Update()
     return bn::nullopt;
 }
 
-void Title::HandleUpDownPress()
+void Title::HandleUpDownPress_()
 {
     int cursorMoveDirection = 0;
     if (bn::keypad::up_pressed())
@@ -81,11 +81,11 @@ void Title::HandleUpDownPress()
     else if (bn::keypad::down_pressed())
         cursorMoveDirection = 1;
 
-    AdvanceCursorPointingOption(cursorMoveDirection);
-    UpdateCursorSpritePosition();
+    AdvanceCursorPointingOption_(cursorMoveDirection);
+    UpdateCursorSpritePosition_();
 }
 
-void Title::HandleStartAPress()
+void Title::HandleStartAPress_()
 {
     using kt = bn::keypad::key_type;
     using helper::keypad::operator|;
@@ -114,8 +114,8 @@ void Title::HandleStartAPress()
                 BN_ERROR("Unknown Lang : ", static_cast<int>(GetLang()));
                 break;
             }
-            RedrawMenuTextSprites();
-            UpdateCursorSpritePosition();
+            RedrawMenuTextSprites_();
+            UpdateCursorSpritePosition_();
             break;
         case MenuOption::CREDIT:
             reservedNextScene_ = scene::Type::CREDIT;
@@ -128,7 +128,7 @@ void Title::HandleStartAPress()
     }
 }
 
-void Title::AdvanceCursorPointingOption(int amount)
+void Title::AdvanceCursorPointingOption_(int amount)
 {
     int cursorIdx = static_cast<int>(cursorPointingOption_);
     cursorIdx += (amount + MENU_OPTION_TOTAL_COUNT);
@@ -136,7 +136,7 @@ void Title::AdvanceCursorPointingOption(int amount)
     cursorPointingOption_ = static_cast<MenuOption>(cursorIdx);
 }
 
-void Title::UpdateCursorSpritePosition()
+void Title::UpdateCursorSpritePosition_()
 {
     using namespace global;
 
@@ -153,7 +153,7 @@ void Title::UpdateCursorSpritePosition()
     cursor_[1].set_position({right, y});
 }
 
-void Title::RedrawMenuTextSprites()
+void Title::RedrawMenuTextSprites_()
 {
     using namespace global;
     const int langIdx = static_cast<int>(setting::GetLang());
