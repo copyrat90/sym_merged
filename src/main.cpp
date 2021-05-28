@@ -8,6 +8,7 @@
 
 #ifndef NDEBUG
 #include <bn_fixed_point.h>
+#include <bn_format.h>
 #include <bn_sprite_ptr.h>
 #include <bn_string.h>
 #include <bn_vector.h>
@@ -38,8 +39,9 @@ int main()
     bn::optional<scene::Type> nextScene;
 
 #ifndef NDEBUG
-    int cpuUsageUpdateCountDown = 1;
-    bn::vector<bn::sprite_ptr, 4> cpuUsageSprites;
+    constexpr int IWRAM_BYTES = 32'768, EWRAM_BYTES = 262'144;
+    int resourceUsageUpdateCountDown = 1;
+    bn::vector<bn::sprite_ptr, 24> resourceUsageSprites;
 #endif
 
     while (true)
@@ -50,16 +52,29 @@ int main()
         }
 
 #ifndef NDEBUG
-        if (--cpuUsageUpdateCountDown <= 0)
+        if (--resourceUsageUpdateCountDown <= 0)
         {
-            cpuUsageSprites.clear();
+            resourceUsageSprites.clear();
             auto* const textGen = sym::global::GetTextGen();
             auto prevAlignment = textGen->alignment();
+            textGen->set_left_alignment();
+            textGen->generate({-120, -70}, bn::format<9>("CPU: {}%", bn::core::last_cpu_usage().integer()),
+                              resourceUsageSprites);
+
+            const int iwramUsedPercent = (bn::fixed(bn::memory::used_static_iwram()) / IWRAM_BYTES * 100).integer();
+            const int ewramUsedPercent =
+                (bn::fixed(EWRAM_BYTES - bn::memory::available_alloc_ewram()) / EWRAM_BYTES * 100).integer();
+            const int iwramFree = IWRAM_BYTES - bn::memory::used_static_iwram();
+            const int ewramFree = bn::memory::available_alloc_ewram();
+
             textGen->set_right_alignment();
-            textGen->generate({120, -70}, bn::to_string<15>(bn::core::last_cpu_usage().integer()) + "%",
-                              cpuUsageSprites);
+            textGen->generate({120, -70}, bn::format<20>("IW: {}% {}", iwramUsedPercent, iwramFree),
+                              resourceUsageSprites);
+            textGen->generate({120, -55},
+
+                              bn::format<20>("EW: {}% {}", ewramUsedPercent, ewramFree), resourceUsageSprites);
             textGen->set_alignment(prevAlignment);
-            cpuUsageUpdateCountDown = 5;
+            resourceUsageUpdateCountDown = 5;
         }
 #endif
 
