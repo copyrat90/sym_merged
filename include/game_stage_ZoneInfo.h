@@ -3,11 +3,12 @@
 #include <bn_affine_bg_item.h>
 #include <bn_assert.h>
 #include <bn_display.h>
-#include <bn_fixed_point.h>
 #include <bn_fixed_rect.h>
 #include <bn_span.h>
 
 #include "helper_tilemap.h"
+
+#include "game_entity_Symbol.h"
 
 namespace sym::game::stage
 {
@@ -21,23 +22,8 @@ struct ZoneInfo
 {
     struct SymbolInfo
     {
-        /**
-         * @brief Symbol types
-         *
-         * If value >= 100, it is a complex symbol.
-         * otherwise, it is a basic symbol.
-         */
-        enum Type
-        {
-            BAR,
-            XOR,
-            UP = 100,
-            VV,
-            PLUS
-        };
-
         bn::fixed_point position;
-        Type symbolType;
+        entity::Symbol::Type symbolType;
     };
 
     struct ButtonInfo
@@ -61,32 +47,44 @@ struct ZoneInfo
         int entranceOfZoneIndex;
     };
 
+    struct ShutterInfo
+    {
+        bn::fixed_point position;
+    };
+
+    struct EntranceInfo
+    {
+        bn::fixed_point position;
+    };
+
     /**
      * @brief Constructor.
      *
      * @param zoneBoundary_a anchor is center of bg
      */
-    constexpr ZoneInfo(const bn::affine_bg_item& mapBg_a, helper::tilemap::IndexRect zoneBoundary_a,
-                       bn::span<SymbolInfo> symbols_a, bn::span<ButtonInfo> hoverButtons_a,
-                       bn::span<ButtonInfo> pressureButtons_a, bn::span<DoorInfo> doors_a, bn::span<ExitInfo> exits_a,
-                       bn::span<bn::fixed_point> entrances_a)
+    constexpr ZoneInfo(const bn::affine_bg_item& mapBg_a, const helper::tilemap::IndexRect zoneBoundary_a,
+                       bn::span<const SymbolInfo> symbols_a, bn::span<const ButtonInfo> hoverButtons_a,
+                       bn::span<const ButtonInfo> pressureButtons_a, bn::span<const DoorInfo> doors_a,
+                       bn::span<const ExitInfo> exits_a, bn::span<const ShutterInfo> shutters_a,
+                       bn::span<const EntranceInfo> entrances_a)
         : mapBg(mapBg_a), symbols(symbols_a), hoverButtons(hoverButtons_a), pressureButtons(pressureButtons_a),
-          zoneBoundary(zoneBoundary_a), doors(doors_a), exits(exits_a), entrances(entrances_a)
+          zoneBoundary(zoneBoundary_a), doors(doors_a), exits(exits_a), shutters(shutters_a), entrances(entrances_a)
     {
     }
 
     const bn::affine_bg_item& mapBg;
 
     // Mutable things. Only for initialize.
-    const bn::span<SymbolInfo> symbols;
-    const bn::span<ButtonInfo> hoverButtons;
-    const bn::span<ButtonInfo> pressureButtons;
+    const bn::span<const SymbolInfo> symbols;
+    const bn::span<const ButtonInfo> hoverButtons;
+    const bn::span<const ButtonInfo> pressureButtons;
 
     // Constant things. Constantly referenced.
     const bn::fixed_rect zoneBoundary;
-    const bn::span<DoorInfo> doors;
-    const bn::span<ExitInfo> exits;
-    const bn::span<bn::fixed_point> entrances;
+    const bn::span<const DoorInfo> doors;
+    const bn::span<const ExitInfo> exits;
+    const bn::span<const ShutterInfo> shutters;
+    const bn::span<const EntranceInfo> entrances;
 };
 
 } // namespace sym::game::stage

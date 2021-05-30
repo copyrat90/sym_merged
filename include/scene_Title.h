@@ -21,7 +21,7 @@ class Title final : public IScene
 {
 public:
     Title();
-    ~Title() = default;
+    ~Title();
     [[nodiscard]] bn::optional<Type> Update() final;
 
 private:

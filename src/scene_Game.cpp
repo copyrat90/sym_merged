@@ -1,6 +1,7 @@
 #include "scene_Game.h"
 
 #include <bn_assert.h>
+#include <bn_blending.h>
 
 #include "bn_optional.h"
 #include "game_stage_getter.h"
@@ -41,17 +42,38 @@ Game::Game(game::Status& status)
       fadeIn_(Transition::Types::FADE | Transition::Types::BG_MOSAIC | effect::Transition::Types::SPRITE_MOSAIC,
               Transition::Direction::IN, FADE_IN_UPDATE_COUNT),
       fadeOut_(Transition::Types::FADE | Transition::Types::BG_MOSAIC | effect::Transition::Types::SPRITE_MOSAIC,
-               Transition::Direction::OUT, FADE_OUT_UPDATE_COUNT)
+               Transition::Direction::OUT, FADE_OUT_UPDATE_COUNT),
+      currentMapBg_(stageInfo_.zoneInfos[0].mapBg.create_bg({512 - 120, -512 + 80}))
 
 {
-    // test
-    BN_LOG(stageInfo_.stageName, ", ", stageInfo_.stageSubName, ", ",
-           stageInfo_.zoneInfos[0].zoneBoundary.top_left().y());
+    currentZoneIdx_ = 0;
+    currentMapBg_.set_wrapping_enabled(false);
+
+    symbolsOfZones_.resize(stageInfo_.zoneInfos.size());
+
+    for (auto& symbolInfo : stageInfo_.zoneInfos[currentZoneIdx_].symbols)
+    {
+        symbolsOfZones_[currentZoneIdx_].emplace_front(symbolInfo.position, symbolInfo.symbolType);
+    }
+}
+
+Game::~Game()
+{
+    bn::blending::set_fade_alpha(0);
 }
 
 bn::optional<Type> Game::Update()
 {
+    // TODO
     return bn::nullopt;
+}
+
+void Game::SetCurrentZone_(int zoneIdx)
+{
+    BN_ASSERT(0 <= zoneIdx && zoneIdx < stageInfo_.zoneInfos.size(), "Zone index out of range!");
+
+    currentMapBg_ = stageInfo_.zoneInfos[zoneIdx].mapBg.create_bg({0, 0});
+    currentMapBg_.set_wrapping_enabled(false);
 }
 
 } // namespace sym::scene

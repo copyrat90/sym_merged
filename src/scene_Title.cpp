@@ -4,6 +4,7 @@
 #include <bn_fixed.h>
 #include <bn_keypad.h>
 
+#include "bn_blending.h"
 #include "global.h"
 
 #include "bn_optional.h"
@@ -35,6 +36,11 @@ Title::Title()
     RedrawMenuTextSprites_();
     UpdateCursorSpritePosition_();
     fadeIn_.Init();
+}
+
+Title::~Title()
+{
+    bn::blending::set_fade_alpha(0);
 }
 
 bn::optional<Type> Title::Update()

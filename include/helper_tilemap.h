@@ -5,6 +5,8 @@
 #include <bn_fixed_rect.h>
 #include <bn_size.h>
 
+#include "helper_rect.h"
+
 namespace sym::helper::tilemap
 {
 
@@ -17,9 +19,7 @@ using IndexPoint = bn::fixed_point;
 
 [[nodiscard]] constexpr IndexRect MakeIndexRectByTopLeftAndBottomRight(IndexPoint topLeft, IndexPoint bottomRight)
 {
-    const bn::fixed_size size(bottomRight.x() - topLeft.x(), bottomRight.y() - topLeft.y());
-    const IndexPoint centerPos = topLeft + IndexPoint(size.width() / 2, size.height() / 2);
-    return {centerPos, size};
+    return rect::MakeFixedRectByTopLeftAndBottomRightPosition(topLeft, bottomRight);
 }
 
 /**
