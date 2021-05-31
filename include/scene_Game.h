@@ -37,9 +37,7 @@ private:
     static constexpr int ZONE_HOVER_BUTTON_MAX_COUNT = 4;
     static constexpr int ZONE_PRESSURE_BUTTON_MAX_COUNT = 4;
     static constexpr int ZONE_DOOR_MAX_COUNT = 4;
-    static constexpr int ZONE_EXIT_MAX_COUNT = 4;
     static constexpr int ZONE_SHUTTER_MAX_COUNT = 4;
-    static constexpr int ZONE_ENTRANCE_MAX_COUNT = ZONE_DOOR_MAX_COUNT + ZONE_EXIT_MAX_COUNT;
 
     game::Status& status_;
     const game::stage::StageInfo& stageInfo_;
@@ -55,13 +53,12 @@ private:
     bn::array<bn::optional<game::entity::Symbol>, 2> symbolsInHands_;
 
     // Fixed entities.
+    // bn::vector<bn::vector<game::entity::Door, ZONE_DOOR_MAX_COUNT>,
+    // ZONE_MAX_COUNT> doorsOfZones_;
+    // bn::vector<bn::vector<game::entity::Shutter, ZONE_SHUTTER_MAX_COUNT>, ZONE_MAX_COUNT> shuttersOfZones_;
     // bn::vector<bn::vector<game::entity::HoverButton, ZONE_HOVER_BUTTON_MAX_COUNT>, ZONE_MAX_COUNT>
     // hoverButtonsOfZones_; bn::vector<bn::vector<game::entity::PressureButton, ZONE_PRESSURE_BUTTON_MAX_COUNT>,
-    // ZONE_MAX_COUNT> pressureButtonsOfZones_; bn::vector<bn::vector<game::entity::Door, ZONE_DOOR_MAX_COUNT>,
-    // ZONE_MAX_COUNT> doorsOfZones_;
-    // bn::vector<bn::vector<game::entity::Exit, ZONE_EXIT_MAX_COUNT>, ZONE_MAX_COUNT> exitsOfZones_;
-    // bn::vector<bn::vector<game::entity::Shutter, ZONE_SHUTTER_MAX_COUNT>, ZONE_MAX_COUNT> shuttersOfZones_;
-    // bn::vector<bn::vector<bn::fixed_point, ZONE_ENTRANCE_MAX_COUNT>, ZONE_MAX_COUNT> entrancesOfZones_;
+    // ZONE_MAX_COUNT> pressureButtonsOfZones_;
 
     void SetCurrentZone_(int zoneIdx);
 };

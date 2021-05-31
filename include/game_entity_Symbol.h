@@ -26,6 +26,10 @@ public:
 
     Symbol(bn::fixed_point position, Symbol::Type type);
     Symbol(Symbol&& other) noexcept;
+    Symbol& operator=(Symbol&& other) noexcept;
+
+    Symbol(const Symbol& other) = delete;
+    Symbol& operator=(const Symbol& other) = delete;
 
     void AllocateGraphicResource() final;
 
@@ -33,6 +37,8 @@ public:
     void SetType(Type);
 
 private:
+    static constexpr bool IS_APPLY_GRAVITY = true;
+
     Symbol::Type type_;
 };
 

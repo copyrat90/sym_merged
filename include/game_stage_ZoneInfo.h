@@ -26,23 +26,10 @@ struct ZoneInfo
         entity::Symbol::Type symbolType;
     };
 
-    struct ButtonInfo
-    {
-        bn::fixed_point position;
-        bn::span<int> openWhenOnShutterIndexes;
-        bn::span<int> openWhenOffShutterIndexes;
-    };
-
     struct DoorInfo
     {
         bn::fixed_point position;
-        int destinationZoneIndex;
-        int entranceOfZoneIndex;
-    };
-
-    struct ExitInfo
-    {
-        bn::fixed_rect collider;
+        bool isOpenedByDefault;
         int destinationZoneIndex;
         int entranceOfZoneIndex;
     };
@@ -50,6 +37,24 @@ struct ZoneInfo
     struct ShutterInfo
     {
         bn::fixed_point position;
+        bool isOpenedByDefault;
+    };
+
+    struct ButtonInfo
+    {
+        bn::fixed_point position;
+        bool isOnByDefault;
+        bn::span<int> openWhenOnDoorIndexes;
+        bn::span<int> openWhenOffDoorIndexes;
+        bn::span<int> openWhenOnShutterIndexes;
+        bn::span<int> openWhenOffShutterIndexes;
+    };
+
+    struct ExitInfo
+    {
+        bn::fixed_rect collider;
+        int destinationZoneIndex;
+        int entranceOfZoneIndex;
     };
 
     struct EntranceInfo
@@ -62,13 +67,13 @@ struct ZoneInfo
      *
      * @param zoneBoundary_a anchor is center of bg
      */
-    constexpr ZoneInfo(const bn::affine_bg_item& mapBg_a, const helper::tilemap::IndexRect zoneBoundary_a,
-                       bn::span<const SymbolInfo> symbols_a, bn::span<const ButtonInfo> hoverButtons_a,
-                       bn::span<const ButtonInfo> pressureButtons_a, bn::span<const DoorInfo> doors_a,
-                       bn::span<const ExitInfo> exits_a, bn::span<const ShutterInfo> shutters_a,
+    constexpr ZoneInfo(const bn::affine_bg_item& mapBg_a, bn::span<const SymbolInfo> symbols_a,
+                       bn::span<const DoorInfo> doors_a, bn::span<const ShutterInfo> shutters_a,
+                       bn::span<const ButtonInfo> hoverButtons_a, bn::span<const ButtonInfo> pressureButtons_a,
+                       const helper::tilemap::IndexRect zoneBoundary_a, bn::span<const ExitInfo> exits_a,
                        bn::span<const EntranceInfo> entrances_a)
-        : mapBg(mapBg_a), symbols(symbols_a), hoverButtons(hoverButtons_a), pressureButtons(pressureButtons_a),
-          zoneBoundary(zoneBoundary_a), doors(doors_a), exits(exits_a), shutters(shutters_a), entrances(entrances_a)
+        : mapBg(mapBg_a), symbols(symbols_a), doors(doors_a), shutters(shutters_a), hoverButtons(hoverButtons_a),
+          pressureButtons(pressureButtons_a), zoneBoundary(zoneBoundary_a), exits(exits_a), entrances(entrances_a)
     {
     }
 
@@ -76,14 +81,14 @@ struct ZoneInfo
 
     // Mutable things. Only for initialize.
     const bn::span<const SymbolInfo> symbols;
+    const bn::span<const DoorInfo> doors;
+    const bn::span<const ShutterInfo> shutters;
     const bn::span<const ButtonInfo> hoverButtons;
     const bn::span<const ButtonInfo> pressureButtons;
 
     // Constant things. Constantly referenced.
-    const bn::fixed_rect zoneBoundary;
-    const bn::span<const DoorInfo> doors;
+    const helper::tilemap::IndexRect zoneBoundary;
     const bn::span<const ExitInfo> exits;
-    const bn::span<const ShutterInfo> shutters;
     const bn::span<const EntranceInfo> entrances;
 };
 

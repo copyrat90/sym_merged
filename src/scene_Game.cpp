@@ -6,9 +6,6 @@
 #include "bn_optional.h"
 #include "game_stage_getter.h"
 
-// test
-#include <bn_log.h>
-
 namespace sym::scene
 {
 
@@ -43,7 +40,7 @@ Game::Game(game::Status& status)
               Transition::Direction::IN, FADE_IN_UPDATE_COUNT),
       fadeOut_(Transition::Types::FADE | Transition::Types::BG_MOSAIC | effect::Transition::Types::SPRITE_MOSAIC,
                Transition::Direction::OUT, FADE_OUT_UPDATE_COUNT),
-      currentMapBg_(stageInfo_.zoneInfos[0].mapBg.create_bg({512 - 120, -512 + 80}))
+      currentMapBg_(stageInfo_.zoneInfos[0].mapBg.create_bg({0, 0}))
 
 {
     currentZoneIdx_ = 0;
@@ -51,10 +48,24 @@ Game::Game(game::Status& status)
 
     symbolsOfZones_.resize(stageInfo_.zoneInfos.size());
 
-    for (auto& symbolInfo : stageInfo_.zoneInfos[currentZoneIdx_].symbols)
+    // Load and initialize Entities in zones using ZoneInfo
+    for (int i = 0; i < stageInfo_.zoneInfos.size(); ++i)
     {
-        symbolsOfZones_[currentZoneIdx_].emplace_front(symbolInfo.position, symbolInfo.symbolType);
+        for (auto& symbolInfo : stageInfo_.zoneInfos[i].symbols)
+        {
+            symbolsOfZones_[i].emplace_front(symbolInfo.position, symbolInfo.symbolType);
+        }
+        // for (auto& doorInfo : stageInfo_.zoneInfos[i].doors)
+        // {
+        //     doorsOfZones_[i].emplace_front(...);
+        // }
     }
+
+    // Allocate all graphics within current zone
+    for (auto& symbol : symbolsOfZones_[currentZoneIdx_])
+        symbol.AllocateGraphicResource();
+    // for (auto& door : doorsOfZones_[currentZoneIdx_])
+    //     door.AllocateGraphicResource();
 }
 
 Game::~Game()

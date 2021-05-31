@@ -64,14 +64,21 @@ Symbol::Symbol(bn::fixed_point position, Symbol::Type type)
              GenerateColliderFromSymbolType_(position, type,
                                              IsComplexSymbol_(type) ? bn::sprite_items::spr_complex_symbols.shape_size()
                                                                     : bn::sprite_items::spr_basic_symbols.shape_size()),
+             IS_APPLY_GRAVITY,
              IsComplexSymbol_(type) ? &bn::sprite_items::spr_complex_symbols : &bn::sprite_items::spr_basic_symbols),
       type_(type)
 {
-    AllocateGraphicResource();
 }
 
-Symbol::Symbol(Symbol&& other) noexcept : Entity(bn::move(other))
+Symbol::Symbol(Symbol&& other) noexcept : Entity(bn::move(other)), type_(other.type_)
 {
+}
+
+Symbol& Symbol::operator=(Symbol&& other) noexcept
+{
+    Entity::operator=(bn::move(other));
+    type_ = other.type_;
+    return *this;
 }
 
 void Symbol::AllocateGraphicResource()
@@ -79,13 +86,12 @@ void Symbol::AllocateGraphicResource()
     int spriteIdx = static_cast<int>(type_);
     if (IsComplexSymbol_(type_))
         spriteIdx -= COMPLEX_SYMBOL_START_NUM;
+    spriteItem_ =
+        IsComplexSymbol_(type_) ? &bn::sprite_items::spr_complex_symbols : &bn::sprite_items::spr_basic_symbols;
 
-    const bn::sprite_item& spriteItem =
-        IsComplexSymbol_(type_) ? bn::sprite_items::spr_complex_symbols : bn::sprite_items::spr_basic_symbols;
-    if (!sprite_)
-        sprite_ = spriteItem.create_sprite(position_);
-    sprite_->set_item(spriteItem);
-    sprite_->set_tiles(spriteItem.tiles_item().create_tiles(spriteIdx));
+    Entity::AllocateGraphicResource();
+
+    sprite_->set_tiles(spriteItem_->tiles_item().create_tiles(spriteIdx));
 }
 
 Symbol::Type Symbol::GetType() const
@@ -98,7 +104,8 @@ void Symbol::SetType(Symbol::Type newType)
     if (type_ != newType)
     {
         type_ = newType;
-        AllocateGraphicResource();
+        if (sprite_)
+            AllocateGraphicResource();
     }
 }
 

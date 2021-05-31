@@ -5,14 +5,25 @@ namespace sym::game::entity
 
 Entity::~Entity() = default;
 
-Entity::Entity(bn::fixed_point position, bn::fixed_rect collider, const bn::sprite_item* const spriteItem)
-    : position_(position), collider_(collider), spriteItem_(spriteItem)
+Entity::Entity(bn::fixed_point position, bn::fixed_rect collider, bool isApplyGravity,
+               const bn::sprite_item* const spriteItem)
+    : position_(position), collider_(collider), isApplyGravity_(isApplyGravity), spriteItem_(spriteItem)
 {
 }
 
 Entity::Entity(Entity&& other) noexcept
-    : collider_(other.collider_), sprite_(bn::move(other.sprite_)), spriteItem_(other.spriteItem_)
+    : position_(other.position_), collider_(other.collider_), isApplyGravity_(other.isApplyGravity_),
+      sprite_(bn::move(other.sprite_)), spriteItem_(other.spriteItem_)
 {
+}
+
+Entity& Entity::operator=(Entity&& other) noexcept
+{
+    position_ = other.position_;
+    collider_ = other.collider_;
+    sprite_ = bn::move(other.sprite_);
+    spriteItem_ = other.spriteItem_;
+    return *this;
 }
 
 void Entity::FreeGraphicResource()
@@ -22,8 +33,13 @@ void Entity::FreeGraphicResource()
 
 void Entity::AllocateGraphicResource()
 {
-    if (spriteItem_)
-        sprite_ = spriteItem_->create_sprite(collider_.position());
+    if (spriteItem_ && !sprite_)
+        sprite_ = spriteItem_->create_sprite(position_);
+}
+
+void Entity::Update()
+{
+    // TODO: Apply gravity
 }
 
 } // namespace sym::game::entity
