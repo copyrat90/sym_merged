@@ -19,36 +19,35 @@ bool IsComplexSymbol_(Symbol::Type type)
     return static_cast<int>(type) >= Symbol::COMPLEX_SYMBOL_START_NUM;
 }
 
-bn::fixed_rect GenerateColliderFromSymbolType_(bn::fixed_point position, Symbol::Type symbolType,
-                                               bn::sprite_shape_size spriteShapeSize)
+/**
+ * @return bn::fixed_rect physics collider relative to the position_.
+ */
+bn::fixed_rect GenerateColliderFromSymbolType_(Symbol::Type symbolType, const bn::sprite_shape_size& spriteShapeSize)
 {
-    const bn::fixed_rect spriteRect(position, {spriteShapeSize.width(), spriteShapeSize.height()});
-    const bn::fixed_point topLeft = spriteRect.top_left();
-
-    bn::fixed_point resultTopLeft = topLeft;
+    bn::fixed_point resultTopLeft = {-spriteShapeSize.width() / 2, -spriteShapeSize.height() / 2};
     bn::fixed_size resultSize;
 
     switch (symbolType)
     {
     case Symbol::Type::BAR:
-        resultTopLeft += {7, 2};
-        resultSize = {2, 12};
+        resultTopLeft += {6, 1};
+        resultSize = {4, 14};
         break;
     case Symbol::Type::XOR:
-        resultTopLeft += {2, 4};
-        resultSize = {12, 7};
+        resultTopLeft += {1, 3};
+        resultSize = {14, 9};
         break;
     case Symbol::Type::UP:
-        resultTopLeft += {2, 1};
-        resultSize = {12, 14};
+        resultTopLeft += {1, 0};
+        resultSize = {14, 16};
         break;
     case Symbol::Type::VV:
-        resultTopLeft += {0, 2};
-        resultSize = {16, 12};
+        resultTopLeft += {0, 1};
+        resultSize = {16, 14};
         break;
     case Symbol::Type::PLUS:
-        resultTopLeft += {2, 2};
-        resultSize = {12, 12};
+        resultTopLeft += {1, 1};
+        resultSize = {14, 14};
         break;
     default:
         BN_ERROR("Unknown Symbol::Type : ", static_cast<int>(symbolType));
@@ -60,28 +59,29 @@ bn::fixed_rect GenerateColliderFromSymbolType_(bn::fixed_point position, Symbol:
 } // namespace
 
 Symbol::Symbol(bn::fixed_point position, Symbol::Type type)
-    : Entity(position,
-             GenerateColliderFromSymbolType_(position, type,
-                                             IsComplexSymbol_(type) ? bn::sprite_items::spr_complex_symbols.shape_size()
-                                                                    : bn::sprite_items::spr_basic_symbols.shape_size()),
-             IS_APPLY_GRAVITY,
-             IsComplexSymbol_(type) ? &bn::sprite_items::spr_complex_symbols : &bn::sprite_items::spr_basic_symbols),
+    : IGravityEntity(position, RELATIVE_INTERACT_RANGE,
+                     GenerateColliderFromSymbolType_(type, IsComplexSymbol_(type)
+                                                               ? bn::sprite_items::spr_complex_symbols.shape_size()
+                                                               : bn::sprite_items::spr_basic_symbols.shape_size()),
+                     IS_GRAVITY_ENABLED_BY_DEFAULT, GRAVITY_SCALE,
+                     IsComplexSymbol_(type) ? &bn::sprite_items::spr_complex_symbols
+                                            : &bn::sprite_items::spr_basic_symbols),
       type_(type)
 {
 }
 
-Symbol::Symbol(Symbol&& other) noexcept : Entity(bn::move(other)), type_(other.type_)
+Symbol::Symbol(Symbol&& other) : IGravityEntity(bn::move(other)), type_(other.type_)
 {
 }
 
-Symbol& Symbol::operator=(Symbol&& other) noexcept
+Symbol& Symbol::operator=(Symbol&& other)
 {
-    Entity::operator=(bn::move(other));
+    IGravityEntity::operator=(bn::move(other));
     type_ = other.type_;
     return *this;
 }
 
-void Symbol::AllocateGraphicResource()
+void Symbol::AllocateGraphicResource(int z_order)
 {
     int spriteIdx = static_cast<int>(type_);
     if (IsComplexSymbol_(type_))
@@ -89,9 +89,8 @@ void Symbol::AllocateGraphicResource()
     spriteItem_ =
         IsComplexSymbol_(type_) ? &bn::sprite_items::spr_complex_symbols : &bn::sprite_items::spr_basic_symbols;
 
-    Entity::AllocateGraphicResource();
-
-    sprite_->set_tiles(spriteItem_->tiles_item().create_tiles(spriteIdx));
+    sprite_ = spriteItem_->create_sprite(position_, spriteIdx);
+    sprite_->set_z_order(z_order);
 }
 
 Symbol::Type Symbol::GetType() const
@@ -105,7 +104,7 @@ void Symbol::SetType(Symbol::Type newType)
     {
         type_ = newType;
         if (sprite_)
-            AllocateGraphicResource();
+            AllocateGraphicResource(sprite_->z_order());
     }
 }
 

@@ -4,6 +4,7 @@
 
 #include <bn_affine_bg_ptr.h>
 #include <bn_array.h>
+#include <bn_camera_ptr.h>
 #include <bn_fixed_point.h>
 #include <bn_forward_list.h>
 #include <bn_memory.h>
@@ -13,6 +14,8 @@
 
 #include "effect_Transition.h"
 #include "game_Status.h"
+#include "game_entity_Door.h"
+#include "game_entity_Player.h"
 #include "game_entity_Symbol.h"
 #include "game_stage_Id.h"
 #include "game_stage_StageInfo.h"
@@ -48,13 +51,16 @@ private:
     int currentZoneIdx_;
     bn::affine_bg_ptr currentMapBg_;
 
+    bn::camera_ptr camera_;
+    bn::fixed_rect zoneBoundary_;
+
     // Movable entities.
+    game::entity::Player player_;
     bn::vector<bn::forward_list<game::entity::Symbol, STAGE_SYMBOL_MAX_COUNT>, ZONE_MAX_COUNT> symbolsOfZones_;
     bn::array<bn::optional<game::entity::Symbol>, 2> symbolsInHands_;
 
     // Fixed entities.
-    // bn::vector<bn::vector<game::entity::Door, ZONE_DOOR_MAX_COUNT>,
-    // ZONE_MAX_COUNT> doorsOfZones_;
+    bn::vector<bn::vector<game::entity::Door, ZONE_DOOR_MAX_COUNT>, ZONE_MAX_COUNT> doorsOfZones_;
     // bn::vector<bn::vector<game::entity::Shutter, ZONE_SHUTTER_MAX_COUNT>, ZONE_MAX_COUNT> shuttersOfZones_;
     // bn::vector<bn::vector<game::entity::HoverButton, ZONE_HOVER_BUTTON_MAX_COUNT>, ZONE_MAX_COUNT>
     // hoverButtonsOfZones_; bn::vector<bn::vector<game::entity::PressureButton, ZONE_PRESSURE_BUTTON_MAX_COUNT>,

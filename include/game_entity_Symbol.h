@@ -1,11 +1,11 @@
 #pragma once
 
-#include "game_entity_Entity.h"
+#include "game_entity_IGravityEntity.h"
 
 namespace sym::game::entity
 {
 
-class Symbol final : Entity
+class Symbol final : public IGravityEntity
 {
 public:
     static constexpr int COMPLEX_SYMBOL_START_NUM = 100;
@@ -25,19 +25,21 @@ public:
     };
 
     Symbol(bn::fixed_point position, Symbol::Type type);
-    Symbol(Symbol&& other) noexcept;
-    Symbol& operator=(Symbol&& other) noexcept;
+    Symbol(Symbol&& other);
+    Symbol& operator=(Symbol&& other);
 
     Symbol(const Symbol& other) = delete;
     Symbol& operator=(const Symbol& other) = delete;
 
-    void AllocateGraphicResource() final;
+    void AllocateGraphicResource(int z_order) final;
 
     Type GetType() const;
     void SetType(Type);
 
 private:
-    static constexpr bool IS_APPLY_GRAVITY = true;
+    static constexpr bn::fixed_rect RELATIVE_INTERACT_RANGE = {{0, 0}, {24, 16}};
+    static constexpr bool IS_GRAVITY_ENABLED_BY_DEFAULT = true;
+    static constexpr bn::fixed GRAVITY_SCALE = 1;
 
     Symbol::Type type_;
 };

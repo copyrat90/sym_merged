@@ -16,4 +16,14 @@ namespace sym::helper::rect
     return MakeFixedRectByTopLeftAndSize(topLeft, size);
 }
 
+[[nodiscard]] constexpr bn::fixed_rect operator+(const bn::fixed_rect& rect, const bn::fixed_point& point)
+{
+    return {rect.position() + point, rect.dimensions()};
+}
+
+[[nodiscard]] constexpr bn::fixed_rect operator+(const bn::fixed_point& point, const bn::fixed_rect& rect)
+{
+    return operator+(rect, point);
+}
+
 } // namespace sym::helper::rect
