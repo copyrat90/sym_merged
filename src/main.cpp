@@ -9,6 +9,7 @@
 #ifndef NDEBUG
 #include <bn_fixed_point.h>
 #include <bn_format.h>
+#include <bn_keypad.h>
 #include <bn_sprite_ptr.h>
 #include <bn_string.h>
 #include <bn_vector.h>
@@ -42,6 +43,7 @@ int main()
     constexpr int IWRAM_BYTES = 32'768, EWRAM_BYTES = 262'144;
     int resourceUsageUpdateCountDown = 1;
     bn::vector<bn::sprite_ptr, 24> resourceUsageSprites;
+    bool isDebugViewOn = true;
 #endif
 
     while (true)
@@ -52,7 +54,15 @@ int main()
         }
 
 #ifndef NDEBUG
-        if (--resourceUsageUpdateCountDown <= 0)
+        if (bn::keypad::select_pressed())
+        {
+            isDebugViewOn = !isDebugViewOn;
+            if (!isDebugViewOn)
+            {
+                resourceUsageSprites.clear();
+            }
+        }
+        if (isDebugViewOn && --resourceUsageUpdateCountDown <= 0)
         {
             resourceUsageSprites.clear();
             auto* const textGen = sym::global::GetTextGen();
