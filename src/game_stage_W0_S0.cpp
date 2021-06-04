@@ -25,7 +25,15 @@ constexpr ZoneInfo::SymbolInfo Z0_symbolInfos_[] = {
 };
 
 constexpr ZoneInfo::DoorInfo Z0_doorInfos_[] = {
-    {{115 - MAP_DIMENSIONS[0].width() / 2, 860 - MAP_DIMENSIONS[0].height() / 2}, true, -1, -1},
+    {{115 - MAP_DIMENSIONS[0].width() / 2, 860 - MAP_DIMENSIONS[0].height() / 2}, true, -1, -1, 1},
+};
+
+constexpr ZoneInfo::ButtonInfo Z0_hoverButtonInfos_[] = {
+    {{92 - MAP_DIMENSIONS[0].width() / 2, 962 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
+};
+
+constexpr ZoneInfo::ButtonInfo Z0_pressureButtonInfos_[] = {
+    {{136 - MAP_DIMENSIONS[0].width() / 2, 984 - MAP_DIMENSIONS[0].height() / 2}, false, 2},
 };
 
 constexpr ZoneInfo::EntranceInfo Z0_entranceInfos_[] = {
@@ -34,7 +42,7 @@ constexpr ZoneInfo::EntranceInfo Z0_entranceInfos_[] = {
 
 constexpr ZoneInfo zoneInfos_[] = {
     ZoneInfo(bn::affine_bg_items::bg_w0_s0_0, Z0_symbolInfos_, Z0_doorInfos_, bn::span<ZoneInfo::ShutterInfo>(),
-             bn::span<ZoneInfo::ButtonInfo>(), bn::span<ZoneInfo::ButtonInfo>(),
+             Z0_hoverButtonInfos_, Z0_pressureButtonInfos_,
              helper::tilemap::IndexRect({0, 82}, bn::size{39, 46}, bg_w0_s0_0.map_item().dimensions()),
              bn::span<ZoneInfo::ExitInfo>(), Z0_entranceInfos_),
 };

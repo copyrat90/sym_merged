@@ -32,22 +32,21 @@ struct ZoneInfo
         bool isOpenedByDefault;
         int destinationZoneIndex;
         int entranceOfZoneIndex;
+        int textSpriteNumber;
     };
 
     struct ShutterInfo
     {
         bn::fixed_point position;
         bool isOpenedByDefault;
+        int textSpriteNumber;
     };
 
     struct ButtonInfo
     {
         bn::fixed_point position;
         bool isOnByDefault;
-        bn::span<int> openWhenOnDoorIndexes;
-        bn::span<int> openWhenOffDoorIndexes;
-        bn::span<int> openWhenOnShutterIndexes;
-        bn::span<int> openWhenOffShutterIndexes;
+        int textSpriteNumber;
     };
 
     struct ExitInfo

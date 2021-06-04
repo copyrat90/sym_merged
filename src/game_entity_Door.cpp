@@ -3,8 +3,9 @@
 #include <bn_assert.h>
 #include <bn_sprite_animate_actions.h>
 
-#include "bn_sprite_items_spr_door.h"
 #include "helper_rect.h"
+
+#include "bn_sprite_items_spr_door.h"
 
 namespace sym::game::entity
 {
@@ -20,33 +21,26 @@ constexpr int WAIT_UPDATES = 15;
 constexpr bn::fixed_rect RELATIVE_INTERACT_RANGE =
     helper::rect::MakeFixedRectByTopLeftAndSize({5 - SPRITE_WIDTH / 2, 4 - SPRITE_HEIGHT / 2}, {22, 24});
 
+constexpr bn::fixed_point RELATIVE_NUMBER_TEXT_POS = {0, -20};
+
 } // namespace
 
-Door::Door(bn::fixed_point position, bool isOpened)
-    : IOpenableEntity(position, RELATIVE_INTERACT_RANGE, isOpened, &bn::sprite_items::spr_door)
+Door::Door(bn::fixed_point position, bool isOpened, int textNumber)
+    : IOpenableEntity(position, RELATIVE_INTERACT_RANGE, textNumber, RELATIVE_NUMBER_TEXT_POS, isOpened,
+                      &bn::sprite_items::spr_door)
 {
     // TODO: draw door graphic asset
 }
 
-Door::Door(Door&& other) : IOpenableEntity(bn::move(other))
-{
-}
-
-Door& Door::operator=(Door&& other)
-{
-    IEntity::operator=(bn::move(other));
-    return *this;
-}
-
 void Door::FreeGraphicResource()
 {
-    if (action_)
-        action_.reset();
+    action_.reset();
     IOpenableEntity::FreeGraphicResource();
 }
 
 void Door::Update()
 {
+    IOpenableEntity::Update();
     if (action_ && !action_->done())
         action_->update();
 }

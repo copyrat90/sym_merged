@@ -11,10 +11,15 @@ namespace sym::game::entity
 class Door final : public IOpenableEntity
 {
 public:
-    Door(bn::fixed_point position, bool isOpened);
+    /**
+     * @brief Constructor.
+     *
+     * @param textNumber number which is shown above the door.
+     */
+    Door(bn::fixed_point position, bool isOpened, int textNumber);
 
-    Door(Door&& other);
-    Door& operator=(Door&& other);
+    Door(Door&& other) = delete;
+    Door& operator=(Door&& other) = delete;
 
     Door(const Door& other) = delete;
     Door& operator=(const Door& other) = delete;

@@ -54,7 +54,7 @@ public:
     virtual void FreeGraphicResource();
     virtual void AllocateGraphicResource(int z_order);
 
-    void SetCamera(const bn::camera_ptr& camera);
+    virtual void SetCamera(const bn::camera_ptr& camera);
 
     bn::fixed_point GetPosition() const;
     void SetPosition(const bn::fixed_point& position);

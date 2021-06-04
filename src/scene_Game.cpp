@@ -19,6 +19,7 @@ namespace
 constexpr int PLAYER_Z_ORDER = 0;
 constexpr int SYMBOL_Z_ORDER = -10;
 constexpr int DOOR_Z_ORDER = 10;
+constexpr int BUTTON_Z_ORDER = 5;
 
 [[nodiscard]] const game::stage::StageInfo& GetStageInfo(game::stage::Id stageId)
 {
@@ -61,6 +62,8 @@ Game::Game(game::Status& status)
     const int zoneCount = stageInfo_.zoneInfos.size();
     symbolsOfZones_.resize(zoneCount);
     doorsOfZones_.resize(zoneCount);
+    hoverButtonsOfZones_.resize(zoneCount);
+    pressureButtonsOfZones_.resize(zoneCount);
 
     // Initialize player and camera
     const bn::fixed_point& playerPosition = stageInfo_.zoneInfos[0].entrances[0].position;
@@ -75,9 +78,15 @@ Game::Game(game::Status& status)
         for (const auto& symbolInfo : zoneInfo.symbols)
             symbolsOfZones_[i].emplace_front(symbolInfo.position, symbolInfo.symbolType);
         for (const auto& doorInfo : zoneInfo.doors)
-            doorsOfZones_[i].emplace_back(doorInfo.position, doorInfo.isOpenedByDefault);
+            doorsOfZones_[i].emplace_back(doorInfo.position, doorInfo.isOpenedByDefault, doorInfo.textSpriteNumber);
         // for (const auto& shutterInfo : zoneInfo.shutters)
         //     shuttersOfZones_[i].emplace_back(...)
+        for (const auto& hoverButtonInfo : zoneInfo.hoverButtons)
+            hoverButtonsOfZones_[i].emplace_back(hoverButtonInfo.position, hoverButtonInfo.textSpriteNumber,
+                                                 hoverButtonInfo.isOnByDefault);
+        for (const auto& pressureButtonInfo : zoneInfo.pressureButtons)
+            pressureButtonsOfZones_[i].emplace_back(pressureButtonInfo.position, pressureButtonInfo.textSpriteNumber,
+                                                    pressureButtonInfo.isOnByDefault);
     }
 
     // Allocate all graphics within current zone
@@ -98,6 +107,16 @@ Game::Game(game::Status& status)
     //     shutter.AllocateGraphicResource();
     //     shutter.SetCamera(camera_);
     // }
+    for (auto& hoverButton : hoverButtonsOfZones_[currentZoneIdx_])
+    {
+        hoverButton.AllocateGraphicResource(BUTTON_Z_ORDER);
+        hoverButton.SetCamera(camera_);
+    }
+    for (auto& pressureButton : pressureButtonsOfZones_[currentZoneIdx_])
+    {
+        pressureButton.AllocateGraphicResource(BUTTON_Z_ORDER);
+        pressureButton.SetCamera(camera_);
+    }
 
     // Initialize Idle action
     player_.InitIdleAction();

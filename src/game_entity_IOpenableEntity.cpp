@@ -5,19 +5,22 @@ namespace sym::game::entity
 
 IOpenableEntity::~IOpenableEntity() = default;
 
-IOpenableEntity::IOpenableEntity(bn::fixed_point position, bn::fixed_rect relativeInteractRange, bool isOpened,
+IOpenableEntity::IOpenableEntity(bn::fixed_point position, bn::fixed_rect relativeInteractRange, int textNumber,
+                                 bn::fixed_point relativeNumberTextPosition, bool isOpened,
                                  const bn::sprite_item* spriteItem)
-    : IEntity(position, relativeInteractRange, spriteItem), isOpened_(isOpened)
+    : INumberTextEntity(position, relativeInteractRange, textNumber, relativeNumberTextPosition, spriteItem),
+      isOpened_(isOpened)
 {
 }
 
-IOpenableEntity::IOpenableEntity(IOpenableEntity&& other) : IEntity(bn::move(other)), isOpened_(other.isOpened_)
+IOpenableEntity::IOpenableEntity(IOpenableEntity&& other)
+    : INumberTextEntity(bn::move(other)), isOpened_(other.isOpened_)
 {
 }
 
 IOpenableEntity& IOpenableEntity::operator=(IOpenableEntity&& other)
 {
-    IEntity::operator=(bn::move(other));
+    INumberTextEntity::operator=(bn::move(other));
     isOpened_ = other.isOpened_;
     return *this;
 }

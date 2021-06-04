@@ -1,16 +1,17 @@
 #pragma once
 
-#include "game_entity_IEntity.h"
+#include "game_entity_INumberTextEntity.h"
 
 namespace sym::game::entity
 {
 
-class IOpenableEntity : public IEntity
+class IOpenableEntity : public INumberTextEntity
 {
 public:
     virtual ~IOpenableEntity() = 0;
 
-    IOpenableEntity(bn::fixed_point position, bn::fixed_rect relativeInteractRange, bool isOpened,
+    IOpenableEntity(bn::fixed_point position, bn::fixed_rect relativeInteractRange, int textNumber,
+                    bn::fixed_point relativeNumberTextPosition, bool isOpened,
                     const bn::sprite_item* spriteItem = nullptr);
 
     IOpenableEntity(IOpenableEntity&& other);

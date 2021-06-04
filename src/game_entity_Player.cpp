@@ -14,16 +14,6 @@ Player::Player(bn::fixed_point position)
 {
 }
 
-Player::Player(Player&& other) : IGravityEntity(bn::move(other))
-{
-}
-
-Player& Player::operator=(Player&& other)
-{
-    IGravityEntity::operator=(bn::move(other));
-    return *this;
-}
-
 void Player::FreeGraphicResource()
 {
     DestroyActions_();
@@ -32,6 +22,8 @@ void Player::FreeGraphicResource()
 
 void Player::Update()
 {
+    IGravityEntity::Update();
+
     bool isActionDone = true;
     if (action2_)
     {

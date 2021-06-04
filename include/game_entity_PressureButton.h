@@ -8,16 +8,16 @@
 namespace sym::game::entity
 {
 
-class HoverButton final : public IButtonEntity
+class PressureButton final : public IButtonEntity
 {
 public:
-    HoverButton(bn::fixed_point position, int textNumber, bool isOnByDefault);
+    PressureButton(bn::fixed_point position, int textNumber, bool isOnByDefault);
 
-    HoverButton(HoverButton&& other) = delete;
-    HoverButton& operator=(HoverButton&& other) = delete;
+    PressureButton(PressureButton&& other) = delete;
+    PressureButton& operator=(PressureButton&& other) = delete;
 
-    HoverButton(const HoverButton& other) = delete;
-    HoverButton& operator=(const HoverButton& other) = delete;
+    PressureButton(const PressureButton& other) = delete;
+    PressureButton& operator=(const PressureButton& other) = delete;
 
     void AllocateGraphicResource(int z_order) final;
     void FreeGraphicResource() final;

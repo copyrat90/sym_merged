@@ -13,8 +13,8 @@ class Player final : public IGravityEntity
 public:
     Player(bn::fixed_point position);
 
-    Player(Player&& other);
-    Player& operator=(Player&& other);
+    Player(Player&& other) = delete;
+    Player& operator=(Player&& other) = delete;
 
     Player(const Player& other) = delete;
     Player& operator=(const Player& other) = delete;
