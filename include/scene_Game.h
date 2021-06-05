@@ -18,6 +18,7 @@
 #include "game_entity_HoverButton.h"
 #include "game_entity_Player.h"
 #include "game_entity_PressureButton.h"
+#include "game_entity_Shutter.h"
 #include "game_entity_Symbol.h"
 #include "game_stage_Id.h"
 #include "game_stage_StageInfo.h"
@@ -63,7 +64,7 @@ private:
 
     // Fixed entities.
     bn::vector<bn::vector<game::entity::Door, ZONE_DOOR_MAX_COUNT>, ZONE_MAX_COUNT> doorsOfZones_;
-    // bn::vector<bn::vector<game::entity::Shutter, ZONE_SHUTTER_MAX_COUNT>, ZONE_MAX_COUNT> shuttersOfZones_;
+    bn::vector<bn::vector<game::entity::Shutter, ZONE_SHUTTER_MAX_COUNT>, ZONE_MAX_COUNT> shuttersOfZones_;
     bn::vector<bn::vector<game::entity::HoverButton, ZONE_HOVER_BUTTON_MAX_COUNT>, ZONE_MAX_COUNT> hoverButtonsOfZones_;
     bn::vector<bn::vector<game::entity::PressureButton, ZONE_PRESSURE_BUTTON_MAX_COUNT>, ZONE_MAX_COUNT>
         pressureButtonsOfZones_;

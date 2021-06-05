@@ -8,29 +8,29 @@
 namespace sym::game::entity
 {
 
-class Door final : public IOpenableEntity
+class Shutter final : public IOpenableEntity
 {
 public:
     /**
      * @brief Constructor.
      *
-     * @param textNumber number which is shown above the door.
+     * @param textNumber number which is shown above the Shutter.
      */
-    Door(bn::fixed_point position, bool isOpened, int textNumber);
+    Shutter(bn::fixed_point position, bool isOpened, int textNumber);
 
-    Door(Door&& other) = delete;
-    Door& operator=(Door&& other) = delete;
+    Shutter(Shutter&& other) = delete;
+    Shutter& operator=(Shutter&& other) = delete;
 
-    Door(const Door& other) = delete;
-    Door& operator=(const Door& other) = delete;
+    Shutter(const Shutter& other) = delete;
+    Shutter& operator=(const Shutter& other) = delete;
 
     void AllocateGraphicResource(int z_order) final;
     void FreeGraphicResource() final;
 
     void Update() final;
 
-    void InitDoorOpenAction();
-    void InitDoorCloseAction();
+    void InitShutterOpenAction();
+    void InitShutterCloseAction();
 
 private:
     bn::optional<bn::sprite_animate_action<4>> action_;

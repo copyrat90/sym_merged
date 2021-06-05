@@ -36,6 +36,7 @@ void HoverButton::AllocateGraphicResource(int z_order)
     IButtonEntity::AllocateGraphicResource(z_order);
     sprite_ =
         spriteItem_->create_sprite(position_, GetButtonOn() ? BUTTON_ON_GRAPHICS_INDEX : BUTTON_OFF_GRAPHICS_INDEX);
+    sprite_->set_z_order(z_order);
 }
 
 void HoverButton::FreeGraphicResource()
@@ -47,6 +48,8 @@ void HoverButton::FreeGraphicResource()
 void HoverButton::Update()
 {
     IButtonEntity::Update();
+    if (action_ && !action_->done())
+        action_->update();
 }
 
 void HoverButton::InitButtonOnAction()

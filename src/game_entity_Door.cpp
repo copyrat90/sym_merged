@@ -19,9 +19,12 @@ constexpr bn::fixed SPRITE_HEIGHT = bn::sprite_items::spr_door.shape_size().heig
 constexpr int WAIT_UPDATES = 15;
 
 constexpr bn::fixed_rect RELATIVE_INTERACT_RANGE =
-    helper::rect::MakeFixedRectByTopLeftAndSize({5 - SPRITE_WIDTH / 2, 4 - SPRITE_HEIGHT / 2}, {22, 24});
+    helper::rect::MakeFixedRectByTopLeftAndSize({2 - SPRITE_WIDTH / 2, 1 - SPRITE_HEIGHT / 2}, {28, 30});
 
-constexpr bn::fixed_point RELATIVE_NUMBER_TEXT_POS = {0, -20};
+constexpr bn::fixed_point RELATIVE_NUMBER_TEXT_POS = {0, -23};
+
+constexpr int OPENED_GRAPHICS_INDEX = 3;
+constexpr int CLOSED_GRAPHICS_INDEX = 0;
 
 } // namespace
 
@@ -29,7 +32,13 @@ Door::Door(bn::fixed_point position, bool isOpened, int textNumber)
     : IOpenableEntity(position, RELATIVE_INTERACT_RANGE, textNumber, RELATIVE_NUMBER_TEXT_POS, isOpened,
                       &bn::sprite_items::spr_door)
 {
-    // TODO: draw door graphic asset
+}
+
+void Door::AllocateGraphicResource(int z_order)
+{
+    IOpenableEntity::AllocateGraphicResource(z_order);
+    sprite_ = spriteItem_->create_sprite(position_, GetOpened() ? OPENED_GRAPHICS_INDEX : CLOSED_GRAPHICS_INDEX);
+    sprite_->set_z_order(z_order);
 }
 
 void Door::FreeGraphicResource()

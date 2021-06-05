@@ -64,6 +64,7 @@ Game::Game(game::Status& status)
     doorsOfZones_.resize(zoneCount);
     hoverButtonsOfZones_.resize(zoneCount);
     pressureButtonsOfZones_.resize(zoneCount);
+    shuttersOfZones_.resize(zoneCount);
 
     // Initialize player and camera
     const bn::fixed_point& playerPosition = stageInfo_.zoneInfos[0].entrances[0].position;
@@ -79,8 +80,9 @@ Game::Game(game::Status& status)
             symbolsOfZones_[i].emplace_front(symbolInfo.position, symbolInfo.symbolType);
         for (const auto& doorInfo : zoneInfo.doors)
             doorsOfZones_[i].emplace_back(doorInfo.position, doorInfo.isOpenedByDefault, doorInfo.textSpriteNumber);
-        // for (const auto& shutterInfo : zoneInfo.shutters)
-        //     shuttersOfZones_[i].emplace_back(...)
+        for (const auto& shutterInfo : zoneInfo.shutters)
+            shuttersOfZones_[i].emplace_back(shutterInfo.position, shutterInfo.isOpenedByDefault,
+                                             shutterInfo.textSpriteNumber);
         for (const auto& hoverButtonInfo : zoneInfo.hoverButtons)
             hoverButtonsOfZones_[i].emplace_back(hoverButtonInfo.position, hoverButtonInfo.textSpriteNumber,
                                                  hoverButtonInfo.isOnByDefault);
@@ -102,11 +104,11 @@ Game::Game(game::Status& status)
         door.AllocateGraphicResource(DOOR_Z_ORDER);
         door.SetCamera(camera_);
     }
-    // for (auto& shutter : shuttersOfZones_[currentZoneIdx_])
-    // {
-    //     shutter.AllocateGraphicResource();
-    //     shutter.SetCamera(camera_);
-    // }
+    for (auto& shutter : shuttersOfZones_[currentZoneIdx_])
+    {
+        shutter.AllocateGraphicResource(DOOR_Z_ORDER);
+        shutter.SetCamera(camera_);
+    }
     for (auto& hoverButton : hoverButtonsOfZones_[currentZoneIdx_])
     {
         hoverButton.AllocateGraphicResource(BUTTON_Z_ORDER);
