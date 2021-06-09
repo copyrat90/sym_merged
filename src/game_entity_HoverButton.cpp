@@ -52,14 +52,30 @@ void HoverButton::Update()
         action_->update();
 }
 
-void HoverButton::InitButtonOnAction()
+bool HoverButton::CanButtonBeToggled()
+{
+    return !action_ || action_->done();
+}
+
+bool HoverButton::ToggleButtonOn()
+{
+    const bool isButtonOnBefore = GetButtonOn();
+    IButtonEntity::ToggleButtonOn();
+    if (isButtonOnBefore)
+        InitButtonOffAction_();
+    else
+        InitButtonOnAction_();
+    return !isButtonOnBefore;
+}
+
+void HoverButton::InitButtonOnAction_()
 {
     BN_ASSERT(sprite_, "HoverButton action cannot be init without allocating graphics!");
     action_ = bn::create_sprite_animate_action_once(*sprite_, WAIT_UPDATES,
                                                     bn::sprite_items::spr_hover_button.tiles_item(), 2, 3);
 }
 
-void HoverButton::InitButtonOffAction()
+void HoverButton::InitButtonOffAction_()
 {
     BN_ASSERT(sprite_, "HoverButton action cannot be init without allocating graphics!");
     action_ = bn::create_sprite_animate_action_once(*sprite_, WAIT_UPDATES,

@@ -2,10 +2,10 @@
 
 #include "game_stage_Id.h"
 
-namespace sym::game
+namespace sym::scene
 {
 
-class Status
+class Param
 {
 public:
     void SetCurrentStage(game::stage::Id stage)
@@ -21,4 +21,4 @@ private:
     game::stage::Id currentStage_;
 };
 
-} // namespace sym::game
+} // namespace sym::scene

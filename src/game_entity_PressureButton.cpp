@@ -52,14 +52,30 @@ void PressureButton::Update()
         action_->update();
 }
 
-void PressureButton::InitButtonOnAction()
+bool PressureButton::CanButtonBeToggled()
+{
+    return !action_ || action_->done();
+}
+
+bool PressureButton::ToggleButtonOn()
+{
+    const bool isButtonOnBefore = GetButtonOn();
+    IButtonEntity::ToggleButtonOn();
+    if (isButtonOnBefore)
+        InitButtonOffAction_();
+    else
+        InitButtonOnAction_();
+    return !isButtonOnBefore;
+}
+
+void PressureButton::InitButtonOnAction_()
 {
     BN_ASSERT(sprite_, "PressureButton action cannot be init without allocating graphics!");
     action_ = bn::create_sprite_animate_action_once(*sprite_, WAIT_UPDATES,
                                                     bn::sprite_items::spr_pressure_button.tiles_item(), 1, 2);
 }
 
-void PressureButton::InitButtonOffAction()
+void PressureButton::InitButtonOffAction_()
 {
     BN_ASSERT(sprite_, "PressureButton action cannot be init without allocating graphics!");
     action_ = bn::create_sprite_animate_action_once(*sprite_, WAIT_UPDATES,

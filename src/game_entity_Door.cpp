@@ -28,8 +28,8 @@ constexpr int CLOSED_GRAPHICS_INDEX = 0;
 
 } // namespace
 
-Door::Door(bn::fixed_point position, bool isOpened, int textNumber)
-    : IOpenableEntity(position, RELATIVE_INTERACT_RANGE, textNumber, RELATIVE_NUMBER_TEXT_POS, isOpened,
+Door::Door(bn::fixed_point position, bool isOpenedByDefault, int textNumber)
+    : IOpenableEntity(position, RELATIVE_INTERACT_RANGE, textNumber, RELATIVE_NUMBER_TEXT_POS, isOpenedByDefault,
                       &bn::sprite_items::spr_door)
 {
 }
@@ -54,14 +54,25 @@ void Door::Update()
         action_->update();
 }
 
-void Door::InitDoorOpenAction()
+bool Door::ToggleOpened()
+{
+    const bool isOpenedBefore = GetOpened();
+    IOpenableEntity::ToggleOpened();
+    if (isOpenedBefore)
+        InitDoorCloseAction_();
+    else
+        InitDoorOpenAction_();
+    return !isOpenedBefore;
+}
+
+void Door::InitDoorOpenAction_()
 {
     BN_ASSERT(sprite_, "Door action cannot be init without allocating graphics!");
     action_ = bn::create_sprite_animate_action_once(*sprite_, WAIT_UPDATES, bn::sprite_items::spr_door.tiles_item(), 0,
                                                     1, 2, 3);
 }
 
-void Door::InitDoorCloseAction()
+void Door::InitDoorCloseAction_()
 {
     BN_ASSERT(sprite_, "Door action cannot be init without allocating graphics!");
     action_ = bn::create_sprite_animate_action_once(*sprite_, WAIT_UPDATES, bn::sprite_items::spr_door.tiles_item(), 3,

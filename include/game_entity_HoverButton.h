@@ -24,11 +24,21 @@ public:
 
     void Update() final;
 
-    void InitButtonOnAction();
-    void InitButtonOffAction();
+    [[nodiscard]] bool CanButtonBeToggled() final;
+    /**
+     * @brief Toggles button (and also animates it)
+     *
+     * `CanButtonBeToggled()` needs to be checked first before using this function.
+     *
+     * @return `true` if button is on
+     */
+    [[maybe_unused]] bool ToggleButtonOn() final;
 
 private:
     bn::optional<bn::sprite_animate_action<2>> action_;
+
+    void InitButtonOnAction_();
+    void InitButtonOffAction_();
 };
 
 } // namespace sym::game::entity

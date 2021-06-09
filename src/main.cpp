@@ -20,10 +20,9 @@
 #include "global.h"
 
 #include "scene_Game.h"
+#include "scene_Param.h"
 #include "scene_Splash.h"
 #include "scene_Title.h"
-
-#include "game_Status.h"
 
 using namespace sym;
 
@@ -33,10 +32,10 @@ int main()
     sym::global::setting::Init();
     bn::bg_palettes::set_transparent_color(constant::TRANSPARENT_BG_COLOR);
 
-    game::Status status;
+    scene::Param sceneParam;
     // Test
     // bn::unique_ptr<scene::IScene> scene(new scene::Splash);
-    bn::unique_ptr<scene::IScene> scene(new scene::Game(status));
+    bn::unique_ptr<scene::IScene> scene(new scene::Game(sceneParam));
     bn::optional<scene::Type> nextScene;
 
 #ifndef NDEBUG
@@ -104,11 +103,11 @@ int main()
             {
             case scene::Type::SPLASH:
                 scene.reset();
-                scene.reset(new scene::Splash);
+                scene.reset(new scene::Splash(sceneParam));
                 break;
             case scene::Type::TITLE:
                 scene.reset();
-                scene.reset(new scene::Title);
+                scene.reset(new scene::Title(sceneParam));
                 break;
             // TODO: Add other scenes
             // case SceneType::GAME:

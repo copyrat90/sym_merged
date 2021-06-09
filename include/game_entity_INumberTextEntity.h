@@ -24,7 +24,7 @@ public:
 
     void SetCamera(const bn::camera_ptr& camera);
 
-private:
+protected:
     bn::optional<bn::sprite_ptr> numberSprite_;
     int textNumber_;
     bn::fixed_point relativeNumberTextPosition_;

@@ -16,7 +16,7 @@ public:
      *
      * @param textNumber number which is shown above the door.
      */
-    Door(bn::fixed_point position, bool isOpened, int textNumber);
+    Door(bn::fixed_point position, bool isOpenedByDefault, int textNumber);
 
     Door(Door&& other) = delete;
     Door& operator=(Door&& other) = delete;
@@ -29,11 +29,18 @@ public:
 
     void Update() final;
 
-    void InitDoorOpenAction();
-    void InitDoorCloseAction();
+    /**
+     * @brief Toggle opened (also animates door)
+     *
+     * @return `true` if the door is opened
+     */
+    [[maybe_unused]] bool ToggleOpened() final;
 
 private:
     bn::optional<bn::sprite_animate_action<4>> action_;
+
+    void InitDoorOpenAction_();
+    void InitDoorCloseAction_();
 };
 
 } // namespace sym::game::entity

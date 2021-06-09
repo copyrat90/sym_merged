@@ -14,7 +14,7 @@ namespace sym::scene
 class Splash final : public IScene
 {
 public:
-    Splash();
+    Splash(scene::Param& sceneParam);
     ~Splash();
     [[nodiscard]] bn::optional<Type> Update() final;
 

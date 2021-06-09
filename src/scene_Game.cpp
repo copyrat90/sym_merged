@@ -43,85 +43,100 @@ constexpr int BUTTON_Z_ORDER = 5;
 
 using namespace effect;
 
-Game::Game(game::Status& status)
-    : status_(status), stageInfo_(GetStageInfo(status.GetCurrentStage())),
-      fadeIn_(Transition::Types::FADE | Transition::Types::BG_MOSAIC | effect::Transition::Types::SPRITE_MOSAIC,
-              Transition::Direction::IN, FADE_IN_UPDATE_COUNT),
-      fadeOut_(Transition::Types::FADE | Transition::Types::BG_MOSAIC | effect::Transition::Types::SPRITE_MOSAIC,
-               Transition::Direction::OUT, FADE_OUT_UPDATE_COUNT),
-      currentMapBg_(stageInfo_.zoneInfos[0].mapBg.create_bg({0, 0})), camera_(bn::camera_ptr::create(0, 0)),
-      player_({0, 0})
+Game::Game(scene::Param& sceneParam)
+    : IScene(sceneParam),
+      state_{
+          sceneParam,
+          GetStageInfo(sceneParam.GetCurrentStage()),
+          {Transition::Types::FADE | Transition::Types::BG_MOSAIC | effect::Transition::Types::SPRITE_MOSAIC,
+           Transition::Direction::IN, FADE_IN_UPDATE_COUNT},
+          {Transition::Types::FADE | Transition::Types::BG_MOSAIC | effect::Transition::Types::SPRITE_MOSAIC,
+           Transition::Direction::OUT, FADE_OUT_UPDATE_COUNT},
+          0,
+          state_.stageInfo.zoneInfos[0].mapBg.create_bg({0, 0}),
+          bn::camera_ptr::create(0, 0),
+          helper::tilemap::ConvertIndexRectToPositionRect(
+              state_.stageInfo.zoneInfos[state_.currentZoneIdx].zoneBoundary),
+          bn::fixed_point{0, 0},
+          {},
+          {},
+          {},
+          {},
+          {},
+          {},
+          true,
+      },
+      playerMovement_(state_), buttonInteraction_(state_)
 
 {
-    currentZoneIdx_ = 0;
-    currentMapBg_.set_wrapping_enabled(false);
-    currentMapBg_.set_camera(camera_);
-    zoneBoundary_ = helper::tilemap::ConvertIndexRectToPositionRect(stageInfo_.zoneInfos[currentZoneIdx_].zoneBoundary);
+    state_.currentMapBg.set_wrapping_enabled(false);
+    state_.currentMapBg.set_camera(state_.camera);
 
     // Resize vectors according to zone count
-    const int zoneCount = stageInfo_.zoneInfos.size();
-    symbolsOfZones_.resize(zoneCount);
-    doorsOfZones_.resize(zoneCount);
-    hoverButtonsOfZones_.resize(zoneCount);
-    pressureButtonsOfZones_.resize(zoneCount);
-    shuttersOfZones_.resize(zoneCount);
+    const int zoneCount = state_.stageInfo.zoneInfos.size();
+    state_.symbolsOfZones.resize(zoneCount);
+    state_.doorsOfZones.resize(zoneCount);
+    state_.hoverButtonsOfZones.resize(zoneCount);
+    state_.pressureButtonsOfZones.resize(zoneCount);
+    state_.shuttersOfZones.resize(zoneCount);
 
     // Initialize player and camera
-    const bn::fixed_point& playerPosition = stageInfo_.zoneInfos[0].entrances[0].position;
-    player_.SetPosition(playerPosition);
-    camera_.set_position(playerPosition);
+    const bn::fixed_point& playerPosition = state_.stageInfo.zoneInfos[0].entrances[0].position;
+    state_.player.SetPosition(playerPosition);
+    state_.camera.set_position(playerPosition);
 
     // Load and initialize Entities in zones using ZoneInfo
     for (int i = 0; i < zoneCount; ++i)
     {
-        const auto& zoneInfo = stageInfo_.zoneInfos[i];
+        const auto& zoneInfo = state_.stageInfo.zoneInfos[i];
 
         for (const auto& symbolInfo : zoneInfo.symbols)
-            symbolsOfZones_[i].emplace_front(symbolInfo.position, symbolInfo.symbolType);
+            state_.symbolsOfZones[i].emplace_front(symbolInfo.position, symbolInfo.symbolType);
         for (const auto& doorInfo : zoneInfo.doors)
-            doorsOfZones_[i].emplace_back(doorInfo.position, doorInfo.isOpenedByDefault, doorInfo.textSpriteNumber);
+            state_.doorsOfZones[i].emplace_back(doorInfo.position, doorInfo.isOpenedByDefault,
+                                                doorInfo.textSpriteNumber);
         for (const auto& shutterInfo : zoneInfo.shutters)
-            shuttersOfZones_[i].emplace_back(shutterInfo.position, shutterInfo.isOpenedByDefault,
-                                             shutterInfo.textSpriteNumber);
+            state_.shuttersOfZones[i].emplace_back(shutterInfo.position, shutterInfo.isOpenedByDefault,
+                                                   shutterInfo.textSpriteNumber);
         for (const auto& hoverButtonInfo : zoneInfo.hoverButtons)
-            hoverButtonsOfZones_[i].emplace_back(hoverButtonInfo.position, hoverButtonInfo.textSpriteNumber,
-                                                 hoverButtonInfo.isOnByDefault);
+            state_.hoverButtonsOfZones[i].emplace_back(hoverButtonInfo.position, hoverButtonInfo.textSpriteNumber,
+                                                       hoverButtonInfo.isOnByDefault);
         for (const auto& pressureButtonInfo : zoneInfo.pressureButtons)
-            pressureButtonsOfZones_[i].emplace_back(pressureButtonInfo.position, pressureButtonInfo.textSpriteNumber,
-                                                    pressureButtonInfo.isOnByDefault);
+            state_.pressureButtonsOfZones[i].emplace_back(
+                pressureButtonInfo.position, pressureButtonInfo.textSpriteNumber, pressureButtonInfo.isOnByDefault);
     }
 
     // Allocate all graphics within current zone
-    player_.AllocateGraphicResource(PLAYER_Z_ORDER);
-    player_.SetCamera(camera_);
-    for (auto& symbol : symbolsOfZones_[currentZoneIdx_])
+    state_.player.AllocateGraphicResource(PLAYER_Z_ORDER);
+    state_.player.SetCamera(state_.camera);
+    for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
     {
         symbol.AllocateGraphicResource(SYMBOL_Z_ORDER);
-        symbol.SetCamera(camera_);
+        symbol.SetCamera(state_.camera);
     }
-    for (auto& door : doorsOfZones_[currentZoneIdx_])
+    for (auto& door : state_.doorsOfZones[state_.currentZoneIdx])
     {
         door.AllocateGraphicResource(DOOR_Z_ORDER);
-        door.SetCamera(camera_);
+        door.SetCamera(state_.camera);
     }
-    for (auto& shutter : shuttersOfZones_[currentZoneIdx_])
+    for (auto& shutter : state_.shuttersOfZones[state_.currentZoneIdx])
     {
         shutter.AllocateGraphicResource(DOOR_Z_ORDER);
-        shutter.SetCamera(camera_);
+        shutter.SetCamera(state_.camera);
     }
-    for (auto& hoverButton : hoverButtonsOfZones_[currentZoneIdx_])
+    for (auto& hoverButton : state_.hoverButtonsOfZones[state_.currentZoneIdx])
     {
         hoverButton.AllocateGraphicResource(BUTTON_Z_ORDER);
-        hoverButton.SetCamera(camera_);
+        hoverButton.SetCamera(state_.camera);
     }
-    for (auto& pressureButton : pressureButtonsOfZones_[currentZoneIdx_])
+    for (auto& pressureButton : state_.pressureButtonsOfZones[state_.currentZoneIdx])
     {
         pressureButton.AllocateGraphicResource(BUTTON_Z_ORDER);
-        pressureButton.SetCamera(camera_);
+        pressureButton.SetCamera(state_.camera);
     }
 
     // Initialize Idle action
-    player_.InitIdleAction();
+    state_.player.InitIdleAction();
 }
 
 Game::~Game()
@@ -132,47 +147,35 @@ Game::~Game()
 bn::optional<Type> Game::Update()
 {
     // TODO
-
-    // Move player
-    if (bn::keypad::up_held())
-    {
-        player_.SetY(player_.GetY() - 3);
-    }
-    else if (bn::keypad::down_held())
-    {
-        player_.SetY(player_.GetY() + 3);
-    }
-    if (bn::keypad::left_held())
-    {
-        player_.SetX(player_.GetX() - 3);
-    }
-    else if (bn::keypad::right_held())
-    {
-        player_.SetX(player_.GetX() + 3);
-    }
+    playerMovement_.Update();
+    buttonInteraction_.Update();
 
     // Update sprite graphics
-    player_.Update();
-    for (auto& symbol : symbolsOfZones_[currentZoneIdx_])
+    state_.player.Update();
+    for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
         symbol.Update();
-    for (auto& door : doorsOfZones_[currentZoneIdx_])
+    for (auto& door : state_.doorsOfZones[state_.currentZoneIdx])
         door.Update();
-    // for (auto& shutter : shuttersOfZones_[currentZoneIdx_])
-    //     shutter.Update();
+    for (auto& shutter : state_.shuttersOfZones[state_.currentZoneIdx])
+        shutter.Update();
+    for (auto& hoverButton : state_.hoverButtonsOfZones[state_.currentZoneIdx])
+        hoverButton.Update();
+    for (auto& pressureButton : state_.pressureButtonsOfZones[state_.currentZoneIdx])
+        pressureButton.Update();
 
     // Move camera (follows player)
-    camera_.set_position(player_.GetPosition());
-    helper::tilemap::SnapCameraToZoneBoundary(camera_, zoneBoundary_);
+    state_.camera.set_position(state_.player.GetPosition());
+    helper::tilemap::SnapCameraToZoneBoundary(state_.camera, state_.zoneBoundary);
 
     return bn::nullopt;
 }
 
 void Game::SetCurrentZone_(int zoneIdx)
 {
-    BN_ASSERT(0 <= zoneIdx && zoneIdx < stageInfo_.zoneInfos.size(), "Zone index out of range!");
+    BN_ASSERT(0 <= zoneIdx && zoneIdx < state_.stageInfo.zoneInfos.size(), "Zone index out of range!");
 
-    currentMapBg_ = stageInfo_.zoneInfos[zoneIdx].mapBg.create_bg({0, 0});
-    currentMapBg_.set_wrapping_enabled(false);
+    state_.currentMapBg = state_.stageInfo.zoneInfos[zoneIdx].mapBg.create_bg({0, 0});
+    state_.currentMapBg.set_wrapping_enabled(false);
 }
 
 } // namespace sym::scene

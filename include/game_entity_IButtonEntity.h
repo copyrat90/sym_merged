@@ -20,8 +20,16 @@ public:
     IButtonEntity(const IButtonEntity& other) = delete;
     IButtonEntity& operator=(const IButtonEntity& other) = delete;
 
-    bool GetButtonOn() const;
-    void SetButtonOn(bool isButtonOn);
+    [[nodiscard]] bool GetButtonOn() const;
+    // void SetButtonOn(bool isButtonOn);
+    [[nodiscard]] virtual bool CanButtonBeToggled() = 0;
+    /**
+     * @brief `CanButtonBeToggled()` needs to be checked first before using this function.
+     * `IButtonEntity::ToggleButtonOn()` must be called somewhere in the Button implementation.
+     *
+     * @return `true` if button is on
+     */
+    [[maybe_unused]] virtual bool ToggleButtonOn() = 0;
 
 private:
     bool isButtonOn_;

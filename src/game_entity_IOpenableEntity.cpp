@@ -6,23 +6,21 @@ namespace sym::game::entity
 IOpenableEntity::~IOpenableEntity() = default;
 
 IOpenableEntity::IOpenableEntity(bn::fixed_point position, bn::fixed_rect relativeInteractRange, int textNumber,
-                                 bn::fixed_point relativeNumberTextPosition, bool isOpened,
+                                 bn::fixed_point relativeNumberTextPosition, bool isOpenedByDefault,
                                  const bn::sprite_item* spriteItem)
     : INumberTextEntity(position, relativeInteractRange, textNumber, relativeNumberTextPosition, spriteItem),
-      isOpened_(isOpened)
+      isOpenedByDefault_(isOpenedByDefault), isOpened_(isOpenedByDefault)
 {
 }
 
-IOpenableEntity::IOpenableEntity(IOpenableEntity&& other)
-    : INumberTextEntity(bn::move(other)), isOpened_(other.isOpened_)
+void IOpenableEntity::AllocateGraphicResource(int z_order)
 {
-}
-
-IOpenableEntity& IOpenableEntity::operator=(IOpenableEntity&& other)
-{
-    INumberTextEntity::operator=(bn::move(other));
-    isOpened_ = other.isOpened_;
-    return *this;
+    INumberTextEntity::AllocateGraphicResource(z_order);
+    if (isOpenedByDefault_)
+    {
+        numberSprite_->set_horizontal_flip(true);
+        numberSprite_->set_vertical_flip(true);
+    }
 }
 
 bool IOpenableEntity::GetOpened() const
@@ -30,10 +28,10 @@ bool IOpenableEntity::GetOpened() const
     return isOpened_;
 }
 
-void IOpenableEntity::SetOpened(bool isOpened)
-{
-    isOpened_ = isOpened;
-}
+// void IOpenableEntity::SetOpened(bool isOpened)
+// {
+//     isOpened_ = isOpened;
+// }
 
 bool IOpenableEntity::ToggleOpened()
 {

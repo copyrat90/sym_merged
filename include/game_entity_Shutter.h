@@ -16,7 +16,7 @@ public:
      *
      * @param textNumber number which is shown above the Shutter.
      */
-    Shutter(bn::fixed_point position, bool isOpened, int textNumber);
+    Shutter(bn::fixed_point position, bool isOpenedByDefault, int textNumber);
 
     Shutter(Shutter&& other) = delete;
     Shutter& operator=(Shutter&& other) = delete;
@@ -29,11 +29,18 @@ public:
 
     void Update() final;
 
-    void InitShutterOpenAction();
-    void InitShutterCloseAction();
+    /**
+     * @brief Toggle opened (also animates shutter)
+     *
+     * @return `true` if the shutter is opened
+     */
+    [[maybe_unused]] bool ToggleOpened() final;
 
 private:
     bn::optional<bn::sprite_animate_action<4>> action_;
+
+    void InitShutterOpenAction_();
+    void InitShutterCloseAction_();
 };
 
 } // namespace sym::game::entity

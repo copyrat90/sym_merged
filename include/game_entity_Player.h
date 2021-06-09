@@ -2,7 +2,6 @@
 
 #include "game_entity_IGravityEntity.h"
 
-#include <bn_any.h>
 #include <bn_sprite_animate_actions.h>
 
 namespace sym::game::entity
@@ -30,15 +29,15 @@ public:
     void InitMergeStartAction();
     void InitMergeEndAction();
 
+    [[nodiscard]] bn::fixed_rect GetLeftSymbolPickupRange() const;
+    [[nodiscard]] bn::fixed_rect GetRightSymbolPickupRange() const;
+    [[nodiscard]] bn::fixed_rect GetLeftButtonInteractRange() const;
+    [[nodiscard]] bn::fixed_rect GetRightButtonInteractRange() const;
+    [[nodiscard]] bn::fixed_point GetLeftSymbolPosition() const;
+    [[nodiscard]] bn::fixed_point GetRightSymbolPosition() const;
+    [[nodiscard]] bn::fixed_point GetMergeSymbolPosition() const;
+
 private:
-    static constexpr bn::fixed_rect RELATIVE_INTERACT_RANGE = {{0, 0}, {32, 32}};
-    static constexpr bn::fixed_rect RELATIVE_PHYSICS_COLLIDER = {{0, 0}, {26, 26}};
-    static constexpr bool IS_GRAVITY_ENABLED_BY_DEFAULT = true;
-    static constexpr bn::fixed GRAVITY_SCALE = 1;
-
-    static constexpr int IDLE_ACTION_WAIT_UPDATE = 30;
-    static constexpr int OTHER_ACTIONS_WAIT_UPDATE = 10;
-
     bn::optional<bn::sprite_animate_action<2>> action2_;
     bn::optional<bn::sprite_animate_action<3>> action3_;
     /**
@@ -49,6 +48,12 @@ private:
      */
     int additionalWaitUpdateCount = -1;
 
+    /**
+     * @brief Updates action.
+     *
+     * @return `true` if action is done, otherwise `false`
+     */
+    bool UpdateAction_();
     void DestroyActions_();
 };
 

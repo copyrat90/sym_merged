@@ -12,8 +12,9 @@
 namespace sym::scene
 {
 
-Splash::Splash()
-    : bgs_{bn::regular_bg_items::bg_splash1.create_bg(0, 0), bn::regular_bg_items::bg_splash2.create_bg(0, 0)},
+Splash::Splash(scene::Param& sceneParam)
+    : IScene(sceneParam), bgs_{bn::regular_bg_items::bg_splash1.create_bg(0, 0),
+                               bn::regular_bg_items::bg_splash2.create_bg(0, 0)},
       fadeIn_(effect::Transition::Types::TRANSPARENCY, effect::Transition::Direction::IN, FADE_IN_UPDATE_COUNT),
       fadeOut_(effect::Transition::Types::TRANSPARENCY, effect::Transition::Direction::OUT, FADE_OUT_UPDATE_COUNT)
 {

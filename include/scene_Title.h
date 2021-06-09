@@ -20,7 +20,7 @@ namespace sym::scene
 class Title final : public IScene
 {
 public:
-    Title();
+    Title(scene::Param& sceneParam);
     ~Title();
     [[nodiscard]] bn::optional<Type> Update() final;
 

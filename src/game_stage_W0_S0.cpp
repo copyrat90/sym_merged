@@ -25,19 +25,28 @@ constexpr ZoneInfo::SymbolInfo Z0_symbolInfos_[] = {
 };
 
 constexpr ZoneInfo::DoorInfo Z0_doorInfos_[] = {
-    {{115 - MAP_DIMENSIONS[0].width() / 2, 857 - MAP_DIMENSIONS[0].height() / 2}, false, -1, -1, 1},
+    {{87 - MAP_DIMENSIONS[0].width() / 2, 849 - MAP_DIMENSIONS[0].height() / 2}, false, -1, -1, 1},
+    {{55 - MAP_DIMENSIONS[0].width() / 2, 849 - MAP_DIMENSIONS[0].height() / 2}, true, -1, -1, 1},
+    {{87 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}, false, -1, -1, 2},
+    {{55 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}, true, -1, -1, 2},
 };
 
 constexpr ZoneInfo::ShutterInfo Z0_shutterInfos_[] = {
-    {{256 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}, false, 2},
+    {{256 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}, false, 0},
+    {{135 - MAP_DIMENSIONS[0].width() / 2, 849 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
+    {{119 - MAP_DIMENSIONS[0].width() / 2, 849 - MAP_DIMENSIONS[0].height() / 2}, true, 1},
+    {{135 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}, false, 2},
+    {{119 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}, true, 2},
 };
 
 constexpr ZoneInfo::ButtonInfo Z0_hoverButtonInfos_[] = {
-    {{92 - MAP_DIMENSIONS[0].width() / 2, 962 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
+    {{92 - MAP_DIMENSIONS[0].width() / 2, 962 - MAP_DIMENSIONS[0].height() / 2}, false, 0},
+    {{167 - MAP_DIMENSIONS[0].width() / 2, 849 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
+    {{167 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}, false, 2},
 };
 
 constexpr ZoneInfo::ButtonInfo Z0_pressureButtonInfos_[] = {
-    {{136 - MAP_DIMENSIONS[0].width() / 2, 984 - MAP_DIMENSIONS[0].height() / 2}, false, 2},
+    {{136 - MAP_DIMENSIONS[0].width() / 2, 984 - MAP_DIMENSIONS[0].height() / 2}, false, 3},
 };
 
 constexpr ZoneInfo::EntranceInfo Z0_entranceInfos_[] = {

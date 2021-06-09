@@ -1,5 +1,7 @@
 #include "game_entity_IButtonEntity.h"
 
+#include <bn_assert.h>
+
 namespace sym::game::entity
 {
 
@@ -30,9 +32,15 @@ bool IButtonEntity::GetButtonOn() const
     return isButtonOn_;
 }
 
-void IButtonEntity::SetButtonOn(bool isButtonOn)
+// void IButtonEntity::SetButtonOn(bool isButtonOn)
+// {
+//     isButtonOn_ = isButtonOn;
+// }
+
+bool IButtonEntity::ToggleButtonOn()
 {
-    isButtonOn_ = isButtonOn;
+    BN_ASSERT(CanButtonBeToggled(), "Button can't be toggled when action is not done");
+    return isButtonOn_ = !isButtonOn_;
 }
 
 } // namespace sym::game::entity

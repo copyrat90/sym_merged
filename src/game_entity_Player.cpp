@@ -4,9 +4,38 @@
 #include <bn_sprite_animate_actions.h>
 
 #include "bn_sprite_items_spr_ingame_protagonist_star.h"
+#include "helper_rect.h"
 
 namespace sym::game::entity
 {
+
+namespace
+{
+
+constexpr int SPRITE_WIDTH = bn::sprite_items::spr_ingame_protagonist_star.shape_size().width();
+constexpr int SPRITE_HEIGHT = bn::sprite_items::spr_ingame_protagonist_star.shape_size().height();
+
+constexpr bn::fixed_rect RELATIVE_INTERACT_RANGE = {{0, 0}, {32, 32}};
+constexpr bn::fixed_rect RELATIVE_LEFT_SYMBOL_PICKUP_RANGE =
+    helper::rect::MakeFixedRectByTopLeftAndSize({0 - SPRITE_WIDTH / 2, 0 - SPRITE_HEIGHT / 2}, {23, 32});
+constexpr bn::fixed_rect RELATIVE_RIGHT_SYMBOL_PICKUP_RANGE =
+    helper::rect::MakeFixedRectByTopLeftAndSize({9 - SPRITE_WIDTH / 2, 0 - SPRITE_HEIGHT / 2}, {23, 32});
+constexpr bn::fixed_rect RELATIVE_LEFT_BUTTON_INTERACT_RANGE =
+    helper::rect::MakeFixedRectByTopLeftAndSize({2 - SPRITE_WIDTH / 2, 9 - SPRITE_HEIGHT / 2}, {9, 11});
+constexpr bn::fixed_rect RELATIVE_RIGHT_BUTTON_INTERACT_RANGE =
+    helper::rect::MakeFixedRectByTopLeftAndSize({21 - SPRITE_WIDTH / 2, 9 - SPRITE_HEIGHT / 2}, {9, 11});
+constexpr bn::fixed_point RELATIVE_LEFT_SYMBOL_POS = {-12, 2.5};
+constexpr bn::fixed_point RELATIVE_RIGHT_SYMBOL_POS = {12, 2.5};
+constexpr bn::fixed_point RELATIVE_MERGE_SYMBOL_POS = {0, -21};
+
+constexpr bn::fixed_rect RELATIVE_PHYSICS_COLLIDER = {{0, 0}, {26, 26}};
+constexpr bool IS_GRAVITY_ENABLED_BY_DEFAULT = true;
+constexpr bn::fixed GRAVITY_SCALE = 1;
+
+constexpr int IDLE_ACTION_WAIT_UPDATE = 30;
+constexpr int OTHER_ACTIONS_WAIT_UPDATE = 10;
+
+} // namespace
 
 Player::Player(bn::fixed_point position)
     : IGravityEntity(position, RELATIVE_INTERACT_RANGE, RELATIVE_PHYSICS_COLLIDER, IS_GRAVITY_ENABLED_BY_DEFAULT,
@@ -24,23 +53,7 @@ void Player::Update()
 {
     IGravityEntity::Update();
 
-    bool isActionDone = true;
-    if (action2_)
-    {
-        if (!action2_->done())
-        {
-            action2_->update();
-            isActionDone = false;
-        }
-    }
-    else if (action3_)
-    {
-        if (!action3_->done())
-        {
-            action3_->update();
-            isActionDone = false;
-        }
-    }
+    bool isActionDone = UpdateAction_();
 
     if (isActionDone && additionalWaitUpdateCount >= 0)
     {
@@ -99,6 +112,67 @@ void Player::InitMergeEndAction()
     action3_ = bn::create_sprite_animate_action_once(
         *sprite_, IDLE_ACTION_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 10, 9, 0);
     additionalWaitUpdateCount = OTHER_ACTIONS_WAIT_UPDATE;
+}
+
+bn::fixed_rect Player::GetLeftSymbolPickupRange() const
+{
+    using helper::rect::operator+;
+    return position_ + RELATIVE_LEFT_SYMBOL_PICKUP_RANGE;
+}
+
+bn::fixed_rect Player::GetRightSymbolPickupRange() const
+{
+    using helper::rect::operator+;
+    return position_ + RELATIVE_RIGHT_SYMBOL_PICKUP_RANGE;
+}
+
+bn::fixed_rect Player::GetLeftButtonInteractRange() const
+{
+    using helper::rect::operator+;
+    return position_ + RELATIVE_LEFT_BUTTON_INTERACT_RANGE;
+}
+
+bn::fixed_rect Player::GetRightButtonInteractRange() const
+{
+    using helper::rect::operator+;
+    return position_ + RELATIVE_RIGHT_BUTTON_INTERACT_RANGE;
+}
+
+bn::fixed_point Player::GetLeftSymbolPosition() const
+{
+    return position_ + RELATIVE_LEFT_SYMBOL_POS;
+}
+
+bn::fixed_point Player::GetRightSymbolPosition() const
+{
+    return position_ + RELATIVE_RIGHT_SYMBOL_POS;
+}
+
+bn::fixed_point Player::GetMergeSymbolPosition() const
+{
+    return position_ + RELATIVE_MERGE_SYMBOL_POS;
+}
+
+bool Player::UpdateAction_()
+{
+    bool isActionDone = true;
+    if (action2_)
+    {
+        if (!action2_->done())
+        {
+            action2_->update();
+            isActionDone = false;
+        }
+    }
+    else if (action3_)
+    {
+        if (!action3_->done())
+        {
+            action3_->update();
+            isActionDone = false;
+        }
+    }
+    return isActionDone;
 }
 
 void Player::DestroyActions_()

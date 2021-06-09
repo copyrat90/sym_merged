@@ -16,9 +16,9 @@
 namespace sym::scene
 {
 
-Title::Title()
-    : cursor_{bn::sprite_items::spr_cursor_star.create_sprite(0, 0),
-              bn::sprite_items::spr_cursor_star.create_sprite(0, 0)},
+Title::Title(scene::Param& sceneParam)
+    : IScene(sceneParam), cursor_{bn::sprite_items::spr_cursor_star.create_sprite(0, 0),
+                                  bn::sprite_items::spr_cursor_star.create_sprite(0, 0)},
       bg_(bn::regular_bg_items::bg_title.create_bg(0, 0)),
       fadeIn_(effect::Transition::Types::FADE | effect::Transition::Types::SPRITE_MOSAIC |
                   effect::Transition::Types::BG_MOSAIC,
