@@ -63,6 +63,11 @@ public:
     void SetX(bn::fixed x);
     void SetY(bn::fixed y);
 
+    void SetHorizontalFlip(bool flip);
+    bool GetHorizontalFlip() const;
+    void SetVerticalFlip(bool flip);
+    bool GetVerticalFlip() const;
+
 protected:
     bn::fixed_point position_;
     bn::fixed_rect relativeInteractRange_;

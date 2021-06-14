@@ -1,7 +1,6 @@
 #include "game_system_ButtonInteraction.h"
 
 #include <bn_fixed_rect.h>
-#include <bn_keypad.h>
 
 #include "bn_sound_items.h"
 
@@ -14,8 +13,6 @@ ButtonInteraction::ButtonInteraction(scene::GameState& state) : ISystem(state)
 
 void ButtonInteraction::Update()
 {
-    UpdateKeyLastingCount_();
-
     HoverButtonPlayerInteract_();
     HoverButtonThrownSymbolInteract_();
 }
@@ -69,36 +66,24 @@ void ButtonInteraction::HoverButtonThrownSymbolInteract_()
     // TODO
 }
 
-void ButtonInteraction::UpdateKeyLastingCount_()
-{
-    if (lKeyLastingCount >= 0)
-        --lKeyLastingCount;
-    if (rKeyLastingCount >= 0)
-        --rKeyLastingCount;
-    if (bn::keypad::l_pressed())
-        lKeyLastingCount = KEYPRESS_LASTING_UPDATE_COUNT;
-    if (bn::keypad::r_pressed())
-        rKeyLastingCount = KEYPRESS_LASTING_UPDATE_COUNT;
-}
-
 bool ButtonInteraction::IsLKeyPressLasts_() const
 {
-    return lKeyLastingCount >= 0;
+    return state_.lKeyLastingCount >= 0;
 }
 
 bool ButtonInteraction::IsRKeyPressLasts_() const
 {
-    return rKeyLastingCount >= 0;
+    return state_.rKeyLastingCount >= 0;
 }
 
 void ButtonInteraction::ResetLKeyPress_()
 {
-    lKeyLastingCount = -1;
+    state_.lKeyLastingCount = -1;
 }
 
 void ButtonInteraction::ResetRKeyPress_()
 {
-    rKeyLastingCount = -1;
+    state_.rKeyLastingCount = -1;
 }
 
 void ButtonInteraction::ToggleOpenedHoverButtonAssociatedOpenables_(int hoverButtonIdx)

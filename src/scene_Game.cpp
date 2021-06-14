@@ -65,8 +65,13 @@ Game::Game(scene::Param& sceneParam)
           {},
           {},
           true,
+          helper::tilemap::TileInfo(state_.currentMapBg),
+          -1,
+          -1,
+          -1,
+          -1,
       },
-      playerMovement_(state_), buttonInteraction_(state_)
+      keyPress_(state_), buttonInteraction_(state_), physicsMovement_(state_)
 
 {
     state_.currentMapBg.set_wrapping_enabled(false);
@@ -147,8 +152,11 @@ Game::~Game()
 bn::optional<Type> Game::Update()
 {
     // TODO
-    playerMovement_.Update();
+    keyPress_.Update();
     buttonInteraction_.Update();
+    // symbolInteraction_.Update();
+
+    physicsMovement_.Update();
 
     // Update sprite graphics
     state_.player.Update();

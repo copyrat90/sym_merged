@@ -20,7 +20,7 @@ constexpr bn::size MAP_DIMENSIONS[] = {
 };
 
 constexpr ZoneInfo::SymbolInfo Z0_symbolInfos_[] = {
-    {{186 - MAP_DIMENSIONS[0].width() / 2, 954 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::BAR},
+    {{227 - MAP_DIMENSIONS[0].width() / 2, 927 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::BAR},
     {{254 - MAP_DIMENSIONS[0].width() / 2, 927 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::XOR},
 };
 
@@ -50,7 +50,7 @@ constexpr ZoneInfo::ButtonInfo Z0_pressureButtonInfos_[] = {
 };
 
 constexpr ZoneInfo::EntranceInfo Z0_entranceInfos_[] = {
-    {{57 - MAP_DIMENSIONS[0].width() / 2, 980 - MAP_DIMENSIONS[0].height() / 2}},
+    {{57 - MAP_DIMENSIONS[0].width() / 2, 950 - MAP_DIMENSIONS[0].height() / 2}},
 };
 
 constexpr ZoneInfo zoneInfos_[] = {

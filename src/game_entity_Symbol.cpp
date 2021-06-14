@@ -59,7 +59,7 @@ bn::fixed_rect GenerateColliderFromSymbolType_(Symbol::Type symbolType, const bn
 } // namespace
 
 Symbol::Symbol(bn::fixed_point position, Symbol::Type type)
-    : IGravityEntity(position, RELATIVE_INTERACT_RANGE,
+    : IPhysicsEntity(position, RELATIVE_INTERACT_RANGE,
                      GenerateColliderFromSymbolType_(type, IsComplexSymbol_(type)
                                                                ? bn::sprite_items::spr_complex_symbols.shape_size()
                                                                : bn::sprite_items::spr_basic_symbols.shape_size()),
@@ -70,13 +70,13 @@ Symbol::Symbol(bn::fixed_point position, Symbol::Type type)
 {
 }
 
-Symbol::Symbol(Symbol&& other) : IGravityEntity(bn::move(other)), type_(other.type_)
+Symbol::Symbol(Symbol&& other) : IPhysicsEntity(bn::move(other)), type_(other.type_)
 {
 }
 
 Symbol& Symbol::operator=(Symbol&& other)
 {
-    IGravityEntity::operator=(bn::move(other));
+    IPhysicsEntity::operator=(bn::move(other));
     type_ = other.type_;
     return *this;
 }

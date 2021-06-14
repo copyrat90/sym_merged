@@ -1,13 +1,13 @@
 #pragma once
 
-#include "game_entity_IGravityEntity.h"
+#include "game_entity_IPhysicsEntity.h"
 
 #include <bn_sprite_animate_actions.h>
 
 namespace sym::game::entity
 {
 
-class Player final : public IGravityEntity
+class Player final : public IPhysicsEntity
 {
 public:
     Player(bn::fixed_point position);
@@ -37,9 +37,22 @@ public:
     [[nodiscard]] bn::fixed_point GetRightSymbolPosition() const;
     [[nodiscard]] bn::fixed_point GetMergeSymbolPosition() const;
 
+    enum class ActionState
+    {
+        IDLE,
+        JUMP,
+        FALL,
+        LAND,
+        MERGE_START,
+        MERGE_END
+    };
+
+    ActionState GetActionState() const;
+
 private:
     bn::optional<bn::sprite_animate_action<2>> action2_;
     bn::optional<bn::sprite_animate_action<3>> action3_;
+    ActionState actionState_ = ActionState::IDLE;
     /**
      * @brief Additional wait update before the InitIdleAction() is called.
      * If it is `-1`, InitIdleAction() is not called.

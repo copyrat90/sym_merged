@@ -11,6 +11,7 @@
 #include "game_entity_PressureButton.h"
 #include "game_entity_Shutter.h"
 #include "game_stage_StageInfo.h"
+#include "helper_tilemap.h"
 #include "scene_Param.h"
 
 namespace sym::scene
@@ -60,6 +61,15 @@ struct GameState
         pressureButtonsOfZones;
 
     bool isMenuPopup;
+
+    helper::tilemap::TileInfo currentMapTileInfo;
+
+    static constexpr int KEYPRESS_LASTING_UPDATE_COUNT = 5;
+    int lKeyLastingCount;
+    int rKeyLastingCount;
+    static constexpr int KEYPRESS_COOLDOWN_UPDATE_COUNT = 20;
+    int lKeyCooldownCount;
+    int rKeyCooldownCount;
 };
 
 } // namespace sym::scene

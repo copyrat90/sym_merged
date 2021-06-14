@@ -30,15 +30,15 @@ constexpr bn::fixed_point RELATIVE_MERGE_SYMBOL_POS = {0, -21};
 
 constexpr bn::fixed_rect RELATIVE_PHYSICS_COLLIDER = {{0, 0}, {26, 26}};
 constexpr bool IS_GRAVITY_ENABLED_BY_DEFAULT = true;
-constexpr bn::fixed GRAVITY_SCALE = 1;
+constexpr bn::fixed GRAVITY_SCALE = 0.1;
 
 constexpr int IDLE_ACTION_WAIT_UPDATE = 30;
-constexpr int OTHER_ACTIONS_WAIT_UPDATE = 10;
+constexpr int OTHER_ACTIONS_WAIT_UPDATE = 5;
 
 } // namespace
 
 Player::Player(bn::fixed_point position)
-    : IGravityEntity(position, RELATIVE_INTERACT_RANGE, RELATIVE_PHYSICS_COLLIDER, IS_GRAVITY_ENABLED_BY_DEFAULT,
+    : IPhysicsEntity(position, RELATIVE_INTERACT_RANGE, RELATIVE_PHYSICS_COLLIDER, IS_GRAVITY_ENABLED_BY_DEFAULT,
                      GRAVITY_SCALE, &bn::sprite_items::spr_ingame_protagonist_star)
 {
 }
@@ -46,12 +46,12 @@ Player::Player(bn::fixed_point position)
 void Player::FreeGraphicResource()
 {
     DestroyActions_();
-    IGravityEntity::FreeGraphicResource();
+    IPhysicsEntity::FreeGraphicResource();
 }
 
 void Player::Update()
 {
-    IGravityEntity::Update();
+    IPhysicsEntity::Update();
 
     bool isActionDone = UpdateAction_();
 
@@ -68,6 +68,7 @@ void Player::InitIdleAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
     DestroyActions_();
+    actionState_ = ActionState::IDLE;
     action2_ = bn::create_sprite_animate_action_forever(
         *sprite_, IDLE_ACTION_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 0, 1);
 }
@@ -76,15 +77,17 @@ void Player::InitJumpAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
     DestroyActions_();
+    actionState_ = ActionState::JUMP;
     action3_ = bn::create_sprite_animate_action_once(
-        *sprite_, IDLE_ACTION_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 2, 3, 4);
+        *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 2, 3, 4);
 }
 
 void Player::InitFallAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
     DestroyActions_();
-    action2_ = bn::create_sprite_animate_action_once(*sprite_, IDLE_ACTION_WAIT_UPDATE,
+    actionState_ = ActionState::FALL;
+    action2_ = bn::create_sprite_animate_action_once(*sprite_, OTHER_ACTIONS_WAIT_UPDATE,
                                                      bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 5, 6);
 }
 
@@ -92,8 +95,9 @@ void Player::InitLandAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
     DestroyActions_();
+    actionState_ = ActionState::LAND;
     action3_ = bn::create_sprite_animate_action_once(
-        *sprite_, IDLE_ACTION_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 7, 8, 0);
+        *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 7, 8, 0);
     additionalWaitUpdateCount = OTHER_ACTIONS_WAIT_UPDATE;
 }
 
@@ -101,16 +105,18 @@ void Player::InitMergeStartAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
     DestroyActions_();
+    actionState_ = ActionState::MERGE_START;
     action3_ = bn::create_sprite_animate_action_once(
-        *sprite_, IDLE_ACTION_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 9, 10, 11);
+        *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 9, 10, 11);
 }
 
 void Player::InitMergeEndAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
     DestroyActions_();
+    actionState_ = ActionState::MERGE_END;
     action3_ = bn::create_sprite_animate_action_once(
-        *sprite_, IDLE_ACTION_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 10, 9, 0);
+        *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 10, 9, 0);
     additionalWaitUpdateCount = OTHER_ACTIONS_WAIT_UPDATE;
 }
 
@@ -151,6 +157,11 @@ bn::fixed_point Player::GetRightSymbolPosition() const
 bn::fixed_point Player::GetMergeSymbolPosition() const
 {
     return position_ + RELATIVE_MERGE_SYMBOL_POS;
+}
+
+Player::ActionState Player::GetActionState() const
+{
+    return actionState_;
 }
 
 bool Player::UpdateAction_()

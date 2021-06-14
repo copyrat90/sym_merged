@@ -16,11 +16,11 @@ IOpenableEntity::IOpenableEntity(bn::fixed_point position, bn::fixed_rect relati
 void IOpenableEntity::AllocateGraphicResource(int z_order)
 {
     INumberTextEntity::AllocateGraphicResource(z_order);
-    if (isOpenedByDefault_)
-    {
-        numberSprite_->set_horizontal_flip(true);
-        numberSprite_->set_vertical_flip(true);
-    }
+    // if (isOpenedByDefault_)
+    // {
+    //     numberSprite_->set_horizontal_flip(true);
+    //     numberSprite_->set_vertical_flip(true);
+    // }
 }
 
 bool IOpenableEntity::GetOpened() const

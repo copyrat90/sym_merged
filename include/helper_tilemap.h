@@ -1,10 +1,12 @@
 #pragma once
 
+#include <bn_affine_bg_ptr.h>
 #include <bn_assert.h>
 #include <bn_camera_ptr.h>
 #include <bn_fixed_rect.h>
 #include <bn_point.h>
 #include <bn_size.h>
+#include <bn_vector.h>
 
 #include "helper_rect.h"
 
@@ -109,5 +111,67 @@ struct IndexRect
  * @param zoneBoundary zoneBoundary in absolute position
  */
 void SnapCameraToZoneBoundary(bn::camera_ptr& cam, const bn::fixed_rect& zoneBoundary);
+
+class TileInfo
+{
+public:
+    TileInfo(const bn::affine_bg_ptr& bg);
+    void Reset(const bn::affine_bg_ptr& bg);
+
+    TileInfo(const TileInfo&) = delete;
+    TileInfo& operator=(const TileInfo&) = delete;
+
+    TileInfo(TileInfo&& other) : bg_(other.bg_), tileFlags_(bn::move(other.tileFlags_))
+    {
+    }
+    TileInfo& operator=(TileInfo&& other)
+    {
+        bg_ = other.bg_;
+        tileFlags_ = bn::move(other.tileFlags_);
+        return *this;
+    }
+
+    enum class Flags
+    {
+        EMPTY = 0,
+        CEILING = 0x01,
+        FLOOR = 0x02,
+        LEFT_BLOCKING_WALL = 0x04,
+        RIGHT_BLOCKING_WALL = 0x08,
+        SPIKE = 0x10,
+    };
+
+    Flags GetTileFlagsByPosition(bn::fixed_point position) const;
+
+private:
+    static constexpr int TILE_VARIATION_COUNT = 32;
+    static constexpr int TILE_GROUP_COUNT = 9;
+
+    const bn::affine_bg_ptr* bg_;
+    bn::vector<Flags, TILE_VARIATION_COUNT> tileFlags_;
+
+    Flags At_(int tileVariationId) const;
+
+    /**
+     * @brief Get map index which can be used to index bg.map().cells_ref().value()
+     *
+     */
+    int MapIndex_(bn::fixed_point point) const;
+};
+
+inline TileInfo::Flags operator|(TileInfo::Flags f1, TileInfo::Flags f2)
+{
+    return static_cast<TileInfo::Flags>(static_cast<int>(f1) | static_cast<int>(f2));
+}
+
+inline TileInfo::Flags operator&(TileInfo::Flags f1, TileInfo::Flags f2)
+{
+    return static_cast<TileInfo::Flags>(static_cast<int>(f1) & static_cast<int>(f2));
+}
+
+inline bool operator!(TileInfo::Flags flags)
+{
+    return flags == TileInfo::Flags::EMPTY;
+}
 
 } // namespace sym::helper::tilemap

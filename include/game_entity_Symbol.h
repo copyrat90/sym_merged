@@ -1,11 +1,11 @@
 #pragma once
 
-#include "game_entity_IGravityEntity.h"
+#include "game_entity_IPhysicsEntity.h"
 
 namespace sym::game::entity
 {
 
-class Symbol final : public IGravityEntity
+class Symbol final : public IPhysicsEntity
 {
 public:
     static constexpr int COMPLEX_SYMBOL_START_NUM = 100;

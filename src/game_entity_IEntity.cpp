@@ -91,6 +91,32 @@ void IEntity::SetY(bn::fixed y)
     SyncSpritePositionToPosition_();
 }
 
+void IEntity::SetHorizontalFlip(bool flip)
+{
+    if (sprite_)
+        sprite_->set_horizontal_flip(flip);
+}
+
+bool IEntity::GetHorizontalFlip() const
+{
+    if (sprite_)
+        return sprite_->horizontal_flip();
+    return false;
+}
+
+void IEntity::SetVerticalFlip(bool flip)
+{
+    if (sprite_)
+        sprite_->set_vertical_flip(flip);
+}
+
+bool IEntity::GetVerticalFlip() const
+{
+    if (sprite_)
+        return sprite_->vertical_flip();
+    return false;
+}
+
 void IEntity::SyncSpritePositionToPosition_()
 {
     if (sprite_)

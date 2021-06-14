@@ -5,14 +5,15 @@
 namespace sym::game::system
 {
 
-class PlayerMovement final : public ISystem
+class KeyPress final : public ISystem
 {
 public:
-    PlayerMovement(scene::GameState& state);
+    KeyPress(scene::GameState& state);
 
     void Update() final;
 
 private:
+    void UpdateLRKeyLastingCount_();
 };
 
 } // namespace sym::game::system

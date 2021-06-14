@@ -3,7 +3,8 @@
 #include "scene_IScene.h"
 
 #include "game_system_ButtonInteraction.h"
-#include "game_system_PlayerMovement.h"
+#include "game_system_KeyPress.h"
+#include "game_system_PhysicsMovement.h"
 #include "scene_GameState.h"
 
 namespace sym::scene
@@ -29,8 +30,10 @@ private:
      */
     GameState state_;
 
-    system::PlayerMovement playerMovement_;
+    system::KeyPress keyPress_;
     system::ButtonInteraction buttonInteraction_;
+    // system::SymbolInteraction symbolInteraction_;
+    system::PhysicsMovement physicsMovement_;
 
     void SetCurrentZone_(int zoneIdx);
 };
