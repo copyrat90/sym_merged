@@ -1,0 +1,6 @@
+Sound name : basket_ball_03_drop.wav.wav
+Made by : andre.nascimento
+Link : https://freesound.org/people/andre.nascimento/sounds/51462/
+License : CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
+
+This sound is embedded into GBA, thus modified to 22050Hz, 8bit PCM.
