@@ -48,7 +48,7 @@ void TileInfo::Reset(const bn::affine_bg_ptr& bg)
 {
     bg_ = &bg;
     tileFlags_.clear();
-    const bn::span<const bn::affine_bg_map_cell>& cells = bg.map().cells_ref().value();
+    const bn::span<const bn::affine_bg_map_cell> cells = bg.map().cells_ref().value();
     tileFlags_.push_back(Flags::EMPTY);
     int group = 0;
     int spikeDirection = 0;
@@ -116,7 +116,7 @@ void TileInfo::Reset(const bn::affine_bg_ptr& bg)
 
 TileInfo::Flags TileInfo::GetTileFlagsByPosition(bn::fixed_point position) const
 {
-    const auto& cells = bg_->map().cells_ref().value();
+    const auto cells = bg_->map().cells_ref().value();
     const int tileId = cells[MapIndex_(position)];
     return At_(tileId);
 }
