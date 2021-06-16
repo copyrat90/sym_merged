@@ -1,8 +1,9 @@
-#include "bn_affine_bg_item.h"
-#include "game_stage_getter.h"
+#include <bn_affine_bg_item.h>
+#include <bn_fixed_rect.h>
 
 #include "bn_affine_bg_items_bg_w0_s0_0.h"
-#include <bn_fixed_rect.h>
+#include "bn_music_items.h"
+#include "game_stage_getter.h"
 
 namespace sym::game::stage
 {
@@ -60,7 +61,7 @@ constexpr ZoneInfo zoneInfos_[] = {
              bn::span<ZoneInfo::ExitInfo>(), Z0_entranceInfos_),
 };
 
-constexpr StageInfo w0_s0_("W0-0", "Test stage", zoneInfos_);
+constexpr StageInfo w0_s0_("W0-0", "Test stage", zoneInfos_, bn::music_items::music_fruity_radioactivity);
 
 } // namespace
 

@@ -3,6 +3,7 @@
 #include <bn_fixed_rect.h>
 
 #include "bn_sound_items.h"
+#include "constant.h"
 
 namespace sym::game::system
 {
@@ -33,7 +34,7 @@ void ButtonInteraction::HoverButtonPlayerInteract_()
             {
                 hoverButton.ToggleButtonOn();
                 ToggleOpenedHoverButtonAssociatedOpenables_(i);
-                bn::sound_items::sfx_toggle_button.play();
+                bn::sound_items::sfx_toggle_button.play(constant::volume::sfx_toggle_button);
                 ResetLKeyPress_();
                 break;
             }

@@ -11,6 +11,9 @@
 #include "helper_math.h"
 #include "helper_tilemap.h"
 
+#include "bn_sound_items.h"
+#include "constant.h"
+
 namespace sym::game::system
 {
 
@@ -226,6 +229,7 @@ void PhysicsMovement::PlayerKeyboardHandle_()
         state_.player.SetGrounded(false);
         state_.player.InitJumpAction();
         --playerJumpCount;
+        bn::sound_items::sfx_player_jump.play(constant::volume::sfx_player_jump);
         velocity.set_y(JUMP_VEL);
     }
     if (bn::keypad::left_held())

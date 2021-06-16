@@ -5,6 +5,7 @@
 #include <bn_keypad.h>
 
 #include "bn_optional.h"
+#include "constant.h"
 #include "game_stage_getter.h"
 #include "helper_tilemap.h"
 
@@ -76,6 +77,9 @@ Game::Game(scene::Param& sceneParam)
 {
     state_.currentMapBg.set_wrapping_enabled(false);
     state_.currentMapBg.set_camera(state_.camera);
+
+    if (state_.stageInfo.backgroundMusic)
+        state_.stageInfo.backgroundMusic->play(constant::volume::GetVolume(*state_.stageInfo.backgroundMusic));
 
     // Resize vectors according to zone count
     const int zoneCount = state_.stageInfo.zoneInfos.size();
