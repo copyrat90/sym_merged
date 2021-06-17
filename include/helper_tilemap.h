@@ -8,6 +8,7 @@
 #include <bn_size.h>
 #include <bn_vector.h>
 
+#include "game_entity_IPhysicsEntity.h"
 #include "helper_rect.h"
 
 namespace sym::helper::tilemap
@@ -111,6 +112,16 @@ struct IndexRect
  * @param zoneBoundary zoneBoundary in absolute position
  */
 void SnapCameraToZoneBoundary(bn::camera_ptr& cam, const bn::fixed_rect& zoneBoundary);
+
+/**
+ * @brief Snap entity to zone boundary.
+ * This function receives absolute position `zoneBoundary`,
+ * so, `ConvertIndexRectToPositionRect()` must be called before.
+ *
+ * @param entity
+ * @param zoneBoundary zoneBoundary in absolute position
+ */
+void SnapEntityToZoneBoundary(game::entity::IPhysicsEntity& entity, const bn::fixed_rect& zoneBoundary);
 
 class TileInfo
 {

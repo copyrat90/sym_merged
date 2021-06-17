@@ -20,13 +20,15 @@ namespace sym::game::system
 namespace
 {
 
-constexpr bn::fixed_point MAX_PLAYER_VEL = {3, 3};
+constexpr bn::fixed_point MAX_PLAYER_VEL = {2, 3};
 constexpr bn::fixed_point PLAYER_DELTA_VEL = {0.3, 0.3};
 constexpr bn::fixed JUMP_VEL = -2.8;
 constexpr bn::fixed_point MAX_SYMBOL_VEL = {3, 3};
 constexpr bn::fixed_point SYMBOL_DELTA_VEL = {0.3, 0.3};
 constexpr bn::fixed VEL_FRICTION = 1.2;
 constexpr bn::fixed COLLISION_DELTA_EPSILON = 0.01;
+
+static_assert(bn::abs(JUMP_VEL) <= MAX_PLAYER_VEL.y());
 
 enum class PushbackDirection
 {
@@ -85,7 +87,6 @@ enum class PushbackDirection
 [[nodiscard]] bn::optional<PushbackDirection> PlatformCollisionResolution_(entity::IPhysicsEntity& entity,
                                                                            const helper::tilemap::TileInfo& mapTileInfo)
 {
-    static_assert(bn::abs(JUMP_VEL) <= MAX_PLAYER_VEL.y());
     using namespace helper::tilemap;
     using namespace helper::math;
     using MoveDirections = entity::IPhysicsEntity::MoveDirections;
@@ -217,11 +218,15 @@ void PhysicsMovement::UpdatePlayer_()
     state_.player.SetPosition(state_.player.GetPosition() + state_.player.GetVelocity());
 
     PlayerCollision_();
+    helper::tilemap::SnapEntityToZoneBoundary(state_.player, state_.zoneBoundary);
     PlayerAnimation_();
 }
 
 void PhysicsMovement::PlayerKeyboardHandle_()
 {
+    if (!state_.isPlayerControllable)
+        return;
+
     bn::fixed_point velocity = state_.player.GetVelocity();
 
     if (bn::keypad::a_pressed() && state_.player.GetGrounded() && playerJumpCount > 0)

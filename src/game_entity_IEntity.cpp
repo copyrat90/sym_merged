@@ -49,6 +49,8 @@ void IEntity::AllocateGraphicResource(int z_order)
     {
         sprite_ = spriteItem_->create_sprite(position_);
         sprite_->set_z_order(z_order);
+        sprite_->set_blending_enabled(true);
+        sprite_->set_mosaic_enabled(true);
     }
 }
 

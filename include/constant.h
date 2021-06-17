@@ -16,6 +16,13 @@ inline constexpr bn::color TRANSPARENT_BG_COLOR(0, 0, 0);
 inline constexpr sym::global::setting::Lang DEFAULT_LANG = sym::global::setting::Lang::ENG;
 inline constexpr auto DEFAULT_TEXT_GEN_ALIGN = bn::sprite_text_generator::alignment_type::CENTER;
 
+// Sprites with higher z orders are drawn first
+// (and therefore can be covered by later sprites)
+constexpr int PLAYER_Z_ORDER = 0;
+constexpr int SYMBOL_Z_ORDER = -10;
+constexpr int DOOR_Z_ORDER = 10;
+constexpr int BUTTON_Z_ORDER = 5;
+
 namespace volume
 {
 

@@ -4,6 +4,7 @@
 #include <bn_blending.h>
 #include <bn_keypad.h>
 
+#include "bn_log.h"
 #include "bn_optional.h"
 #include "constant.h"
 #include "game_stage_getter.h"
@@ -14,13 +15,6 @@ namespace sym::scene
 
 namespace
 {
-
-// Sprites with higher z orders are drawn first
-// (and therefore can be covered by later sprites)
-constexpr int PLAYER_Z_ORDER = 0;
-constexpr int SYMBOL_Z_ORDER = -10;
-constexpr int DOOR_Z_ORDER = 10;
-constexpr int BUTTON_Z_ORDER = 5;
 
 [[nodiscard]] const game::stage::StageInfo& GetStageInfo(game::stage::Id stageId)
 {
@@ -65,6 +59,7 @@ Game::Game(scene::Param& sceneParam)
           {},
           {},
           {},
+          false,
           true,
           helper::tilemap::TileInfo(state_.currentMapBg),
           -1,
@@ -72,10 +67,12 @@ Game::Game(scene::Param& sceneParam)
           -1,
           -1,
       },
-      keyPress_(state_), buttonInteraction_(state_), physicsMovement_(state_)
-
+      keyPress_(state_), buttonInteraction_(state_), physicsMovement_(state_), zoneSwitch_(state_)
 {
+    // Set bg
     state_.currentMapBg.set_wrapping_enabled(false);
+    state_.currentMapBg.set_blending_enabled(true);
+    state_.currentMapBg.set_mosaic_enabled(true);
     state_.currentMapBg.set_camera(state_.camera);
 
     if (state_.stageInfo.backgroundMusic)
@@ -116,36 +113,39 @@ Game::Game(scene::Param& sceneParam)
     }
 
     // Allocate all graphics within current zone
-    state_.player.AllocateGraphicResource(PLAYER_Z_ORDER);
+    state_.player.AllocateGraphicResource(constant::PLAYER_Z_ORDER);
     state_.player.SetCamera(state_.camera);
     for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
     {
-        symbol.AllocateGraphicResource(SYMBOL_Z_ORDER);
+        symbol.AllocateGraphicResource(constant::SYMBOL_Z_ORDER);
         symbol.SetCamera(state_.camera);
     }
     for (auto& door : state_.doorsOfZones[state_.currentZoneIdx])
     {
-        door.AllocateGraphicResource(DOOR_Z_ORDER);
+        door.AllocateGraphicResource(constant::DOOR_Z_ORDER);
         door.SetCamera(state_.camera);
     }
     for (auto& shutter : state_.shuttersOfZones[state_.currentZoneIdx])
     {
-        shutter.AllocateGraphicResource(DOOR_Z_ORDER);
+        shutter.AllocateGraphicResource(constant::DOOR_Z_ORDER);
         shutter.SetCamera(state_.camera);
     }
     for (auto& hoverButton : state_.hoverButtonsOfZones[state_.currentZoneIdx])
     {
-        hoverButton.AllocateGraphicResource(BUTTON_Z_ORDER);
+        hoverButton.AllocateGraphicResource(constant::BUTTON_Z_ORDER);
         hoverButton.SetCamera(state_.camera);
     }
     for (auto& pressureButton : state_.pressureButtonsOfZones[state_.currentZoneIdx])
     {
-        pressureButton.AllocateGraphicResource(BUTTON_Z_ORDER);
+        pressureButton.AllocateGraphicResource(constant::BUTTON_Z_ORDER);
         pressureButton.SetCamera(state_.camera);
     }
 
     // Initialize Idle action
     state_.player.InitIdleAction();
+
+    // Init Fade-in effect
+    state_.fadeIn.Init();
 }
 
 Game::~Game()
@@ -159,8 +159,8 @@ bn::optional<Type> Game::Update()
     keyPress_.Update();
     buttonInteraction_.Update();
     // symbolInteraction_.Update();
-
     physicsMovement_.Update();
+    zoneSwitch_.Update();
 
     // Update sprite graphics
     state_.player.Update();
@@ -175,7 +175,14 @@ bn::optional<Type> Game::Update()
     for (auto& pressureButton : state_.pressureButtonsOfZones[state_.currentZoneIdx])
         pressureButton.Update();
 
+    // Update fade effects
+    if (state_.fadeIn.GetState() == effect::Transition::State::ONGOING)
+        state_.fadeIn.Update();
+    if (state_.fadeOut.GetState() == effect::Transition::State::ONGOING)
+        state_.fadeOut.Update();
+
     // Move camera (follows player)
+    BN_LOG("player pos : (", state_.player.GetPosition().x(), ", ", state_.player.GetPosition().y(), ")");
     state_.camera.set_position(state_.player.GetPosition());
     helper::tilemap::SnapCameraToZoneBoundary(state_.camera, state_.zoneBoundary);
 

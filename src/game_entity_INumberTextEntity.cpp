@@ -40,6 +40,8 @@ void INumberTextEntity::AllocateGraphicResource(int z_order)
     numberSprite_ =
         bn::sprite_items::font_modern_dos_8x8.create_sprite(position_ + relativeNumberTextPosition_, textNumber_);
     numberSprite_->set_z_order(z_order);
+    numberSprite_->set_blending_enabled(true);
+    numberSprite_->set_mosaic_enabled(true);
 }
 
 void INumberTextEntity::SetCamera(const bn::camera_ptr& camera)

@@ -60,7 +60,8 @@ struct GameState
     bn::vector<bn::vector<game::entity::PressureButton, ZONE_PRESSURE_BUTTON_MAX_COUNT>, ZONE_MAX_COUNT>
         pressureButtonsOfZones;
 
-    bool isMenuPopup;
+    bool isPaused;
+    bool isPlayerControllable;
 
     helper::tilemap::TileInfo currentMapTileInfo;
 

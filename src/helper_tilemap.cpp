@@ -39,6 +39,34 @@ void SnapCameraToZoneBoundary(bn::camera_ptr& cam, const bn::fixed_rect& zoneBou
     }
 }
 
+void SnapEntityToZoneBoundary(game::entity::IPhysicsEntity& entity, const bn::fixed_rect& zoneBoundary)
+{
+    bn::fixed_point entityPos = entity.GetPosition();
+
+    if (entityPos.y() < zoneBoundary.top())
+    {
+        const bn::fixed dy = zoneBoundary.top() - entityPos.y();
+        entityPos.set_y(entityPos.y() + dy);
+    }
+    else if (entityPos.y() > zoneBoundary.bottom())
+    {
+        const bn::fixed dy = entityPos.y() - zoneBoundary.bottom();
+        entityPos.set_y(entityPos.y() - dy);
+    }
+    if (entityPos.x() < zoneBoundary.left())
+    {
+        const bn::fixed dx = zoneBoundary.left() - entityPos.x();
+        entityPos.set_x(entityPos.x() + dx);
+    }
+    else if (entityPos.x() > zoneBoundary.right())
+    {
+        const bn::fixed dx = entityPos.x() - zoneBoundary.right();
+        entityPos.set_x(entityPos.x() - dx);
+    }
+
+    entity.SetPosition(entityPos);
+}
+
 TileInfo::TileInfo(const bn::affine_bg_ptr& bg) : bg_(&bg)
 {
     Reset(bg);

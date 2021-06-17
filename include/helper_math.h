@@ -7,11 +7,13 @@
 namespace sym::helper::math
 {
 
+constexpr bn::fixed EPSILON = 0.01;
+
 [[nodiscard]] inline bn::fixed operator%(bn::fixed a, int b)
 {
     bn::fixed result = a - (a / b).floor_integer() * b;
     BN_LOG("operator% : ", result);
-    BN_ASSERT(0 <= result && result < b, "operator% is giving wrong result");
+    BN_ASSERT(-EPSILON <= result && result < b + EPSILON, "operator% is giving wrong result of ", result);
     return result;
 }
 

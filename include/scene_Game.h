@@ -5,6 +5,7 @@
 #include "game_system_ButtonInteraction.h"
 #include "game_system_KeyPress.h"
 #include "game_system_PhysicsMovement.h"
+#include "game_system_ZoneSwitch.h"
 #include "scene_GameState.h"
 
 namespace sym::scene
@@ -34,6 +35,7 @@ private:
     system::ButtonInteraction buttonInteraction_;
     // system::SymbolInteraction symbolInteraction_;
     system::PhysicsMovement physicsMovement_;
+    system::ZoneSwitch zoneSwitch_;
 
     void SetCurrentZone_(int zoneIdx);
 };

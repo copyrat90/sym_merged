@@ -39,6 +39,8 @@ void Door::AllocateGraphicResource(int z_order)
     IOpenableEntity::AllocateGraphicResource(z_order);
     sprite_ = spriteItem_->create_sprite(position_, GetOpened() ? OPENED_GRAPHICS_INDEX : CLOSED_GRAPHICS_INDEX);
     sprite_->set_z_order(z_order);
+    sprite_->set_blending_enabled(true);
+    sprite_->set_mosaic_enabled(true);
 }
 
 void Door::FreeGraphicResource()
