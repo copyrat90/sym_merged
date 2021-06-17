@@ -87,6 +87,7 @@ public:
 private:
     const Types types_;
     const Direction direction_;
+    const int updateCount_;
     int updateCountDown_;
 
     State state_ = State::NOT_READY;

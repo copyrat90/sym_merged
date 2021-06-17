@@ -9,7 +9,7 @@ namespace sym::effect
 {
 
 Transition::Transition(Types types, Direction direction, int updateCount)
-    : types_(types), direction_(direction), updateCountDown_(updateCount)
+    : types_(types), direction_(direction), updateCount_(updateCount)
 {
     BN_ASSERT(!((static_cast<int>(types & Types::FADE) > 0) &&
                 ((static_cast<int>(types & Types::TRANSPARENCY) > 0) || (static_cast<int>(types & Types::INTENSITY)))),
@@ -23,6 +23,7 @@ Transition::~Transition()
 
 void Transition::Init()
 {
+    updateCountDown_ = updateCount_;
     if (static_cast<int>(types_ & Types::FADE) > 0)
     {
         bn::blending::set_fade_alpha((direction_ == Direction::IN) ? 1 : 0);
