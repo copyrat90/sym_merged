@@ -14,7 +14,7 @@ constexpr bn::fixed SPRITE_WIDTH = bn::sprite_items::spr_hover_button.shape_size
 constexpr bn::fixed SPRITE_HEIGHT = bn::sprite_items::spr_hover_button.shape_size().height();
 
 constexpr bn::fixed_rect RELATIVE_INTERACT_RANGE =
-    helper::rect::MakeFixedRectByTopLeftAndSize({3 - SPRITE_WIDTH / 2, 2 - SPRITE_HEIGHT / 2}, {10, 12});
+    helper::rect::MakeFixedRectByTopLeftAndSize({0 - SPRITE_WIDTH / 2, -1 - SPRITE_HEIGHT / 2}, {16, 18});
 
 constexpr bn::fixed_point RELATIVE_NUMBER_TEXT_POS = {0, -13};
 

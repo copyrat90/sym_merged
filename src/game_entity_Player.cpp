@@ -16,14 +16,16 @@ constexpr int SPRITE_WIDTH = bn::sprite_items::spr_ingame_protagonist_star.shape
 constexpr int SPRITE_HEIGHT = bn::sprite_items::spr_ingame_protagonist_star.shape_size().height();
 
 constexpr bn::fixed_rect RELATIVE_INTERACT_RANGE = {{0, 0}, {32, 32}};
+constexpr bn::fixed_point RELATIVE_LEFT_HAND_POS = {4 - SPRITE_WIDTH / 2, 13 - SPRITE_HEIGHT};
+constexpr bn::fixed_point RELATIVE_RIGHT_HAND_POS = {27 - SPRITE_WIDTH / 2, 13 - SPRITE_HEIGHT};
 constexpr bn::fixed_rect RELATIVE_LEFT_SYMBOL_PICKUP_RANGE =
-    helper::rect::MakeFixedRectByTopLeftAndSize({0 - SPRITE_WIDTH / 2, 0 - SPRITE_HEIGHT / 2}, {23, 32});
+    helper::rect::MakeFixedRectByTopLeftAndSize({-4 - SPRITE_WIDTH / 2, 3 - SPRITE_HEIGHT / 2}, {27, 26});
 constexpr bn::fixed_rect RELATIVE_RIGHT_SYMBOL_PICKUP_RANGE =
-    helper::rect::MakeFixedRectByTopLeftAndSize({9 - SPRITE_WIDTH / 2, 0 - SPRITE_HEIGHT / 2}, {23, 32});
+    helper::rect::MakeFixedRectByTopLeftAndSize({9 - SPRITE_WIDTH / 2, 3 - SPRITE_HEIGHT / 2}, {27, 26});
 constexpr bn::fixed_rect RELATIVE_LEFT_BUTTON_INTERACT_RANGE =
-    helper::rect::MakeFixedRectByTopLeftAndSize({2 - SPRITE_WIDTH / 2, 9 - SPRITE_HEIGHT / 2}, {9, 11});
+    helper::rect::MakeFixedRectByTopLeftAndSize({-1 - SPRITE_WIDTH / 2, 6 - SPRITE_HEIGHT / 2}, {15, 17});
 constexpr bn::fixed_rect RELATIVE_RIGHT_BUTTON_INTERACT_RANGE =
-    helper::rect::MakeFixedRectByTopLeftAndSize({21 - SPRITE_WIDTH / 2, 9 - SPRITE_HEIGHT / 2}, {9, 11});
+    helper::rect::MakeFixedRectByTopLeftAndSize({18 - SPRITE_WIDTH / 2, 6 - SPRITE_HEIGHT / 2}, {15, 17});
 constexpr bn::fixed_point RELATIVE_LEFT_SYMBOL_POS = {-12, 2.5};
 constexpr bn::fixed_point RELATIVE_RIGHT_SYMBOL_POS = {12, 2.5};
 constexpr bn::fixed_point RELATIVE_MERGE_SYMBOL_POS = {0, -21};
