@@ -8,6 +8,11 @@ namespace sym::game::system
 {
 using ExitInfo = stage::ZoneInfo::ExitInfo;
 
+/**
+ * @brief All about switching zones,
+ * including checking doors and exits.
+ *
+ */
 class ZoneSwitch final : public ISystem
 {
 public:

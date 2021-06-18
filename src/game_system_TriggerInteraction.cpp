@@ -1,4 +1,4 @@
-#include "game_system_ButtonInteraction.h"
+#include "game_system_TriggerInteraction.h"
 
 #include <bn_fixed_rect.h>
 
@@ -8,17 +8,17 @@
 namespace sym::game::system
 {
 
-ButtonInteraction::ButtonInteraction(scene::GameState& state) : ISystem(state)
+TriggerInteraction::TriggerInteraction(scene::GameState& state) : ISystem(state)
 {
 }
 
-void ButtonInteraction::Update()
+void TriggerInteraction::Update()
 {
     HoverButtonPlayerInteract_();
     HoverButtonThrownSymbolInteract_();
 }
 
-void ButtonInteraction::HoverButtonPlayerInteract_()
+void TriggerInteraction::HoverButtonPlayerInteract_()
 {
     if (IsLKeyPressLasts_())
     {
@@ -62,32 +62,32 @@ void ButtonInteraction::HoverButtonPlayerInteract_()
     }
 }
 
-void ButtonInteraction::HoverButtonThrownSymbolInteract_()
+void TriggerInteraction::HoverButtonThrownSymbolInteract_()
 {
     // TODO
 }
 
-bool ButtonInteraction::IsLKeyPressLasts_() const
+bool TriggerInteraction::IsLKeyPressLasts_() const
 {
     return state_.lKeyLastingCount >= 0;
 }
 
-bool ButtonInteraction::IsRKeyPressLasts_() const
+bool TriggerInteraction::IsRKeyPressLasts_() const
 {
     return state_.rKeyLastingCount >= 0;
 }
 
-void ButtonInteraction::ResetLKeyPress_()
+void TriggerInteraction::ResetLKeyPress_()
 {
     state_.lKeyLastingCount = -1;
 }
 
-void ButtonInteraction::ResetRKeyPress_()
+void TriggerInteraction::ResetRKeyPress_()
 {
     state_.rKeyLastingCount = -1;
 }
 
-void ButtonInteraction::ToggleOpenedHoverButtonAssociatedOpenables_(int hoverButtonIdx)
+void TriggerInteraction::ToggleOpenedHoverButtonAssociatedOpenables_(int hoverButtonIdx)
 {
     const auto& zoneInfo = state_.stageInfo.zoneInfos[state_.currentZoneIdx];
     const int hoverButtonTextNum = zoneInfo.hoverButtons[hoverButtonIdx].textSpriteNumber;

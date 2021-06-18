@@ -2,9 +2,9 @@
 
 #include "scene_IScene.h"
 
-#include "game_system_ButtonInteraction.h"
 #include "game_system_KeyPress.h"
 #include "game_system_PhysicsMovement.h"
+#include "game_system_TriggerInteraction.h"
 #include "game_system_ZoneSwitch.h"
 #include "scene_GameState.h"
 
@@ -32,7 +32,7 @@ private:
     GameState state_;
 
     system::KeyPress keyPress_;
-    system::ButtonInteraction buttonInteraction_;
+    system::TriggerInteraction triggerInteraction_;
     // system::SymbolInteraction symbolInteraction_;
     system::PhysicsMovement physicsMovement_;
     system::ZoneSwitch zoneSwitch_;

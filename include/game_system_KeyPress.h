@@ -5,6 +5,10 @@
 namespace sym::game::system
 {
 
+/**
+ * @brief Manages key press lasting for a short period
+ *
+ */
 class KeyPress final : public ISystem
 {
 public:

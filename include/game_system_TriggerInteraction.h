@@ -5,10 +5,16 @@
 namespace sym::game::system
 {
 
-class ButtonInteraction final : public ISystem
+/**
+ * @brief Manages trigger interactions, but not colliders.
+ * (e.g. symbol pick-up & put-down, button toggle).
+ * Switching zones stuff (doors and exits) are dealt in `system::ZoneSwitch` instead.
+ *
+ */
+class TriggerInteraction final : public ISystem
 {
 public:
-    ButtonInteraction(scene::GameState& state);
+    TriggerInteraction(scene::GameState& state);
 
     void Update() final;
 

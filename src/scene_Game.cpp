@@ -67,7 +67,7 @@ Game::Game(scene::Param& sceneParam)
           -1,
           -1,
       },
-      keyPress_(state_), buttonInteraction_(state_), physicsMovement_(state_), zoneSwitch_(state_)
+      keyPress_(state_), triggerInteraction_(state_), physicsMovement_(state_), zoneSwitch_(state_)
 {
     // Set bg
     state_.currentMapBg.set_wrapping_enabled(false);
@@ -157,7 +157,7 @@ bn::optional<Type> Game::Update()
 {
     // TODO
     keyPress_.Update();
-    buttonInteraction_.Update();
+    triggerInteraction_.Update();
     // symbolInteraction_.Update();
     physicsMovement_.Update();
     zoneSwitch_.Update();

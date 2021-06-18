@@ -5,6 +5,12 @@
 namespace sym::game::system
 {
 
+/**
+ * @brief Physics Update, along with sound effects.
+ * Only deals with colliders, not triggers.
+ * (e.g. no pressure button & door interations)
+ *
+ */
 class PhysicsMovement final : public ISystem
 {
 public:
