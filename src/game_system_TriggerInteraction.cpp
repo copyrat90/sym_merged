@@ -1,9 +1,15 @@
 #include "game_system_TriggerInteraction.h"
 
+#include <bn_algorithm.h>
+#include <bn_assert.h>
 #include <bn_fixed_rect.h>
+#include <bn_keypad.h>
 
 #include "bn_sound_items.h"
 #include "constant.h"
+#include "helper_math.h"
+
+#include "bn_log.h"
 
 namespace sym::game::system
 {
@@ -14,55 +20,151 @@ TriggerInteraction::TriggerInteraction(scene::GameState& state) : ISystem(state)
 
 void TriggerInteraction::Update()
 {
-    HoverButtonPlayerInteract_();
-    HoverButtonThrownSymbolInteract_();
+    // WIP
+    if (IsLKeyPressLasts_() || IsRKeyPressLasts_())
+    {
+        if (bn::keypad::down_held())
+        {
+            if (IsLKeyPressLasts_())
+                PlayerPutsDownSymbol_(Hand::LEFT);
+            else
+                PlayerPutsDownSymbol_(Hand::RIGHT);
+        }
+        else
+        {
+            auto symbolIter = state_.symbolsOfZones[state_.currentZoneIdx].end();
+            int entityIdx = -1;
+            auto [nearestEntityType, interactHand] = GetNearestInteractableFromPlayer_(symbolIter, entityIdx);
+            switch (nearestEntityType)
+            {
+            case EntityType::NONE:
+                break;
+            case EntityType::SYMBOL:
+                PlayerPicksUpSymbol_(interactHand, symbolIter);
+                if (interactHand == Hand::LEFT)
+                    ResetLKeyPress_();
+                else
+                    ResetRKeyPress_();
+                break;
+            case EntityType::HOVER_BUTTON:
+                PlayerClicksHoverButton_(entityIdx);
+                if (interactHand == Hand::LEFT)
+                    ResetLKeyPress_();
+                else
+                    ResetRKeyPress_();
+                break;
+            default:
+                BN_ERROR("Invalid TriggerInteraction::EntityType : ", static_cast<int>(nearestEntityType));
+            }
+        }
+    }
+
+    InteractHoverButtonAndThrownSymbol_();
 }
 
-void TriggerInteraction::HoverButtonPlayerInteract_()
+bn::pair<TriggerInteraction::EntityType, TriggerInteraction::Hand> TriggerInteraction::
+    GetNearestInteractableFromPlayer_(bn::ilist<entity::Symbol>::iterator& outSymbolIter, int& outHoverButtonIdx)
 {
-    if (IsLKeyPressLasts_())
+    bn::fixed_rect buttonInteractRange;
+    bn::fixed_rect symbolInteractRange;
+    Hand interactHand = Hand::RIGHT;
+    if (!state_.symbolsInHands[1] && state_.rKeyLastingCount >= state_.lKeyLastingCount)
     {
-        const bn::fixed_rect leftHand = state_.player.GetLeftButtonInteractRange();
+        buttonInteractRange = state_.player.GetRightButtonInteractRange();
+        symbolInteractRange = state_.player.GetRightButtonInteractRange();
+        interactHand = Hand::RIGHT;
+    }
+    else if (!state_.symbolsInHands[0] && state_.rKeyLastingCount < state_.lKeyLastingCount)
+    {
+        buttonInteractRange = state_.player.GetLeftButtonInteractRange();
+        symbolInteractRange = state_.player.GetLeftSymbolPickupRange();
+        interactHand = Hand::LEFT;
+    }
+    else
+    {
+        return {EntityType::NONE, interactHand};
+    }
 
-        for (int i = 0; i < state_.hoverButtonsOfZones[state_.currentZoneIdx].size(); ++i)
+    EntityType nearestEntityType = EntityType::NONE;
+    auto& symbolsOfZone = state_.symbolsOfZones[state_.currentZoneIdx];
+    bn::fixed nearestDistanceSquared = -1;
+    for (auto symbol = symbolsOfZone.begin(); symbol != symbolsOfZone.end(); ++symbol)
+    {
+        if (!symbol->GetPickedUp() && symbol->GetInteractRange().intersects(symbolInteractRange))
         {
-            auto& hoverButton = state_.hoverButtonsOfZones[state_.currentZoneIdx][i];
-            if (!hoverButton.CanButtonBeToggled())
-                continue;
-
-            if (leftHand.intersects(hoverButton.GetInteractRange()))
+            const bn::fixed candidateDistanceSquared =
+                helper::math::DistanceSquared(symbol->GetInteractRange().position(), symbolInteractRange.position());
+            if (nearestEntityType == EntityType::NONE || candidateDistanceSquared < nearestDistanceSquared)
             {
-                hoverButton.ToggleButtonOn();
-                ToggleOpenedHoverButtonAssociatedOpenables_(i);
-                bn::sound_items::sfx_toggle_button.play(constant::volume::sfx_toggle_button);
-                ResetLKeyPress_();
-                break;
+                nearestEntityType = EntityType::SYMBOL;
+                outSymbolIter = symbol;
+                nearestDistanceSquared = candidateDistanceSquared;
             }
         }
     }
 
-    if (IsRKeyPressLasts_())
+    for (int i = 0; i < state_.hoverButtonsOfZones[state_.currentZoneIdx].size(); ++i)
     {
-        const bn::fixed_rect rightHand = state_.player.GetRightButtonInteractRange();
-        for (int i = 0; i < state_.hoverButtonsOfZones[state_.currentZoneIdx].size(); ++i)
+        auto& button = state_.hoverButtonsOfZones[state_.currentZoneIdx][i];
+        if (button.CanButtonBeToggled() && button.GetInteractRange().intersects(buttonInteractRange))
         {
-            auto& hoverButton = state_.hoverButtonsOfZones[state_.currentZoneIdx][i];
-            if (!hoverButton.CanButtonBeToggled())
-                continue;
-
-            if (rightHand.intersects(hoverButton.GetInteractRange()))
+            const bn::fixed candidateDistanceSquared =
+                helper::math::DistanceSquared(button.GetInteractRange().position(), buttonInteractRange.position());
+            if (nearestEntityType == EntityType::NONE || candidateDistanceSquared < nearestDistanceSquared)
             {
-                hoverButton.ToggleButtonOn();
-                ToggleOpenedHoverButtonAssociatedOpenables_(i);
-                bn::sound_items::sfx_toggle_button.play();
-                ResetRKeyPress_();
-                break;
+                nearestEntityType = EntityType::HOVER_BUTTON;
+                outHoverButtonIdx = i;
+                nearestDistanceSquared = candidateDistanceSquared;
             }
+        }
+    }
+
+    return {nearestEntityType, interactHand};
+}
+
+void TriggerInteraction::PlayerPicksUpSymbol_(Hand interactHand, bn::ilist<entity::Symbol>::iterator symbolIter)
+{
+    // WIP
+    symbolIter->SetPickedUp(true);
+
+    if (interactHand == Hand::LEFT)
+        state_.symbolsInHands[0] = bn::move(*symbolIter);
+    else
+        state_.symbolsInHands[1] = bn::move(*symbolIter);
+    state_.symbolsOfZones[state_.currentZoneIdx].erase(symbolIter);
+}
+
+void TriggerInteraction::PlayerPutsDownSymbol_(Hand hand)
+{
+    if (hand == Hand::LEFT)
+    {
+        if (state_.symbolsInHands[0])
+        {
+            state_.symbolsInHands[0]->SetPickedUp(false);
+            state_.symbolsOfZones[state_.currentZoneIdx].push_back(bn::move(*state_.symbolsInHands[0]));
+            state_.symbolsInHands[0].reset();
+        }
+    }
+    else
+    {
+        if (state_.symbolsInHands[1])
+        {
+            state_.symbolsInHands[1]->SetPickedUp(false);
+            state_.symbolsOfZones[state_.currentZoneIdx].push_back(bn::move(*state_.symbolsInHands[1]));
+            state_.symbolsInHands[1].reset();
         }
     }
 }
 
-void TriggerInteraction::HoverButtonThrownSymbolInteract_()
+void TriggerInteraction::PlayerClicksHoverButton_(int hoverButtonIdx)
+{
+    auto& hoverButton = state_.hoverButtonsOfZones[state_.currentZoneIdx][hoverButtonIdx];
+    hoverButton.ToggleButtonOn();
+    ToggleOpenedHoverButtonAssociatedOpenables_(hoverButtonIdx);
+    bn::sound_items::sfx_toggle_button.play(constant::volume::sfx_toggle_button);
+}
+
+void TriggerInteraction::InteractHoverButtonAndThrownSymbol_()
 {
     // TODO
 }

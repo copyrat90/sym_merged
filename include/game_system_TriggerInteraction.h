@@ -2,6 +2,11 @@
 
 #include "game_system_ISystem.h"
 
+#include <bn_list.h>
+#include <bn_utility.h>
+
+#include "game_entity_HoverButton.h"
+
 namespace sym::game::system
 {
 
@@ -19,8 +24,25 @@ public:
     void Update() final;
 
 private:
-    void HoverButtonPlayerInteract_();
-    void HoverButtonThrownSymbolInteract_();
+    enum class EntityType
+    {
+        NONE,
+        SYMBOL,
+        HOVER_BUTTON
+    };
+    enum class Hand
+    {
+        LEFT,
+        RIGHT
+    };
+
+    [[nodiscard]] bn::pair<EntityType, Hand> GetNearestInteractableFromPlayer_(
+        bn::ilist<entity::Symbol>::iterator& outSymbolIter, int& outHoverButtonIdx);
+
+    void PlayerPicksUpSymbol_(Hand interactHand, bn::ilist<entity::Symbol>::iterator symbolIter);
+    void PlayerPutsDownSymbol_(Hand hand);
+    void PlayerClicksHoverButton_(int hoverButtonIdx);
+    void InteractHoverButtonAndThrownSymbol_();
 
     void UpdateKeyLastingCount_();
     [[nodiscard]] bool IsLKeyPressLasts_() const;

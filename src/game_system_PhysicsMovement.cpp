@@ -41,7 +41,6 @@ enum class PushbackDirection
 [[nodiscard]] bn::optional<PushbackDirection> FloorCollisionResolution_(entity::IPhysicsEntity& entity)
 {
     using namespace helper::math;
-    BN_LOG("floor collision");
     const bn::fixed dy = -(entity.GetPhysicsCollider().bottom() % 8) - COLLISION_DELTA_EPSILON;
     entity.SetY(entity.GetY() + dy);
     entity.SetYVelocity(0);
@@ -51,7 +50,6 @@ enum class PushbackDirection
 [[nodiscard]] bn::optional<PushbackDirection> LeftWallCollisionResolution_(entity::IPhysicsEntity& entity)
 {
     using namespace helper::math;
-    BN_LOG("left_wall collision");
     const bn::fixed dx = 8 - (entity.GetPhysicsCollider().left() % 8) + COLLISION_DELTA_EPSILON;
     entity.SetX(entity.GetX() + dx);
     entity.SetXVelocity(0);
@@ -61,9 +59,7 @@ enum class PushbackDirection
 [[nodiscard]] bn::optional<PushbackDirection> RightWallCollisionResolution_(entity::IPhysicsEntity& entity)
 {
     using namespace helper::math;
-    BN_LOG("right_wall collision");
     const bn::fixed dx = -(entity.GetPhysicsCollider().right() % 8) - COLLISION_DELTA_EPSILON;
-    BN_LOG(dx);
     entity.SetX(entity.GetX() + dx);
     entity.SetXVelocity(0);
     return PushbackDirection::LEFT;
@@ -72,7 +68,6 @@ enum class PushbackDirection
 [[nodiscard]] bn::optional<PushbackDirection> CeilingCollisionResolution_(entity::IPhysicsEntity& entity)
 {
     using namespace helper::math;
-    BN_LOG("ceiling collision");
     const bn::fixed dy = 8 - (entity.GetPhysicsCollider().top() % 8) + COLLISION_DELTA_EPSILON;
     entity.SetY(entity.GetY() + dy);
     entity.SetYVelocity(0);
@@ -259,9 +254,7 @@ void PhysicsMovement::PlayerGravity_()
     //     return;
 
     bn::fixed_point velocity = state_.player.GetVelocity();
-    BN_LOG("vel: ", velocity.y());
     velocity.set_y(velocity.y() + state_.player.GetGravityScale());
-    BN_LOG("vel: ", velocity.y());
     state_.player.SetVelocity(velocity);
 }
 
@@ -360,6 +353,14 @@ void PhysicsMovement::UpdateSymbols_()
 
 void PhysicsMovement::UpdateSymbolsInHands_()
 {
+    if (state_.symbolsInHands[0])
+    {
+        state_.symbolsInHands[0]->SetPosition(state_.player.GetLeftSymbolPosition());
+    }
+    if (state_.symbolsInHands[1])
+    {
+        state_.symbolsInHands[1]->SetPosition(state_.player.GetRightSymbolPosition());
+    }
 }
 
 void PhysicsMovement::UpdateSymbolsOnFloor_()

@@ -16,9 +16,8 @@ IPhysicsEntity::IPhysicsEntity(bn::fixed_point position, bn::fixed_rect relative
 }
 
 IPhysicsEntity::IPhysicsEntity(IPhysicsEntity&& other)
-    : IEntity(other.position_, other.relativeInteractRange_, other.spriteItem_),
-      relativePhysicsCollider_(other.relativePhysicsCollider_), isGravityEnabled_(other.isGravityEnabled_),
-      gravityScale_(other.gravityScale_)
+    : IEntity(bn::move(other)), relativePhysicsCollider_(other.relativePhysicsCollider_),
+      isGravityEnabled_(other.isGravityEnabled_), gravityScale_(other.gravityScale_)
 {
 }
 

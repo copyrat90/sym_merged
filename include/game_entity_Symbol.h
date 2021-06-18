@@ -36,12 +36,16 @@ public:
     Type GetType() const;
     void SetType(Type);
 
+    bool GetPickedUp() const;
+    void SetPickedUp(bool isPickedUp);
+
 private:
     static constexpr bn::fixed_rect RELATIVE_INTERACT_RANGE = {{0, 0}, {24, 16}};
     static constexpr bool IS_GRAVITY_ENABLED_BY_DEFAULT = true;
     static constexpr bn::fixed GRAVITY_SCALE = 1;
 
     Symbol::Type type_;
+    bool isPickedUp_ = false;
 };
 
 } // namespace sym::game::entity

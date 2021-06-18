@@ -4,7 +4,6 @@
 #include <bn_blending.h>
 #include <bn_keypad.h>
 
-#include "bn_log.h"
 #include "bn_optional.h"
 #include "constant.h"
 #include "game_stage_getter.h"
@@ -182,7 +181,6 @@ bn::optional<Type> Game::Update()
         state_.fadeOut.Update();
 
     // Move camera (follows player)
-    BN_LOG("player pos : (", state_.player.GetPosition().x(), ", ", state_.player.GetPosition().y(), ")");
     state_.camera.set_position(state_.player.GetPosition());
     helper::tilemap::SnapCameraToZoneBoundary(state_.camera, state_.zoneBoundary);
 

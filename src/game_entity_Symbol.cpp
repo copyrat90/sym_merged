@@ -70,7 +70,7 @@ Symbol::Symbol(bn::fixed_point position, Symbol::Type type)
 {
 }
 
-Symbol::Symbol(Symbol&& other) : IPhysicsEntity(bn::move(other)), type_(other.type_)
+Symbol::Symbol(Symbol&& other) : IPhysicsEntity(bn::move(other)), type_(other.type_), isPickedUp_(other.isPickedUp_)
 {
 }
 
@@ -108,6 +108,17 @@ void Symbol::SetType(Symbol::Type newType)
         if (sprite_)
             AllocateGraphicResource(sprite_->z_order());
     }
+}
+
+bool Symbol::GetPickedUp() const
+{
+    return isPickedUp_;
+}
+
+void Symbol::SetPickedUp(bool isPickedUp)
+{
+    isPickedUp_ = isPickedUp;
+    SetGravityEnabled(!isPickedUp);
 }
 
 } // namespace sym::game::entity

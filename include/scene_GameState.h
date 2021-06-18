@@ -1,7 +1,7 @@
 #pragma once
 
 #include <bn_affine_bg_ptr.h>
-#include <bn_forward_list.h>
+#include <bn_list.h>
 #include <bn_vector.h>
 
 #include "effect_Transition.h"
@@ -17,18 +17,6 @@
 namespace sym::scene
 {
 
-namespace
-{
-
-constexpr int ZONE_MAX_COUNT = 8;
-constexpr int STAGE_SYMBOL_MAX_COUNT = 16;
-constexpr int ZONE_HOVER_BUTTON_MAX_COUNT = 8;
-constexpr int ZONE_PRESSURE_BUTTON_MAX_COUNT = 8;
-constexpr int ZONE_DOOR_MAX_COUNT = 8;
-constexpr int ZONE_SHUTTER_MAX_COUNT = 8;
-
-} // namespace
-
 /**
  * @brief All scene::Game member variables reside in here.
  * to easily pass states by reference into Systems.
@@ -36,6 +24,13 @@ constexpr int ZONE_SHUTTER_MAX_COUNT = 8;
  */
 struct GameState
 {
+    static constexpr int ZONE_MAX_COUNT = 8;
+    static constexpr int STAGE_SYMBOL_MAX_COUNT = 16;
+    static constexpr int ZONE_HOVER_BUTTON_MAX_COUNT = 8;
+    static constexpr int ZONE_PRESSURE_BUTTON_MAX_COUNT = 8;
+    static constexpr int ZONE_DOOR_MAX_COUNT = 8;
+    static constexpr int ZONE_SHUTTER_MAX_COUNT = 8;
+
     scene::Param& sceneParam_;
     const game::stage::StageInfo& stageInfo;
 
@@ -50,7 +45,7 @@ struct GameState
 
     // Movable entities.
     game::entity::Player player;
-    bn::vector<bn::forward_list<game::entity::Symbol, STAGE_SYMBOL_MAX_COUNT>, ZONE_MAX_COUNT> symbolsOfZones;
+    bn::vector<bn::list<game::entity::Symbol, STAGE_SYMBOL_MAX_COUNT>, ZONE_MAX_COUNT> symbolsOfZones;
     bn::array<bn::optional<game::entity::Symbol>, 2> symbolsInHands;
 
     // Fixed entities.
