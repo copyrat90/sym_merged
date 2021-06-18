@@ -88,16 +88,20 @@ void ZoneSwitch::SwitchToNextZone_()
         pressureButton.FreeGraphicResource();
 
     // switch zone
+    const int prevZoneIdx = state_.currentZoneIdx;
     state_.currentZoneIdx = nextZone_->destinationZoneIndex;
     const auto& currentZoneInfo = state_.stageInfo.zoneInfos[state_.currentZoneIdx];
 
     // Set bg and tiles
-    state_.currentMapBg = currentZoneInfo.mapBg.create_bg({0, 0});
-    state_.currentMapBg.set_wrapping_enabled(false);
-    state_.currentMapBg.set_blending_enabled(true);
-    state_.currentMapBg.set_mosaic_enabled(true);
-    state_.currentMapBg.set_camera(state_.camera);
-    state_.currentMapTileInfo = helper::tilemap::TileInfo(state_.currentMapBg);
+    if (currentZoneInfo.mapBg != state_.stageInfo.zoneInfos[prevZoneIdx].mapBg)
+    {
+        state_.currentMapBg = currentZoneInfo.mapBg.create_bg({0, 0});
+        state_.currentMapBg.set_wrapping_enabled(false);
+        state_.currentMapBg.set_blending_enabled(true);
+        state_.currentMapBg.set_mosaic_enabled(true);
+        state_.currentMapBg.set_camera(state_.camera);
+        state_.currentMapTileInfo = helper::tilemap::TileInfo(state_.currentMapBg);
+    }
     state_.zoneBoundary = helper::tilemap::ConvertIndexRectToPositionRect(currentZoneInfo.zoneBoundary);
     state_.player.SetPosition(currentZoneInfo.entrances[nextZone_->entranceOfZoneIndex].position);
 
