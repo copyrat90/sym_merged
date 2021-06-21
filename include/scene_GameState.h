@@ -63,9 +63,9 @@ struct GameState
     static constexpr int KEYPRESS_LASTING_UPDATE_COUNT = 5;
     int lKeyLastingCount;
     int rKeyLastingCount;
-    static constexpr int KEYPRESS_COOLDOWN_UPDATE_COUNT = 20;
-    int lKeyCooldownCount;
-    int rKeyCooldownCount;
+    // static constexpr int KEYPRESS_COOLDOWN_UPDATE_COUNT = 20;
+    // int lKeyCooldownCount;
+    // int rKeyCooldownCount;
 };
 
 } // namespace sym::scene

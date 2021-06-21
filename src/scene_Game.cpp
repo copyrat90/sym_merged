@@ -63,8 +63,6 @@ Game::Game(scene::Param& sceneParam)
           helper::tilemap::TileInfo(state_.currentMapBg),
           -1,
           -1,
-          -1,
-          -1,
       },
       keyPress_(state_), triggerInteraction_(state_), physicsMovement_(state_), zoneSwitch_(state_)
 {

@@ -26,9 +26,15 @@ void TriggerInteraction::Update()
         if (bn::keypad::down_held())
         {
             if (IsLKeyPressLasts_())
+            {
                 PlayerPutsDownSymbol_(Hand::LEFT);
-            else
+                ResetLKeyPress_();
+            }
+            else if (IsRKeyPressLasts_())
+            {
                 PlayerPutsDownSymbol_(Hand::RIGHT);
+                ResetRKeyPress_();
+            }
         }
         else
         {
@@ -124,8 +130,8 @@ bn::pair<TriggerInteraction::EntityType, TriggerInteraction::Hand> TriggerIntera
 
 void TriggerInteraction::PlayerPicksUpSymbol_(Hand interactHand, bn::ilist<entity::Symbol>::iterator symbolIter)
 {
-    // WIP
     symbolIter->SetPickedUp(true);
+    symbolIter->SetGravityEnabled(false);
 
     if (interactHand == Hand::LEFT)
         state_.symbolsInHands[0] = bn::move(*symbolIter);
@@ -141,6 +147,7 @@ void TriggerInteraction::PlayerPutsDownSymbol_(Hand hand)
         if (state_.symbolsInHands[0])
         {
             state_.symbolsInHands[0]->SetPickedUp(false);
+            state_.symbolsInHands[0]->SetGravityEnabled(true);
             state_.symbolsOfZones[state_.currentZoneIdx].push_back(bn::move(*state_.symbolsInHands[0]));
             state_.symbolsInHands[0].reset();
         }
@@ -150,6 +157,7 @@ void TriggerInteraction::PlayerPutsDownSymbol_(Hand hand)
         if (state_.symbolsInHands[1])
         {
             state_.symbolsInHands[1]->SetPickedUp(false);
+            state_.symbolsInHands[1]->SetGravityEnabled(true);
             state_.symbolsOfZones[state_.currentZoneIdx].push_back(bn::move(*state_.symbolsInHands[1]));
             state_.symbolsInHands[1].reset();
         }

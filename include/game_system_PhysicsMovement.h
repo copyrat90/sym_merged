@@ -21,8 +21,6 @@ public:
 private:
     void UpdatePlayer_();
     void PlayerKeyboardHandle_();
-    void PlayerGravity_();
-    void PlayerClampVelocity_();
     void PlayerCollision_();
     void PlayerAnimation_();
 

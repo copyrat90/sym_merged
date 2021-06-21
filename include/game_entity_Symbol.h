@@ -39,6 +39,9 @@ public:
     bool GetPickedUp() const;
     void SetPickedUp(bool isPickedUp);
 
+    bool GetThrown() const;
+    void SetThrown(bool isThrown);
+
 private:
     static constexpr bn::fixed_rect RELATIVE_INTERACT_RANGE = {{0, 0}, {24, 16}};
     static constexpr bool IS_GRAVITY_ENABLED_BY_DEFAULT = true;
@@ -46,6 +49,7 @@ private:
 
     Symbol::Type type_;
     bool isPickedUp_ = false;
+    bool isThrown_ = false;
 };
 
 } // namespace sym::game::entity

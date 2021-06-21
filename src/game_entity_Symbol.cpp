@@ -70,7 +70,8 @@ Symbol::Symbol(bn::fixed_point position, Symbol::Type type)
 {
 }
 
-Symbol::Symbol(Symbol&& other) : IPhysicsEntity(bn::move(other)), type_(other.type_), isPickedUp_(other.isPickedUp_)
+Symbol::Symbol(Symbol&& other)
+    : IPhysicsEntity(bn::move(other)), type_(other.type_), isPickedUp_(other.isPickedUp_), isThrown_(other.isThrown_)
 {
 }
 
@@ -78,6 +79,8 @@ Symbol& Symbol::operator=(Symbol&& other)
 {
     IPhysicsEntity::operator=(bn::move(other));
     type_ = other.type_;
+    isPickedUp_ = other.isPickedUp_;
+    isThrown_ = other.isThrown_;
     return *this;
 }
 
@@ -118,7 +121,16 @@ bool Symbol::GetPickedUp() const
 void Symbol::SetPickedUp(bool isPickedUp)
 {
     isPickedUp_ = isPickedUp;
-    SetGravityEnabled(!isPickedUp);
+}
+
+bool Symbol::GetThrown() const
+{
+    return isThrown_;
+}
+
+void Symbol::SetThrown(bool isThrown)
+{
+    isThrown_ = isThrown;
 }
 
 } // namespace sym::game::entity

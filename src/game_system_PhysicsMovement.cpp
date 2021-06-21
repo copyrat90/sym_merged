@@ -20,15 +20,16 @@ namespace sym::game::system
 namespace
 {
 
-constexpr bn::fixed_point MAX_PLAYER_VEL = {2, 3};
+constexpr bn::fixed_point MAX_ENTITY_VEL = {2, 3};
 constexpr bn::fixed_point PLAYER_DELTA_VEL = {0.3, 0.3};
 constexpr bn::fixed JUMP_VEL = -2.8;
-constexpr bn::fixed_point MAX_SYMBOL_VEL = {3, 3};
 constexpr bn::fixed_point SYMBOL_DELTA_VEL = {0.3, 0.3};
 constexpr bn::fixed VEL_FRICTION = 1.2;
 constexpr bn::fixed COLLISION_DELTA_EPSILON = 0.01;
 
-static_assert(bn::abs(JUMP_VEL) <= MAX_PLAYER_VEL.y());
+constexpr int COLLISION_LOOP_MAX_COUNT = 100;
+
+static_assert(bn::abs(JUMP_VEL) <= MAX_ENTITY_VEL.y());
 
 enum class PushbackDirection
 {
@@ -192,6 +193,61 @@ enum class PushbackDirection
     return bn::nullopt;
 }
 
+void ApplyGravity_(entity::IPhysicsEntity& entity)
+{
+    bn::fixed_point velocity = entity.GetVelocity();
+    velocity.set_y(velocity.y() + entity.GetGravityScale());
+    entity.SetVelocity(velocity);
+}
+
+void ClampVelocity_(entity::IPhysicsEntity& entity)
+{
+    bn::fixed_point velocity = entity.GetVelocity();
+
+    if (velocity.x() > MAX_ENTITY_VEL.x())
+        velocity.set_x(MAX_ENTITY_VEL.x());
+    else if (velocity.x() < -MAX_ENTITY_VEL.x())
+        velocity.set_x(-MAX_ENTITY_VEL.x());
+    if (velocity.y() > MAX_ENTITY_VEL.y())
+        velocity.set_y(MAX_ENTITY_VEL.y());
+    else if (velocity.y() < -MAX_ENTITY_VEL.y())
+        velocity.set_y(-MAX_ENTITY_VEL.y());
+
+    entity.SetVelocity(velocity);
+}
+
+void SymbolCollision_(entity::Symbol& symbol, const helper::tilemap::TileInfo& mapTileInfo)
+{
+    bn::optional<PushbackDirection> collisionResult;
+    bool nextGrounded = false;
+    for (int i = 0; i < COLLISION_LOOP_MAX_COUNT; ++i)
+    {
+        collisionResult = PlatformCollisionResolution_(symbol, mapTileInfo);
+        if (!collisionResult)
+            break;
+        if (symbol.GetThrown())
+        {
+            symbol.SetThrown(false);
+            symbol.SetGravityEnabled(true);
+        }
+        if (collisionResult == PushbackDirection::UP)
+            nextGrounded = true;
+        if (i == COLLISION_LOOP_MAX_COUNT - 1)
+            BN_LOG("[WARN] Collision detection loop max count reached!");
+    }
+    symbol.SetGrounded(nextGrounded);
+}
+
+void UpdateSymbolOnFloor_(entity::Symbol& symbol, const helper::tilemap::TileInfo& mapTileInfo)
+{
+    ApplyGravity_(symbol);
+
+    ClampVelocity_(symbol);
+    symbol.SetPosition(symbol.GetPosition() + symbol.GetVelocity());
+
+    SymbolCollision_(symbol, mapTileInfo);
+}
+
 } // namespace
 
 PhysicsMovement::PhysicsMovement(scene::GameState& state) : ISystem(state)
@@ -206,10 +262,10 @@ void PhysicsMovement::Update()
 
 void PhysicsMovement::UpdatePlayer_()
 {
-    PlayerGravity_();
+    ApplyGravity_(state_.player);
     PlayerKeyboardHandle_();
 
-    PlayerClampVelocity_();
+    ClampVelocity_(state_.player);
     state_.player.SetPosition(state_.player.GetPosition() + state_.player.GetVelocity());
 
     PlayerCollision_();
@@ -248,37 +304,11 @@ void PhysicsMovement::PlayerKeyboardHandle_()
     state_.player.SetVelocity(velocity);
 }
 
-void PhysicsMovement::PlayerGravity_()
-{
-    // if (state_.player.GetGrounded())
-    //     return;
-
-    bn::fixed_point velocity = state_.player.GetVelocity();
-    velocity.set_y(velocity.y() + state_.player.GetGravityScale());
-    state_.player.SetVelocity(velocity);
-}
-
-void PhysicsMovement::PlayerClampVelocity_()
-{
-    bn::fixed_point velocity = state_.player.GetVelocity();
-
-    if (velocity.x() > MAX_PLAYER_VEL.x())
-        velocity.set_x(MAX_PLAYER_VEL.x());
-    else if (velocity.x() < -MAX_PLAYER_VEL.x())
-        velocity.set_x(-MAX_PLAYER_VEL.x());
-    if (velocity.y() > MAX_PLAYER_VEL.y())
-        velocity.set_y(MAX_PLAYER_VEL.y());
-    else if (velocity.y() < -MAX_PLAYER_VEL.y())
-        velocity.set_y(-MAX_PLAYER_VEL.y());
-
-    state_.player.SetVelocity(velocity);
-}
-
 void PhysicsMovement::PlayerCollision_()
 {
     bn::optional<PushbackDirection> collisionResult;
     bool nextGrounded = false;
-    for (int i = 0; i < 100; ++i)
+    for (int i = 0; i < COLLISION_LOOP_MAX_COUNT; ++i)
     {
         collisionResult = PlatformCollisionResolution_(state_.player, state_.currentMapTileInfo);
         if (!collisionResult)
@@ -306,8 +336,8 @@ void PhysicsMovement::PlayerCollision_()
             BN_ERROR("Invalid PushbackDirection: ", static_cast<int>(*collisionResult));
         }
 
-        if (i == 99)
-            BN_LOG("[WARN] Collision detection max loop reached!");
+        if (i == COLLISION_LOOP_MAX_COUNT - 1)
+            BN_LOG("[WARN] Collision detection loop max count reached!");
     }
     state_.player.SetGrounded(nextGrounded);
 }
@@ -365,6 +395,10 @@ void PhysicsMovement::UpdateSymbolsInHands_()
 
 void PhysicsMovement::UpdateSymbolsOnFloor_()
 {
+    for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
+    {
+        UpdateSymbolOnFloor_(symbol, state_.currentMapTileInfo);
+    }
 }
 
 void PhysicsMovement::UpdateSymbolsThrown_()
