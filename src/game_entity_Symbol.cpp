@@ -14,6 +14,10 @@ namespace sym::game::entity
 namespace
 {
 
+static constexpr bn::fixed_rect RELATIVE_INTERACT_RANGE = {{0, 0}, {24, 16}};
+static constexpr bool IS_GRAVITY_ENABLED_BY_DEFAULT = true;
+static constexpr bn::fixed GRAVITY_SCALE = 0.3;
+
 bool IsComplexSymbol_(Symbol::Type type)
 {
     return static_cast<int>(type) >= Symbol::COMPLEX_SYMBOL_START_NUM;

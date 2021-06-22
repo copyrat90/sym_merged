@@ -216,7 +216,8 @@ void ClampVelocity_(entity::IPhysicsEntity& entity)
     entity.SetVelocity(velocity);
 }
 
-void SymbolCollision_(entity::Symbol& symbol, const helper::tilemap::TileInfo& mapTileInfo)
+void SymbolCollision_(entity::Symbol& symbol, const helper::tilemap::TileInfo& mapTileInfo,
+                      const effect::Transition& fadeIn)
 {
     bn::optional<PushbackDirection> collisionResult;
     bool nextGrounded = false;
@@ -225,27 +226,47 @@ void SymbolCollision_(entity::Symbol& symbol, const helper::tilemap::TileInfo& m
         collisionResult = PlatformCollisionResolution_(symbol, mapTileInfo);
         if (!collisionResult)
             break;
-        if (symbol.GetThrown())
+        switch (*collisionResult)
         {
-            symbol.SetThrown(false);
-            symbol.SetGravityEnabled(true);
+        case PushbackDirection::UP:
+            if (!nextGrounded)
+            {
+                nextGrounded = true;
+                if (!symbol.GetGrounded())
+                {
+                    if (fadeIn.GetState() != effect::Transition::State::ONGOING)
+                        bn::sound_items::sfx_symbol_drop.play();
+                }
+            }
+            break;
+        case PushbackDirection::DOWN:
+        case PushbackDirection::LEFT:
+        case PushbackDirection::RIGHT:
+            if (!symbol.GetGravityEnabled())
+            {
+                symbol.SetThrown(false);
+                symbol.SetGravityEnabled(true);
+                bn::sound_items::sfx_symbol_bump.play();
+            }
+            break;
+        default:
+            BN_ERROR("Invalid PushbackDirection: ", static_cast<int>(*collisionResult));
         }
-        if (collisionResult == PushbackDirection::UP)
-            nextGrounded = true;
         if (i == COLLISION_LOOP_MAX_COUNT - 1)
             BN_LOG("[WARN] Collision detection loop max count reached!");
     }
     symbol.SetGrounded(nextGrounded);
 }
 
-void UpdateSymbolOnFloor_(entity::Symbol& symbol, const helper::tilemap::TileInfo& mapTileInfo)
+void UpdateSymbolOnFloor_(entity::Symbol& symbol, const helper::tilemap::TileInfo& mapTileInfo,
+                          const effect::Transition& fadeIn)
 {
     ApplyGravity_(symbol);
 
     ClampVelocity_(symbol);
     symbol.SetPosition(symbol.GetPosition() + symbol.GetVelocity());
 
-    SymbolCollision_(symbol, mapTileInfo);
+    SymbolCollision_(symbol, mapTileInfo, fadeIn);
 }
 
 } // namespace
@@ -397,7 +418,7 @@ void PhysicsMovement::UpdateSymbolsOnFloor_()
 {
     for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
     {
-        UpdateSymbolOnFloor_(symbol, state_.currentMapTileInfo);
+        UpdateSymbolOnFloor_(symbol, state_.currentMapTileInfo, state_.fadeIn);
     }
 }
 
