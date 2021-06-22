@@ -8,8 +8,6 @@
 #include <bn_optional.h>
 #include <bn_span.h>
 
-#include <bn_log.h>
-
 namespace sym::helper::tilemap
 {
 

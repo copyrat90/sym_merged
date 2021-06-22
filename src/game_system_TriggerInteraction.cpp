@@ -9,8 +9,6 @@
 #include "constant.h"
 #include "helper_math.h"
 
-#include "bn_log.h"
-
 namespace sym::game::system
 {
 

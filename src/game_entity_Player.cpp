@@ -6,9 +6,6 @@
 #include "bn_sprite_items_spr_ingame_protagonist_star.h"
 #include "helper_rect.h"
 
-#include "bn_log.h"
-#include "bn_string_view.h"
-
 namespace sym::game::entity
 {
 
