@@ -68,6 +68,8 @@ private:
      */
     bool UpdateAction_();
     void DestroyActions_();
+
+    void AddRelativeYPos_(bn::fixed_point& resultPos, bool isFront) const;
 };
 
 } // namespace sym::game::entity

@@ -6,6 +6,9 @@
 #include "bn_sprite_items_spr_ingame_protagonist_star.h"
 #include "helper_rect.h"
 
+#include "bn_log.h"
+#include "bn_string_view.h"
+
 namespace sym::game::entity
 {
 
@@ -24,8 +27,21 @@ constexpr bn::fixed_rect RELATIVE_LEFT_BUTTON_INTERACT_RANGE =
     helper::rect::MakeFixedRectByTopLeftAndSize({-1 - SPRITE_WIDTH / 2, 6 - SPRITE_HEIGHT / 2}, {15, 17});
 constexpr bn::fixed_rect RELATIVE_RIGHT_BUTTON_INTERACT_RANGE =
     helper::rect::MakeFixedRectByTopLeftAndSize({18 - SPRITE_WIDTH / 2, 6 - SPRITE_HEIGHT / 2}, {15, 17});
-constexpr bn::fixed_point RELATIVE_LEFT_SYMBOL_POS = {-12, 2};
-constexpr bn::fixed_point RELATIVE_RIGHT_SYMBOL_POS = {12, 2};
+
+constexpr bn::fixed UNUSED = 0;
+constexpr bn::fixed RELATIVE_LEFT_SYMBOL_X_POS = -12;
+constexpr bn::fixed RELATIVE_RIGHT_SYMBOL_X_POS = 12;
+// index 0 is the final index for animate_action_forever
+constexpr bn::fixed IDLE_FRONT_SYMBOL_Y_POSITIONS[] = {-2, -3};
+constexpr bn::fixed IDLE_BACK_SYMBOL_Y_POSITIONS[] = {-1, -2};
+// index 0 is unused for animate_action_once
+constexpr bn::fixed JUMP_FRONT_SYMBOL_Y_POSITIONS[] = {UNUSED, 0, -3, -4};
+constexpr bn::fixed JUMP_BACK_SYMBOL_Y_POSITIONS[] = {UNUSED, 1, -2, -2};
+constexpr bn::fixed FALL_FRONT_SYMBOL_Y_POSITIONS[] = {UNUSED, -2, -3};
+constexpr bn::fixed FALL_BACK_SYMBOL_Y_POSITIONS[] = {UNUSED, -2, -4};
+constexpr bn::fixed LAND_FRONT_SYMBOL_Y_POSITIONS[] = {UNUSED, -1, 0, IDLE_FRONT_SYMBOL_Y_POSITIONS[1]};
+constexpr bn::fixed LAND_BACK_SYMBOL_Y_POSITIONS[] = {UNUSED, -2, 1, IDLE_BACK_SYMBOL_Y_POSITIONS[1]};
+
 constexpr bn::fixed_point RELATIVE_MERGE_SYMBOL_POS = {0, -21};
 
 constexpr bn::fixed_rect RELATIVE_PHYSICS_COLLIDER = {{0, 0}, {26, 26}};
@@ -146,12 +162,20 @@ bn::fixed_rect Player::GetRightButtonInteractRange() const
 
 bn::fixed_point Player::GetLeftSymbolPosition() const
 {
-    return position_ + RELATIVE_LEFT_SYMBOL_POS;
+    bn::fixed_point resultPos = position_;
+    resultPos.set_x(resultPos.x() + RELATIVE_LEFT_SYMBOL_X_POS);
+    const bool leftIsFront = GetHorizontalFlip();
+    AddRelativeYPos_(resultPos, leftIsFront);
+    return resultPos;
 }
 
 bn::fixed_point Player::GetRightSymbolPosition() const
 {
-    return position_ + RELATIVE_RIGHT_SYMBOL_POS;
+    bn::fixed_point resultPos = position_;
+    resultPos.set_x(resultPos.x() + RELATIVE_RIGHT_SYMBOL_X_POS);
+    const bool rightIsFront = !GetHorizontalFlip();
+    AddRelativeYPos_(resultPos, rightIsFront);
+    return resultPos;
 }
 
 bn::fixed_point Player::GetMergeSymbolPosition() const
@@ -191,6 +215,45 @@ void Player::DestroyActions_()
     additionalWaitUpdateCount = -1;
     action2_.reset();
     action3_.reset();
+}
+
+void Player::AddRelativeYPos_(bn::fixed_point& resultPos, bool isFront) const
+{
+    switch (actionState_)
+    {
+    case ActionState::IDLE:
+        if (isFront)
+            resultPos.set_y(resultPos.y() + IDLE_FRONT_SYMBOL_Y_POSITIONS[action2_->current_index()]);
+        else
+            resultPos.set_y(resultPos.y() + IDLE_BACK_SYMBOL_Y_POSITIONS[action2_->current_index()]);
+        break;
+    case ActionState::JUMP:
+        if (isFront)
+            resultPos.set_y(resultPos.y() + JUMP_FRONT_SYMBOL_Y_POSITIONS[action3_->current_index()]);
+        else
+            resultPos.set_y(resultPos.y() + JUMP_BACK_SYMBOL_Y_POSITIONS[action3_->current_index()]);
+        break;
+    case ActionState::FALL:
+        if (isFront)
+            resultPos.set_y(resultPos.y() + FALL_FRONT_SYMBOL_Y_POSITIONS[action2_->current_index()]);
+        else
+            resultPos.set_y(resultPos.y() + FALL_BACK_SYMBOL_Y_POSITIONS[action2_->current_index()]);
+        break;
+    case ActionState::LAND:
+        if (isFront)
+            resultPos.set_y(resultPos.y() + LAND_FRONT_SYMBOL_Y_POSITIONS[action3_->current_index()]);
+        else
+            resultPos.set_y(resultPos.y() + LAND_BACK_SYMBOL_Y_POSITIONS[action3_->current_index()]);
+        break;
+        break;
+    case ActionState::MERGE_START:
+    case ActionState::MERGE_END:
+        BN_ERROR("Merge Symbol Position not implemented!");
+        break;
+    default:
+        BN_ERROR("Invalid Player::ActionState : ", static_cast<int>(actionState_));
+        break;
+    }
 }
 
 } // namespace sym::game::entity
