@@ -42,7 +42,8 @@ private:
     void PlayerPicksUpSymbol_(Hand interactHand, bn::ilist<entity::Symbol>::iterator symbolIter);
     void PlayerPutsDownSymbol_(Hand hand);
     void PlayerClicksHoverButton_(int hoverButtonIdx);
-    void InteractHoverButtonAndThrownSymbol_();
+    void InteractHoverButtonsAndThrownSymbol_();
+    void InteractPressureButtonsAndEntities_();
 
     void UpdateKeyLastingCount_();
     [[nodiscard]] bool IsLKeyPressLasts_() const;
@@ -50,6 +51,7 @@ private:
     void ResetLKeyPress_();
     void ResetRKeyPress_();
     void ToggleOpenedHoverButtonAssociatedOpenables_(int hoverButtonIdx);
+    void ToggleOpenedPressureButtonAssociatedOpenables_(int pressureButtonIdx);
 };
 
 } // namespace sym::game::system

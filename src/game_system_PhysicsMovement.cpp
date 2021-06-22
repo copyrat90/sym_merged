@@ -7,6 +7,7 @@
 #include <bn_math.h>
 #include <bn_optional.h>
 
+#include "bn_vector.h"
 #include "helper_keypad.h"
 #include "helper_math.h"
 #include "helper_tilemap.h"
@@ -193,6 +194,41 @@ enum class PushbackDirection
     return bn::nullopt;
 }
 
+/**
+ * @brief Detect and Resolve colision.
+ * You need to call this once again, if if returns value other than `bn::nullopt`.
+ *
+ */
+[[nodiscard]] bn::optional<PushbackDirection> ShuttersCollisionResolution_(
+    entity::IPhysicsEntity& entity, bn::vector<entity::Shutter, scene::GameState::ZONE_SHUTTER_MAX_COUNT>& shutters)
+{
+    for (const auto& shutter : shutters)
+    {
+        bn::fixed_rect entityCollider = entity.GetPhysicsCollider();
+        const bn::fixed_rect shutterCollider = shutter.GetInteractRange();
+        if (shutter.GetOpened())
+            continue;
+        if (!entityCollider.intersects(shutterCollider))
+            continue;
+
+        if (entityCollider.position().x() <= shutterCollider.position().x())
+        {
+            const bn::fixed dx = entityCollider.right() - shutterCollider.left();
+            entity.SetX(entity.GetX() - dx);
+            entity.SetXVelocity(0);
+            return PushbackDirection::LEFT;
+        }
+        else
+        {
+            const bn::fixed dx = shutterCollider.right() - entityCollider.left();
+            entity.SetX(entity.GetX() + dx);
+            entity.SetXVelocity(0);
+            return PushbackDirection::RIGHT;
+        }
+    }
+    return bn::nullopt;
+}
+
 void ApplyGravity_(entity::IPhysicsEntity& entity)
 {
     bn::fixed_point velocity = entity.GetVelocity();
@@ -214,59 +250,6 @@ void ClampVelocity_(entity::IPhysicsEntity& entity)
         velocity.set_y(-MAX_ENTITY_VEL.y());
 
     entity.SetVelocity(velocity);
-}
-
-void SymbolCollision_(entity::Symbol& symbol, const helper::tilemap::TileInfo& mapTileInfo,
-                      const effect::Transition& fadeIn)
-{
-    bn::optional<PushbackDirection> collisionResult;
-    bool nextGrounded = false;
-    for (int i = 0; i < COLLISION_LOOP_MAX_COUNT; ++i)
-    {
-        collisionResult = PlatformCollisionResolution_(symbol, mapTileInfo);
-        if (!collisionResult)
-            break;
-        switch (*collisionResult)
-        {
-        case PushbackDirection::UP:
-            if (!nextGrounded)
-            {
-                nextGrounded = true;
-                if (!symbol.GetGrounded())
-                {
-                    if (fadeIn.GetState() != effect::Transition::State::ONGOING)
-                        bn::sound_items::sfx_symbol_drop.play();
-                }
-            }
-            break;
-        case PushbackDirection::DOWN:
-        case PushbackDirection::LEFT:
-        case PushbackDirection::RIGHT:
-            if (!symbol.GetGravityEnabled())
-            {
-                symbol.SetThrown(false);
-                symbol.SetGravityEnabled(true);
-                bn::sound_items::sfx_symbol_bump.play();
-            }
-            break;
-        default:
-            BN_ERROR("Invalid PushbackDirection: ", static_cast<int>(*collisionResult));
-        }
-        if (i == COLLISION_LOOP_MAX_COUNT - 1)
-            BN_LOG("[WARN] Collision detection loop max count reached!");
-    }
-    symbol.SetGrounded(nextGrounded);
-}
-
-void UpdateSymbolOnFloor_(entity::Symbol& symbol, const helper::tilemap::TileInfo& mapTileInfo,
-                          const effect::Transition& fadeIn)
-{
-    ApplyGravity_(symbol);
-
-    ClampVelocity_(symbol);
-    symbol.SetPosition(symbol.GetPosition() + symbol.GetVelocity());
-
-    SymbolCollision_(symbol, mapTileInfo, fadeIn);
 }
 
 } // namespace
@@ -331,9 +314,17 @@ void PhysicsMovement::PlayerCollision_()
     bool nextGrounded = false;
     for (int i = 0; i < COLLISION_LOOP_MAX_COUNT; ++i)
     {
+        // resolve collision
         collisionResult = PlatformCollisionResolution_(state_.player, state_.currentMapTileInfo);
         if (!collisionResult)
-            break;
+        {
+            collisionResult =
+                ShuttersCollisionResolution_(state_.player, state_.shuttersOfZones[state_.currentZoneIdx]);
+            if (!collisionResult)
+                break;
+        }
+
+        // additional work to do when collision is detected
         switch (*collisionResult)
         {
         case PushbackDirection::UP:
@@ -398,7 +389,7 @@ void PhysicsMovement::PlayerAnimation_()
 void PhysicsMovement::UpdateSymbols_()
 {
     UpdateSymbolsInHands_();
-    UpdateSymbolsOnFloor_();
+    UpdateSymbolsOfCurrentZone_();
     UpdateSymbolsThrown_();
 }
 
@@ -414,12 +405,65 @@ void PhysicsMovement::UpdateSymbolsInHands_()
     }
 }
 
-void PhysicsMovement::UpdateSymbolsOnFloor_()
+void PhysicsMovement::UpdateSymbolsOfCurrentZone_()
 {
     for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
     {
-        UpdateSymbolOnFloor_(symbol, state_.currentMapTileInfo, state_.fadeIn);
+        ApplyGravity_(symbol);
+
+        ClampVelocity_(symbol);
+        symbol.SetPosition(symbol.GetPosition() + symbol.GetVelocity());
+
+        SymbolCollision_(symbol);
     }
+}
+
+void PhysicsMovement::SymbolCollision_(entity::Symbol& symbol)
+{
+    bn::optional<PushbackDirection> collisionResult;
+    bool nextGrounded = false;
+    for (int i = 0; i < COLLISION_LOOP_MAX_COUNT; ++i)
+    {
+        // resolve collision
+        collisionResult = PlatformCollisionResolution_(symbol, state_.currentMapTileInfo);
+        if (!collisionResult)
+        {
+            collisionResult = ShuttersCollisionResolution_(symbol, state_.shuttersOfZones[state_.currentZoneIdx]);
+            if (!collisionResult)
+                break;
+        }
+
+        // additional work to do when collision is detected
+        switch (*collisionResult)
+        {
+        case PushbackDirection::UP:
+            if (!nextGrounded)
+            {
+                nextGrounded = true;
+                if (!symbol.GetGrounded())
+                {
+                    if (state_.fadeIn.GetState() != effect::Transition::State::ONGOING)
+                        bn::sound_items::sfx_symbol_ground_bump.play(constant::volume::sfx_symbol_ground_bump);
+                }
+            }
+            break;
+        case PushbackDirection::DOWN:
+        case PushbackDirection::LEFT:
+        case PushbackDirection::RIGHT:
+            if (!symbol.GetGravityEnabled())
+            {
+                symbol.SetThrown(false);
+                symbol.SetGravityEnabled(true);
+                bn::sound_items::sfx_symbol_wall_bump.play(constant::volume::sfx_symbol_wall_bump);
+            }
+            break;
+        default:
+            BN_ERROR("Invalid PushbackDirection: ", static_cast<int>(*collisionResult));
+        }
+        if (i == COLLISION_LOOP_MAX_COUNT - 1)
+            BN_LOG("[WARN] Collision detection loop max count reached!");
+    }
+    symbol.SetGrounded(nextGrounded);
 }
 
 void PhysicsMovement::UpdateSymbolsThrown_()

@@ -26,8 +26,9 @@ private:
 
     void UpdateSymbols_();
     void UpdateSymbolsInHands_();
-    void UpdateSymbolsOnFloor_();
+    void UpdateSymbolsOfCurrentZone_();
     void UpdateSymbolsThrown_();
+    void SymbolCollision_(entity::Symbol&);
 
     static constexpr int MAX_PLAYER_JUMP_COUNT = 1;
     int playerJumpCount = MAX_PLAYER_JUMP_COUNT;

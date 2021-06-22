@@ -42,7 +42,7 @@ int main()
     constexpr int IWRAM_BYTES = 32'768, EWRAM_BYTES = 262'144;
     int resourceUsageUpdateCountDown = 1;
     bn::vector<bn::sprite_ptr, 24> resourceUsageSprites;
-    bool isDebugViewOn = true;
+    bool isDebugViewOn = false;
 #endif
 
     while (true)

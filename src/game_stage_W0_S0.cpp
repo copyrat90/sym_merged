@@ -21,33 +21,28 @@ constexpr bn::size MAP_DIMENSIONS[] = {
 };
 
 constexpr ZoneInfo::SymbolInfo Z0_symbolInfos_[] = {
-    {{227 - MAP_DIMENSIONS[0].width() / 2, 927 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::BAR},
-    {{254 - MAP_DIMENSIONS[0].width() / 2, 927 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::XOR},
+    {{106 - MAP_DIMENSIONS[0].width() / 2, 974 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::BAR},
+    {{127 - MAP_DIMENSIONS[0].width() / 2, 974 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::XOR},
 };
 
 constexpr ZoneInfo::DoorInfo Z0_doorInfos_[] = {
-    {{87 - MAP_DIMENSIONS[0].width() / 2, 849 - MAP_DIMENSIONS[0].height() / 2}, false, -1, -1, 1},
-    {{55 - MAP_DIMENSIONS[0].width() / 2, 849 - MAP_DIMENSIONS[0].height() / 2}, true, -1, -1, 1},
-    {{87 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}, false, -1, -1, 2},
-    {{55 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}, true, -1, -1, 2},
+    {{124 - MAP_DIMENSIONS[0].width() / 2, 872 - MAP_DIMENSIONS[0].height() / 2}, false, -1, -1, 2},
 };
 
 constexpr ZoneInfo::ShutterInfo Z0_shutterInfos_[] = {
-    {{256 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}, false, 0},
-    {{135 - MAP_DIMENSIONS[0].width() / 2, 849 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
-    {{119 - MAP_DIMENSIONS[0].width() / 2, 849 - MAP_DIMENSIONS[0].height() / 2}, true, 1},
-    {{135 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}, false, 2},
-    {{119 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}, true, 2},
+    {{252 - MAP_DIMENSIONS[0].width() / 2, 928 - MAP_DIMENSIONS[0].height() / 2}, false, 0},
+    {{154 - MAP_DIMENSIONS[0].width() / 2, 872 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
+    {{262 - MAP_DIMENSIONS[0].width() / 2, 928 - MAP_DIMENSIONS[0].height() / 2}, false, 3},
 };
 
 constexpr ZoneInfo::ButtonInfo Z0_hoverButtonInfos_[] = {
-    {{92 - MAP_DIMENSIONS[0].width() / 2, 962 - MAP_DIMENSIONS[0].height() / 2}, false, 0},
-    {{167 - MAP_DIMENSIONS[0].width() / 2, 849 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
-    {{167 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}, false, 2},
+    {{180 - MAP_DIMENSIONS[0].width() / 2, 974 - MAP_DIMENSIONS[0].height() / 2}, false, 0},
+    {{205 - MAP_DIMENSIONS[0].width() / 2, 870 - MAP_DIMENSIONS[0].height() / 2}, false, 2},
 };
 
 constexpr ZoneInfo::ButtonInfo Z0_pressureButtonInfos_[] = {
-    {{136 - MAP_DIMENSIONS[0].width() / 2, 984 - MAP_DIMENSIONS[0].height() / 2}, false, 3},
+    {{257 - MAP_DIMENSIONS[0].width() / 2, 856 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
+    {{210 - MAP_DIMENSIONS[0].width() / 2, 936 - MAP_DIMENSIONS[0].height() / 2}, false, 3},
 };
 
 constexpr ZoneInfo::ExitInfo Z0_exitInfos_[] = {

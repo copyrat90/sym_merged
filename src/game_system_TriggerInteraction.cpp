@@ -63,7 +63,8 @@ void TriggerInteraction::Update()
         }
     }
 
-    InteractHoverButtonAndThrownSymbol_();
+    InteractHoverButtonsAndThrownSymbol_();
+    InteractPressureButtonsAndEntities_();
 }
 
 bn::pair<TriggerInteraction::EntityType, TriggerInteraction::Hand> TriggerInteraction::
@@ -128,6 +129,8 @@ bn::pair<TriggerInteraction::EntityType, TriggerInteraction::Hand> TriggerIntera
 
 void TriggerInteraction::PlayerPicksUpSymbol_(Hand interactHand, bn::ilist<entity::Symbol>::iterator symbolIter)
 {
+    bn::sound_items::sfx_symbol_pickup.play(constant::volume::sfx_symbol_pickup);
+
     symbolIter->SetPickedUp(true);
     symbolIter->SetGravityEnabled(false);
 
@@ -148,6 +151,7 @@ void TriggerInteraction::PlayerPutsDownSymbol_(Hand hand)
             state_.symbolsInHands[0]->SetGravityEnabled(true);
             state_.symbolsOfZones[state_.currentZoneIdx].push_back(bn::move(*state_.symbolsInHands[0]));
             state_.symbolsInHands[0].reset();
+            bn::sound_items::sfx_symbol_drop.play(constant::volume::sfx_symbol_drop);
         }
     }
     else
@@ -158,6 +162,7 @@ void TriggerInteraction::PlayerPutsDownSymbol_(Hand hand)
             state_.symbolsInHands[1]->SetGravityEnabled(true);
             state_.symbolsOfZones[state_.currentZoneIdx].push_back(bn::move(*state_.symbolsInHands[1]));
             state_.symbolsInHands[1].reset();
+            bn::sound_items::sfx_symbol_drop.play(constant::volume::sfx_symbol_drop);
         }
     }
 }
@@ -167,12 +172,53 @@ void TriggerInteraction::PlayerClicksHoverButton_(int hoverButtonIdx)
     auto& hoverButton = state_.hoverButtonsOfZones[state_.currentZoneIdx][hoverButtonIdx];
     hoverButton.ToggleButtonOn();
     ToggleOpenedHoverButtonAssociatedOpenables_(hoverButtonIdx);
-    bn::sound_items::sfx_toggle_button.play(constant::volume::sfx_toggle_button);
+    bn::sound_items::sfx_hover_button_toggle.play(constant::volume::sfx_hover_button_toggle);
 }
 
-void TriggerInteraction::InteractHoverButtonAndThrownSymbol_()
+void TriggerInteraction::InteractHoverButtonsAndThrownSymbol_()
 {
     // TODO
+}
+
+void TriggerInteraction::InteractPressureButtonsAndEntities_()
+{
+    const bn::fixed_rect playerCollider = state_.player.GetPhysicsCollider();
+    auto& pressureButtons = state_.pressureButtonsOfZones[state_.currentZoneIdx];
+    for (int buttonIdx = 0; buttonIdx < pressureButtons.size(); ++buttonIdx)
+    {
+        auto& button = pressureButtons[buttonIdx];
+
+        if (!button.CanButtonBeToggled())
+            continue;
+
+        // player & symbol collision check
+        const bool prevButtonOn = button.GetButtonOn();
+        bool currentButtonOn = false;
+
+        if (button.GetInteractRange().intersects(playerCollider))
+        {
+            currentButtonOn = true;
+        }
+        else
+        {
+            for (const auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
+            {
+                if (button.GetInteractRange().intersects(symbol.GetPhysicsCollider()))
+                {
+                    currentButtonOn = true;
+                    break;
+                }
+            }
+        }
+
+        // result: toggles or not
+        if ((!prevButtonOn && currentButtonOn) || (prevButtonOn && !currentButtonOn))
+        {
+            button.ToggleButtonOn();
+            bn::sound_items::sfx_pressure_button_toggle.play(constant::volume::sfx_pressure_button_toggle);
+            ToggleOpenedPressureButtonAssociatedOpenables_(buttonIdx);
+        }
+    }
 }
 
 bool TriggerInteraction::IsLKeyPressLasts_() const
@@ -208,6 +254,23 @@ void TriggerInteraction::ToggleOpenedHoverButtonAssociatedOpenables_(int hoverBu
     for (int i = 0; i < state_.shuttersOfZones[state_.currentZoneIdx].size(); ++i)
     {
         if (hoverButtonTextNum == zoneInfo.shutters[i].textSpriteNumber)
+            state_.shuttersOfZones[state_.currentZoneIdx][i].ToggleOpened();
+    }
+}
+
+void TriggerInteraction::ToggleOpenedPressureButtonAssociatedOpenables_(int pressureButtonIdx)
+{
+    const auto& zoneInfo = state_.stageInfo.zoneInfos[state_.currentZoneIdx];
+    const int pressureButtonTextNum = zoneInfo.pressureButtons[pressureButtonIdx].textSpriteNumber;
+
+    for (int i = 0; i < state_.doorsOfZones[state_.currentZoneIdx].size(); ++i)
+    {
+        if (pressureButtonTextNum == zoneInfo.doors[i].textSpriteNumber)
+            state_.doorsOfZones[state_.currentZoneIdx][i].ToggleOpened();
+    }
+    for (int i = 0; i < state_.shuttersOfZones[state_.currentZoneIdx].size(); ++i)
+    {
+        if (pressureButtonTextNum == zoneInfo.shutters[i].textSpriteNumber)
             state_.shuttersOfZones[state_.currentZoneIdx][i].ToggleOpened();
     }
 }

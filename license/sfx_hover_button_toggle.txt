@@ -1,0 +1,6 @@
+Sound name : Click
+Made by : complex_waveform
+Link : https://freesound.org/people/complex_waveform/sounds/213148/
+License : CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
+
+This sound is embedded into GBA, thus modified to 22050Hz, 8bit PCM.

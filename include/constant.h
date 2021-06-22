@@ -37,10 +37,13 @@ constexpr bn::fixed music_rene = 0.2;
 constexpr bn::fixed sfx_menu_cursor = SFX_DEFAULT;
 constexpr bn::fixed sfx_menu_select = SFX_DEFAULT;
 constexpr bn::fixed sfx_player_jump = SFX_DEFAULT;
-constexpr bn::fixed sfx_symbol_bump = SFX_DEFAULT;
+constexpr bn::fixed sfx_symbol_pickup = 0.5;
 constexpr bn::fixed sfx_symbol_drop = SFX_DEFAULT;
+constexpr bn::fixed sfx_symbol_wall_bump = SFX_DEFAULT;
+constexpr bn::fixed sfx_symbol_ground_bump = SFX_DEFAULT;
 constexpr bn::fixed sfx_symbol_throw = SFX_DEFAULT;
-constexpr bn::fixed sfx_toggle_button = SFX_DEFAULT;
+constexpr bn::fixed sfx_hover_button_toggle = SFX_DEFAULT;
+constexpr bn::fixed sfx_pressure_button_toggle = SFX_DEFAULT;
 
 constexpr bn::fixed ClampVolume(bn::fixed volume)
 {
