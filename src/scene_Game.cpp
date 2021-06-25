@@ -59,7 +59,6 @@ Game::Game(scene::Param& sceneParam)
           {},
           {},
           false,
-          true,
           helper::tilemap::TileInfo(state_.currentMapBg),
           -1,
           -1,

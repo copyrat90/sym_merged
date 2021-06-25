@@ -56,7 +56,6 @@ struct GameState
         pressureButtonsOfZones;
 
     bool isPaused;
-    bool isPlayerControllable;
 
     helper::tilemap::TileInfo currentMapTileInfo;
 

@@ -37,6 +37,9 @@ public:
     [[nodiscard]] bn::fixed_point GetRightSymbolPosition() const;
     [[nodiscard]] bn::fixed_point GetMergeSymbolPosition() const;
 
+    bool GetControllable() const;
+    void SetControllable(bool isControllable);
+
     enum class ActionState
     {
         IDLE,
@@ -59,7 +62,9 @@ private:
      * (i.e. the last animation frame is used after the action ends.)
      *
      */
-    int additionalWaitUpdateCount = -1;
+    int additionalWaitUpdateCount_ = -1;
+
+    bool isControllable_ = true;
 
     /**
      * @brief Updates action.

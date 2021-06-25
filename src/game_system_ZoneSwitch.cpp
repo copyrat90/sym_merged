@@ -29,7 +29,7 @@ void ZoneSwitch::UpdateNextZone_()
     case ExitFadeState::NOT_STARTED:
         exitFadeState_ = ExitFadeState::FADE_OUT;
         state_.fadeOut.Init();
-        state_.isPlayerControllable = false;
+        state_.player.SetControllable(false);
         break;
     case ExitFadeState::FADE_OUT:
         if (state_.fadeOut.GetState() == Transition::State::DONE)
@@ -37,7 +37,7 @@ void ZoneSwitch::UpdateNextZone_()
             exitFadeState_ = ExitFadeState::FADE_IN;
             SwitchToNextZone_();
             state_.fadeIn.Init();
-            state_.isPlayerControllable = true;
+            state_.player.SetControllable(true);
         }
         break;
     case ExitFadeState::FADE_IN:

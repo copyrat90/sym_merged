@@ -279,7 +279,7 @@ void PhysicsMovement::UpdatePlayer_()
 
 void PhysicsMovement::PlayerKeyboardHandle_()
 {
-    if (!state_.isPlayerControllable)
+    if (!state_.player.GetControllable())
         return;
 
     bn::fixed_point velocity = state_.player.GetVelocity();

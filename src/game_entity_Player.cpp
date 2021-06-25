@@ -68,9 +68,9 @@ void Player::Update()
 
     bool isActionDone = UpdateAction_();
 
-    if (isActionDone && additionalWaitUpdateCount >= 0)
+    if (isActionDone && additionalWaitUpdateCount_ >= 0)
     {
-        if (additionalWaitUpdateCount-- == 0)
+        if (additionalWaitUpdateCount_-- == 0)
         {
             InitIdleAction();
         }
@@ -111,7 +111,7 @@ void Player::InitLandAction()
     actionState_ = ActionState::LAND;
     action3_ = bn::create_sprite_animate_action_once(
         *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 7, 8, 0);
-    additionalWaitUpdateCount = OTHER_ACTIONS_WAIT_UPDATE;
+    additionalWaitUpdateCount_ = OTHER_ACTIONS_WAIT_UPDATE;
 }
 
 void Player::InitMergeStartAction()
@@ -130,7 +130,7 @@ void Player::InitMergeEndAction()
     actionState_ = ActionState::MERGE_END;
     action3_ = bn::create_sprite_animate_action_once(
         *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 10, 9, 0);
-    additionalWaitUpdateCount = OTHER_ACTIONS_WAIT_UPDATE;
+    additionalWaitUpdateCount_ = OTHER_ACTIONS_WAIT_UPDATE;
 }
 
 bn::fixed_rect Player::GetLeftSymbolPickupRange() const
@@ -180,6 +180,16 @@ bn::fixed_point Player::GetMergeSymbolPosition() const
     return position_ + RELATIVE_MERGE_SYMBOL_POS;
 }
 
+bool Player::GetControllable() const
+{
+    return isControllable_;
+}
+
+void Player::SetControllable(bool isControllable)
+{
+    isControllable_ = isControllable;
+}
+
 Player::ActionState Player::GetActionState() const
 {
     return actionState_;
@@ -209,7 +219,7 @@ bool Player::UpdateAction_()
 
 void Player::DestroyActions_()
 {
-    additionalWaitUpdateCount = -1;
+    additionalWaitUpdateCount_ = -1;
     action2_.reset();
     action3_.reset();
 }
