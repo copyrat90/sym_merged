@@ -15,6 +15,8 @@ namespace sym::scene
 namespace
 {
 
+constexpr int FADE_IN_UPDATE_COUNT = 30;
+
 [[nodiscard]] const game::stage::StageInfo& GetStageInfo(game::stage::Id stageId)
 {
     using namespace game;
@@ -38,32 +40,31 @@ namespace
 using namespace effect;
 
 Game::Game(scene::Param& sceneParam)
-    : IScene(sceneParam),
-      state_{
-          sceneParam,
-          GetStageInfo(sceneParam.GetCurrentStage()),
-          {Transition::Types::FADE | Transition::Types::BG_MOSAIC | effect::Transition::Types::SPRITE_MOSAIC,
-           Transition::Direction::IN, FADE_IN_UPDATE_COUNT},
-          {Transition::Types::FADE | Transition::Types::BG_MOSAIC | effect::Transition::Types::SPRITE_MOSAIC,
-           Transition::Direction::OUT, FADE_OUT_UPDATE_COUNT},
-          0,
-          state_.stageInfo.zoneInfos[0].mapBg.create_bg({0, 0}),
-          bn::camera_ptr::create(0, 0),
-          helper::tilemap::ConvertIndexRectToPositionRect(
-              state_.stageInfo.zoneInfos[state_.currentZoneIdx].zoneBoundary),
-          bn::fixed_point{0, 0},
-          {},
-          {},
-          {},
-          {},
-          {},
-          {},
-          false,
-          helper::tilemap::TileInfo(state_.currentMapBg),
-          -1,
-          -1,
-      },
-      keyPress_(state_), triggerInteraction_(state_), physicsMovement_(state_), zoneSwitch_(state_)
+    : IScene(sceneParam), state_{
+                              sceneParam,
+                              GetStageInfo(sceneParam.GetCurrentStage()),
+                              0,
+                              state_.stageInfo.zoneInfos[0].mapBg.create_bg({0, 0}),
+                              bn::camera_ptr::create(0, 0),
+                              helper::tilemap::ConvertIndexRectToPositionRect(
+                                  state_.stageInfo.zoneInfos[state_.currentZoneIdx].zoneBoundary),
+                              bn::fixed_point{0, 0},
+                              {},
+                              {},
+                              {},
+                              {},
+                              {},
+                              {},
+                              false,
+                              helper::tilemap::TileInfo(state_.currentMapBg),
+                              -1,
+                              -1,
+                              {state_},
+                              {state_},
+                              {state_},
+                              {state_},
+                              {state_},
+                          }
 {
     // Set bg
     state_.currentMapBg.set_wrapping_enabled(false);
@@ -141,7 +142,8 @@ Game::Game(scene::Param& sceneParam)
     state_.player.InitIdleAction();
 
     // Init Fade-in effect
-    state_.fadeIn.Init();
+    state_.transition.InitIn(Transition::Types::FADE | Transition::Types::BG_MOSAIC | Transition::Types::SPRITE_MOSAIC,
+                             FADE_IN_UPDATE_COUNT);
 }
 
 Game::~Game()
@@ -152,11 +154,11 @@ Game::~Game()
 bn::optional<Type> Game::Update()
 {
     // TODO
-    keyPress_.Update();
-    triggerInteraction_.Update();
-    // symbolInteraction_.Update();
-    physicsMovement_.Update();
-    zoneSwitch_.Update();
+    state_.keyPress.Update();
+    state_.triggerInteraction.Update();
+    state_.physicsMovement.Update();
+    state_.zoneSwitch.Update();
+    state_.transition.Update();
 
     // Update sprite graphics
     state_.player.Update();
@@ -170,12 +172,6 @@ bn::optional<Type> Game::Update()
         hoverButton.Update();
     for (auto& pressureButton : state_.pressureButtonsOfZones[state_.currentZoneIdx])
         pressureButton.Update();
-
-    // Update fade effects
-    if (state_.fadeIn.GetState() == effect::Transition::State::ONGOING)
-        state_.fadeIn.Update();
-    if (state_.fadeOut.GetState() == effect::Transition::State::ONGOING)
-        state_.fadeOut.Update();
 
     // Move camera (follows player)
     state_.camera.set_position(state_.player.GetPosition());

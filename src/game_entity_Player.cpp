@@ -47,6 +47,7 @@ constexpr bn::fixed GRAVITY_SCALE = 0.1;
 
 constexpr int IDLE_ACTION_WAIT_UPDATE = 30;
 constexpr int OTHER_ACTIONS_WAIT_UPDATE = 5;
+constexpr int DAMAGE_TRANSITION_UPDATE_COUNT = 30;
 
 } // namespace
 
@@ -58,7 +59,7 @@ Player::Player(bn::fixed_point position)
 
 void Player::FreeGraphicResource()
 {
-    DestroyActions_();
+    DestroyAnimation_();
     IPhysicsEntity::FreeGraphicResource();
 }
 
@@ -66,9 +67,9 @@ void Player::Update()
 {
     IPhysicsEntity::Update();
 
-    bool isActionDone = UpdateAction_();
+    bool isAnimationDone = UpdateAnimation_();
 
-    if (isActionDone && additionalWaitUpdateCount_ >= 0)
+    if (isAnimationDone && additionalWaitUpdateCount_ >= 0)
     {
         if (additionalWaitUpdateCount_-- == 0)
         {
@@ -80,36 +81,36 @@ void Player::Update()
 void Player::InitIdleAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
-    DestroyActions_();
-    actionState_ = ActionState::IDLE;
-    action2_ = bn::create_sprite_animate_action_forever(
+    DestroyAnimation_();
+    animationState_ = AnimationState::IDLE;
+    animation2_ = bn::create_sprite_animate_action_forever(
         *sprite_, IDLE_ACTION_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 0, 1);
 }
 
 void Player::InitJumpAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
-    DestroyActions_();
-    actionState_ = ActionState::JUMP;
-    action3_ = bn::create_sprite_animate_action_once(
+    DestroyAnimation_();
+    animationState_ = AnimationState::JUMP;
+    animation3_ = bn::create_sprite_animate_action_once(
         *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 2, 3, 4);
 }
 
 void Player::InitFallAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
-    DestroyActions_();
-    actionState_ = ActionState::FALL;
-    action2_ = bn::create_sprite_animate_action_once(*sprite_, OTHER_ACTIONS_WAIT_UPDATE,
-                                                     bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 5, 6);
+    DestroyAnimation_();
+    animationState_ = AnimationState::FALL;
+    animation2_ = bn::create_sprite_animate_action_once(
+        *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 5, 6);
 }
 
 void Player::InitLandAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
-    DestroyActions_();
-    actionState_ = ActionState::LAND;
-    action3_ = bn::create_sprite_animate_action_once(
+    DestroyAnimation_();
+    animationState_ = AnimationState::LAND;
+    animation3_ = bn::create_sprite_animate_action_once(
         *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 7, 8, 0);
     additionalWaitUpdateCount_ = OTHER_ACTIONS_WAIT_UPDATE;
 }
@@ -117,18 +118,18 @@ void Player::InitLandAction()
 void Player::InitMergeStartAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
-    DestroyActions_();
-    actionState_ = ActionState::MERGE_START;
-    action3_ = bn::create_sprite_animate_action_once(
+    DestroyAnimation_();
+    animationState_ = AnimationState::MERGE_START;
+    animation3_ = bn::create_sprite_animate_action_once(
         *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 9, 10, 11);
 }
 
 void Player::InitMergeEndAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
-    DestroyActions_();
-    actionState_ = ActionState::MERGE_END;
-    action3_ = bn::create_sprite_animate_action_once(
+    DestroyAnimation_();
+    animationState_ = AnimationState::MERGE_END;
+    animation3_ = bn::create_sprite_animate_action_once(
         *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 10, 9, 0);
     additionalWaitUpdateCount_ = OTHER_ACTIONS_WAIT_UPDATE;
 }
@@ -190,75 +191,95 @@ void Player::SetControllable(bool isControllable)
     isControllable_ = isControllable;
 }
 
-Player::ActionState Player::GetActionState() const
+Player::AnimationState Player::GetAnimationState() const
 {
-    return actionState_;
+    return animationState_;
 }
 
-bool Player::UpdateAction_()
+bool Player::GetAnimationDone() const
+{
+    if (animation2_)
+        return animation2_->done();
+    else if (animation3_)
+        return animation3_->done();
+    BN_ERROR("GetAnimationDone() is called when there is no animation");
+    return true;
+}
+
+bn::fixed_point Player::GetLastSafePosition() const
+{
+    return lastSafePosition_;
+}
+
+void Player::SetLastSafePosition(bn::fixed_point safePosition)
+{
+    lastSafePosition_ = safePosition;
+}
+
+bool Player::UpdateAnimation_()
 {
     bool isActionDone = true;
-    if (action2_)
+    if (animation2_)
     {
-        if (!action2_->done())
+        if (!animation2_->done())
         {
-            action2_->update();
+            animation2_->update();
             isActionDone = false;
         }
     }
-    else if (action3_)
+    else if (animation3_)
     {
-        if (!action3_->done())
+        if (!animation3_->done())
         {
-            action3_->update();
+            animation3_->update();
             isActionDone = false;
         }
     }
     return isActionDone;
 }
 
-void Player::DestroyActions_()
+void Player::DestroyAnimation_()
 {
     additionalWaitUpdateCount_ = -1;
-    action2_.reset();
-    action3_.reset();
+    animation2_.reset();
+    animation3_.reset();
 }
 
 void Player::AddRelativeYPos_(bn::fixed_point& resultPos, bool isFront) const
 {
-    switch (actionState_)
+    switch (animationState_)
     {
-    case ActionState::IDLE:
+    case AnimationState::IDLE:
         if (isFront)
-            resultPos.set_y(resultPos.y() + IDLE_FRONT_SYMBOL_Y_POSITIONS[action2_->current_index()]);
+            resultPos.set_y(resultPos.y() + IDLE_FRONT_SYMBOL_Y_POSITIONS[animation2_->current_index()]);
         else
-            resultPos.set_y(resultPos.y() + IDLE_BACK_SYMBOL_Y_POSITIONS[action2_->current_index()]);
+            resultPos.set_y(resultPos.y() + IDLE_BACK_SYMBOL_Y_POSITIONS[animation2_->current_index()]);
         break;
-    case ActionState::JUMP:
+    case AnimationState::JUMP:
         if (isFront)
-            resultPos.set_y(resultPos.y() + JUMP_FRONT_SYMBOL_Y_POSITIONS[action3_->current_index()]);
+            resultPos.set_y(resultPos.y() + JUMP_FRONT_SYMBOL_Y_POSITIONS[animation3_->current_index()]);
         else
-            resultPos.set_y(resultPos.y() + JUMP_BACK_SYMBOL_Y_POSITIONS[action3_->current_index()]);
+            resultPos.set_y(resultPos.y() + JUMP_BACK_SYMBOL_Y_POSITIONS[animation3_->current_index()]);
         break;
-    case ActionState::FALL:
+    case AnimationState::FALL:
         if (isFront)
-            resultPos.set_y(resultPos.y() + FALL_FRONT_SYMBOL_Y_POSITIONS[action2_->current_index()]);
+            resultPos.set_y(resultPos.y() + FALL_FRONT_SYMBOL_Y_POSITIONS[animation2_->current_index()]);
         else
-            resultPos.set_y(resultPos.y() + FALL_BACK_SYMBOL_Y_POSITIONS[action2_->current_index()]);
+            resultPos.set_y(resultPos.y() + FALL_BACK_SYMBOL_Y_POSITIONS[animation2_->current_index()]);
         break;
-    case ActionState::LAND:
+    case AnimationState::LAND:
         if (isFront)
-            resultPos.set_y(resultPos.y() + LAND_FRONT_SYMBOL_Y_POSITIONS[action3_->current_index()]);
+            resultPos.set_y(resultPos.y() + LAND_FRONT_SYMBOL_Y_POSITIONS[animation3_->current_index()]);
         else
-            resultPos.set_y(resultPos.y() + LAND_BACK_SYMBOL_Y_POSITIONS[action3_->current_index()]);
+            resultPos.set_y(resultPos.y() + LAND_BACK_SYMBOL_Y_POSITIONS[animation3_->current_index()]);
         break;
         break;
-    case ActionState::MERGE_START:
-    case ActionState::MERGE_END:
+    case AnimationState::MERGE_START:
+    case AnimationState::MERGE_END:
         BN_ERROR("Merge Symbol Position not implemented!");
         break;
     default:
-        BN_ERROR("Invalid Player::ActionState : ", static_cast<int>(actionState_));
+        BN_ERROR("Invalid Player::AnimationState : ", static_cast<int>(animationState_));
         break;
     }
 }

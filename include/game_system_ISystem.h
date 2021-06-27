@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scene_GameState.h"
+#include "scene_GameState_fwd.h"
 
 namespace sym::game::system
 {

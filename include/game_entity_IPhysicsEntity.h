@@ -67,19 +67,21 @@ protected:
     bool isGrounded_ = false;
 };
 
-inline IPhysicsEntity::MoveDirections operator|(IPhysicsEntity::MoveDirections d1, IPhysicsEntity::MoveDirections d2)
+[[nodiscard]] constexpr IPhysicsEntity::MoveDirections operator|(IPhysicsEntity::MoveDirections d1,
+                                                                 IPhysicsEntity::MoveDirections d2)
 {
     using MoveDirections = IPhysicsEntity::MoveDirections;
     return static_cast<MoveDirections>(static_cast<int>(d1) | static_cast<int>(d2));
 }
 
-inline IPhysicsEntity::MoveDirections operator&(IPhysicsEntity::MoveDirections d1, IPhysicsEntity::MoveDirections d2)
+[[nodiscard]] constexpr IPhysicsEntity::MoveDirections operator&(IPhysicsEntity::MoveDirections d1,
+                                                                 IPhysicsEntity::MoveDirections d2)
 {
     using MoveDirections = IPhysicsEntity::MoveDirections;
     return static_cast<MoveDirections>(static_cast<int>(d1) & static_cast<int>(d2));
 }
 
-inline bool operator!(IPhysicsEntity::MoveDirections dir)
+[[nodiscard]] constexpr bool operator!(IPhysicsEntity::MoveDirections dir)
 {
     using MoveDirections = IPhysicsEntity::MoveDirections;
     return dir == static_cast<MoveDirections>(0);

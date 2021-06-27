@@ -170,17 +170,17 @@ private:
     int MapIndex_(bn::fixed_point point) const;
 };
 
-inline TileInfo::Flags operator|(TileInfo::Flags f1, TileInfo::Flags f2)
+[[nodiscard]] constexpr TileInfo::Flags operator|(TileInfo::Flags f1, TileInfo::Flags f2)
 {
     return static_cast<TileInfo::Flags>(static_cast<int>(f1) | static_cast<int>(f2));
 }
 
-inline TileInfo::Flags operator&(TileInfo::Flags f1, TileInfo::Flags f2)
+[[nodiscard]] constexpr TileInfo::Flags operator&(TileInfo::Flags f1, TileInfo::Flags f2)
 {
     return static_cast<TileInfo::Flags>(static_cast<int>(f1) & static_cast<int>(f2));
 }
 
-inline bool operator!(TileInfo::Flags flags)
+[[nodiscard]] constexpr bool operator!(TileInfo::Flags flags)
 {
     return flags == TileInfo::Flags::EMPTY;
 }

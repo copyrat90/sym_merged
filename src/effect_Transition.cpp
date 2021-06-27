@@ -9,11 +9,16 @@ namespace sym::effect
 {
 
 Transition::Transition(Types types, Direction direction, int updateCount)
-    : types_(types), direction_(direction), updateCount_(updateCount)
+    : types_(types), direction_(direction), updateCount_(updateCount), updateCountDown_(updateCount)
 {
     BN_ASSERT(!((static_cast<int>(types & Types::FADE) > 0) &&
                 ((static_cast<int>(types & Types::TRANSPARENCY) > 0) || (static_cast<int>(types & Types::INTENSITY)))),
               "FADE and other blendings cannot be enabled at the same time!");
+    BN_ASSERT(updateCount_ > 0, "updateCount should be positive number");
+}
+
+Transition::Transition() : Transition(static_cast<Types>(0), Direction::NONE, 1)
+{
 }
 
 Transition::~Transition()
@@ -23,6 +28,10 @@ Transition::~Transition()
 
 void Transition::Init()
 {
+    BN_ASSERT(static_cast<int>(types_) != 0, "Cannot Init empty transition");
+    BN_ASSERT(direction_ != Direction::NONE, "Cannot Init empty transition");
+    BN_ASSERT(updateCount_ > 0, "updateCount should be positive number");
+
     updateCountDown_ = updateCount_;
     if (static_cast<int>(types_ & Types::FADE) > 0)
     {
@@ -58,17 +67,23 @@ void Transition::Init()
     state_ = State::ONGOING;
 }
 
+void Transition::Init(Types types, Direction direction, int updateCount)
+{
+    Set(types, direction, updateCount);
+    Init();
+}
+
 void Transition::Update()
 {
     BN_ASSERT(state_ != State::NOT_READY, "Cannot update Transition when it is not initialized");
     BN_ASSERT(state_ != State::DONE, "Cannot update Transition when it is done");
 
-    if (transparencyAction_)
-        transparencyAction_->update();
+    if (fadeAction_)
+        fadeAction_->update();
     else
     {
-        if (fadeAction_)
-            fadeAction_->update();
+        if (transparencyAction_)
+            transparencyAction_->update();
         if (intensityAction_)
             intensityAction_->update();
     }
@@ -91,6 +106,53 @@ void Transition::Destroy()
     intensityAction_.reset();
     spriteMosaicAction_.reset();
     bgMosaicAction_.reset();
+}
+
+void Transition::Set(Types types, Direction direction, int updateCount)
+{
+    BN_ASSERT(state_ != State::ONGOING, "Can't change transition options when it is ongoing");
+    types_ = types;
+    direction_ = direction;
+    updateCount_ = updateCount;
+    updateCountDown_ = updateCount;
+}
+
+Transition::Types Transition::GetTypes() const
+{
+    return types_;
+}
+
+void Transition::SetTypes(Types types)
+{
+    BN_ASSERT(state_ != State::ONGOING, "Can't change transition types when it is ongoing");
+    types_ = types;
+}
+
+Transition::Direction Transition::GetDirection() const
+{
+    return direction_;
+}
+
+void Transition::SetDirection(Direction direction)
+{
+    BN_ASSERT(state_ != State::ONGOING, "Can't change direction when transition is ongoing");
+    direction_ = direction;
+}
+
+int Transition::GetUpdateCount() const
+{
+    return updateCount_;
+}
+
+void Transition::SetUpdateCount(int updateCount)
+{
+    BN_ASSERT(state_ != State::ONGOING, "Can't change update count when transition is ongoing");
+    updateCount_ = updateCount;
+}
+
+int Transition::GetRemainingUpdateCount() const
+{
+    return updateCountDown_;
 }
 
 } // namespace sym::effect

@@ -14,9 +14,14 @@ namespace sym::game::entity
 namespace
 {
 
-static constexpr bn::fixed_rect RELATIVE_INTERACT_RANGE = {{0, 0}, {24, 16}};
-static constexpr bool IS_GRAVITY_ENABLED_BY_DEFAULT = true;
-static constexpr bn::fixed GRAVITY_SCALE = 0.3;
+constexpr bn::fixed_rect RELATIVE_INTERACT_RANGE = {{0, 0}, {24, 16}};
+constexpr bool IS_GRAVITY_ENABLED_BY_DEFAULT = true;
+constexpr bn::fixed GRAVITY_SCALE = 0.3;
+
+constexpr int MERGE_START_UPDATE_COUNT = 30;
+constexpr int MERGE_END_UPDATE_COUNT = 30;
+constexpr int DAMAGE_START_UPDATE_COUNT = 30;
+constexpr int DAMAGE_END_UPDATE_COUNT = 30;
 
 bool IsComplexSymbol_(Symbol::Type type)
 {
@@ -75,7 +80,8 @@ Symbol::Symbol(bn::fixed_point position, Symbol::Type type)
 }
 
 Symbol::Symbol(Symbol&& other)
-    : IPhysicsEntity(bn::move(other)), type_(other.type_), isPickedUp_(other.isPickedUp_), isThrown_(other.isThrown_)
+    : IPhysicsEntity(bn::move(other)), type_(other.type_), isPickedUp_(other.isPickedUp_), isThrown_(other.isThrown_),
+      animationState_(other.animationState_)
 {
 }
 
@@ -85,6 +91,7 @@ Symbol& Symbol::operator=(Symbol&& other)
     type_ = other.type_;
     isPickedUp_ = other.isPickedUp_;
     isThrown_ = other.isThrown_;
+    animationState_ = other.animationState_;
     return *this;
 }
 
@@ -98,8 +105,34 @@ void Symbol::AllocateGraphicResource(int z_order)
 
     sprite_ = spriteItem_->create_sprite(position_, spriteIdx);
     sprite_->set_z_order(z_order);
-    sprite_->set_blending_enabled(true);
-    sprite_->set_mosaic_enabled(true);
+    sprite_->set_blending_enabled(isBlendingEnabled_);
+    sprite_->set_mosaic_enabled(isMosaicEnabled_);
+    sprite_->set_visible(isVisible_);
+    if (paletteItem_)
+        SetColors(*paletteItem_);
+}
+
+void Symbol::Update()
+{
+    IPhysicsEntity::Update();
+
+    UpdateAnimation_();
+}
+
+void Symbol::InitMergeStartAction()
+{
+    BN_ASSERT(sprite_, "Symbol action cannot be init without allocating graphics!");
+    DestroyAnimation_();
+    animationState_ = AnimationState::MERGE_START;
+    // TODO
+}
+
+void Symbol::InitMergeEndAction()
+{
+    BN_ASSERT(sprite_, "Symbol action cannot be init without allocating graphics!");
+    DestroyAnimation_();
+    animationState_ = AnimationState::MERGE_END;
+    // TODO
 }
 
 Symbol::Type Symbol::GetType() const
@@ -135,6 +168,28 @@ bool Symbol::GetThrown() const
 void Symbol::SetThrown(bool isThrown)
 {
     isThrown_ = isThrown;
+}
+
+Symbol::AnimationState Symbol::GetAnimationState() const
+{
+    return animationState_;
+}
+
+bool Symbol::GetAnimationDone() const
+{
+    // TODO
+    return true;
+}
+
+bool Symbol::UpdateAnimation_()
+{
+    // TODO
+    return true;
+}
+
+void Symbol::DestroyAnimation_()
+{
+    // TODO
 }
 
 } // namespace sym::game::entity

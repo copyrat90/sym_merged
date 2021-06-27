@@ -4,6 +4,8 @@
 
 #include <bn_optional.h>
 
+#include "game_stage_StageInfo.h"
+
 namespace sym::game::system
 {
 using ExitInfo = stage::ZoneInfo::ExitInfo;
@@ -23,19 +25,13 @@ public:
     void Update() final;
 
 private:
-    enum class ExitFadeState
-    {
-        NOT_STARTED,
-        FADE_OUT,
-        FADE_IN
-    };
-
-    ExitFadeState exitFadeState_ = ExitFadeState::NOT_STARTED;
     bn::optional<ExitInfo> nextZone_;
 
-    void UpdateNextZone_();
+    void InitTransition_();
 
     bn::optional<ExitInfo> GetNextZone_();
+
+    // wait between phase event handler
     void SwitchToNextZone_();
 };
 

@@ -40,8 +40,26 @@ void INumberTextEntity::AllocateGraphicResource(int z_order)
     numberSprite_ =
         bn::sprite_items::font_modern_dos_8x8.create_sprite(position_ + relativeNumberTextPosition_, textNumber_);
     numberSprite_->set_z_order(z_order);
-    numberSprite_->set_blending_enabled(true);
-    numberSprite_->set_mosaic_enabled(true);
+    numberSprite_->set_blending_enabled(isBlendingEnabled_);
+    numberSprite_->set_mosaic_enabled(isMosaicEnabled_);
+    numberSprite_->set_visible(isVisible_);
+    // TODO: Override SetColors()
+    // if (paletteItem_)
+    // SetColors(*paletteItem_);
+}
+
+void INumberTextEntity::SetBlendingEnabled(bool isEnable)
+{
+    IEntity::SetBlendingEnabled(isEnable);
+    if (numberSprite_)
+        numberSprite_->set_blending_enabled(isEnable);
+}
+
+void INumberTextEntity::SetMosaicEnabled(bool isEnable)
+{
+    IEntity::SetMosaicEnabled(isEnable);
+    if (numberSprite_)
+        numberSprite_->set_mosaic_enabled(isEnable);
 }
 
 void INumberTextEntity::SetCamera(const bn::camera_ptr& camera)

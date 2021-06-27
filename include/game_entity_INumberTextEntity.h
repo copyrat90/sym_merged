@@ -19,10 +19,13 @@ public:
     INumberTextEntity(const INumberTextEntity& other) = delete;
     INumberTextEntity& operator=(const INumberTextEntity& other) = delete;
 
-    void FreeGraphicResource();
-    void AllocateGraphicResource(int z_order);
+    void FreeGraphicResource() override;
+    void AllocateGraphicResource(int z_order) override;
 
-    void SetCamera(const bn::camera_ptr& camera);
+    void SetBlendingEnabled(bool isEnable) override;
+    void SetMosaicEnabled(bool isEnable) override;
+
+    void SetCamera(const bn::camera_ptr& camera) override;
 
 protected:
     bn::optional<bn::sprite_ptr> numberSprite_;

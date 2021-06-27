@@ -6,6 +6,7 @@
 #include <bn_utility.h>
 
 #include "game_entity_HoverButton.h"
+#include "game_entity_Symbol.h"
 
 namespace sym::game::system
 {

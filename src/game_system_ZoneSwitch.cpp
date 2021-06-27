@@ -3,60 +3,49 @@
 #include <bn_assert.h>
 
 #include "constant.h"
+#include "scene_GameState.h"
+
+#include "bn_log.h"
 
 namespace sym::game::system
 {
-using namespace sym::effect;
+
+namespace
+{
+
+constexpr Transition::Types TRANSITION_TYPES =
+    Transition::Types::FADE | Transition::Types::BG_MOSAIC | Transition::Types::SPRITE_MOSAIC;
+
+constexpr int FADE_IN_UPDATE_COUNT = 30;
+constexpr int FADE_OUT_UPDATE_COUNT = 30;
+
+} // namespace
 
 void ZoneSwitch::Update()
 {
     if (nextZone_)
-        UpdateNextZone_();
-    else
-    {
-        nextZone_ = GetNextZone_();
-        if (nextZone_)
-        {
-            UpdateNextZone_();
-        }
-    }
+        return;
+
+    nextZone_ = GetNextZone_();
+    if (nextZone_)
+        InitTransition_();
 }
 
-void ZoneSwitch::UpdateNextZone_()
+void ZoneSwitch::InitTransition_()
 {
-    switch (exitFadeState_)
-    {
-    case ExitFadeState::NOT_STARTED:
-        exitFadeState_ = ExitFadeState::FADE_OUT;
-        state_.fadeOut.Init();
-        state_.player.SetControllable(false);
-        break;
-    case ExitFadeState::FADE_OUT:
-        if (state_.fadeOut.GetState() == Transition::State::DONE)
-        {
-            exitFadeState_ = ExitFadeState::FADE_IN;
-            SwitchToNextZone_();
-            state_.fadeIn.Init();
-            state_.player.SetControllable(true);
-        }
-        break;
-    case ExitFadeState::FADE_IN:
-        if (state_.fadeIn.GetState() == Transition::State::DONE)
-        {
-            exitFadeState_ = ExitFadeState::NOT_STARTED;
-            nextZone_.reset();
-        }
-        break;
-    default:
-        BN_ERROR("Invalid ExitState: ", static_cast<int>(exitFadeState_));
-        break;
-    }
+    state_.player.SetControllable(false);
+
+    state_.transition.SetBlendingAppliedItems(Transition::AppliedItems::ALL);
+    state_.transition.SetMosaicAppliedItems(Transition::AppliedItems::ALL);
+    state_.transition.InitOutAndIn(TRANSITION_TYPES, FADE_OUT_UPDATE_COUNT, FADE_IN_UPDATE_COUNT);
+    state_.transition.SetWaitBetweenEventHandler([this] { SwitchToNextZone_(); });
+    state_.transition.SetLastTransitionEventHandler([this] { state_.player.SetControllable(true); });
+    state_.transition.SetDoneEventHandler([this] { nextZone_.reset(); });
 }
 
 bn::optional<ExitInfo> ZoneSwitch::GetNextZone_()
 {
-    if (state_.fadeOut.GetState() != Transition::State::ONGOING &&
-        state_.fadeIn.GetState() != Transition::State::ONGOING && !state_.isPaused)
+    if (!state_.transition.IsOngoing() && !state_.isPaused)
     {
         const auto playerCollider = state_.player.GetPhysicsCollider();
         const auto exits = state_.stageInfo.zoneInfos[state_.currentZoneIdx].exits;
@@ -95,10 +84,12 @@ void ZoneSwitch::SwitchToNextZone_()
     // Set bg and tiles
     if (currentZoneInfo.mapBg != state_.stageInfo.zoneInfos[prevZoneIdx].mapBg)
     {
+        const bool isBlendingEnabled = state_.currentMapBg.blending_enabled();
+        const bool isMosaicEnabled = state_.currentMapBg.mosaic_enabled();
         state_.currentMapBg = currentZoneInfo.mapBg.create_bg({0, 0});
         state_.currentMapBg.set_wrapping_enabled(false);
-        state_.currentMapBg.set_blending_enabled(true);
-        state_.currentMapBg.set_mosaic_enabled(true);
+        state_.currentMapBg.set_blending_enabled(isBlendingEnabled);
+        state_.currentMapBg.set_mosaic_enabled(isMosaicEnabled);
         state_.currentMapBg.set_camera(state_.camera);
         state_.currentMapTileInfo = helper::tilemap::TileInfo(state_.currentMapBg);
     }

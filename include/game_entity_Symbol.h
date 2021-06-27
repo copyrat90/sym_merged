@@ -33,6 +33,11 @@ public:
 
     void AllocateGraphicResource(int z_order) final;
 
+    void Update() final;
+
+    void InitMergeStartAction();
+    void InitMergeEndAction();
+
     Type GetType() const;
     void SetType(Type);
 
@@ -42,10 +47,30 @@ public:
     bool GetThrown() const;
     void SetThrown(bool isThrown);
 
+    enum class AnimationState
+    {
+        IDLE,
+        MERGE_START,
+        MERGE_END
+    };
+
+    AnimationState GetAnimationState() const;
+    bool GetAnimationDone() const;
+
 private:
     Symbol::Type type_;
     bool isPickedUp_ = false;
     bool isThrown_ = false;
+
+    AnimationState animationState_ = AnimationState::IDLE;
+
+    /**
+     * @brief Updates action.
+     *
+     * @return `true` if action is done, otherwise `false`
+     */
+    bool UpdateAnimation_();
+    void DestroyAnimation_();
 };
 
 } // namespace sym::game::entity

@@ -49,8 +49,57 @@ void IEntity::AllocateGraphicResource(int z_order)
     {
         sprite_ = spriteItem_->create_sprite(position_);
         sprite_->set_z_order(z_order);
-        sprite_->set_blending_enabled(true);
-        sprite_->set_mosaic_enabled(true);
+        sprite_->set_blending_enabled(isBlendingEnabled_);
+        sprite_->set_mosaic_enabled(isMosaicEnabled_);
+        sprite_->set_visible(isVisible_);
+        if (paletteItem_)
+            SetColors(*paletteItem_);
+    }
+}
+
+void IEntity::SetBlendingEnabled(bool isEnable)
+{
+    isBlendingEnabled_ = isEnable;
+    if (sprite_)
+        sprite_->set_blending_enabled(isEnable);
+}
+
+bool IEntity::GetBlendingEnabled() const
+{
+    return isBlendingEnabled_;
+}
+
+void IEntity::SetMosaicEnabled(bool isEnable)
+{
+    isMosaicEnabled_ = isEnable;
+    if (sprite_)
+        sprite_->set_mosaic_enabled(isEnable);
+}
+
+bool IEntity::GetMosaicEnabled() const
+{
+    return isMosaicEnabled_;
+}
+
+void IEntity::SetVisible(bool isVisible)
+{
+    isVisible_ = isVisible;
+    if (sprite_)
+        sprite_->set_visible(isVisible);
+}
+
+bool IEntity::GetVisible() const
+{
+    return isVisible_;
+}
+
+void IEntity::SetColors(const bn::sprite_palette_item& paletteItem)
+{
+    paletteItem_ = &paletteItem;
+    if (sprite_)
+    {
+        bn::sprite_palette_ptr pal = sprite_->palette();
+        pal.set_colors(paletteItem);
     }
 }
 

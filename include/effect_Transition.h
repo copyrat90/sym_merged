@@ -24,6 +24,7 @@ public:
      */
     enum class Types
     {
+        NONE = 0,
         TRANSPARENCY = 1,
         FADE = 2,
         INTENSITY = 4,
@@ -32,6 +33,7 @@ public:
     };
     enum class Direction
     {
+        NONE,
         IN,
         OUT
     };
@@ -43,6 +45,7 @@ public:
     };
 
     Transition(Types types, Direction direction, int updateCount);
+    Transition();
 
     ~Transition();
 
@@ -56,6 +59,17 @@ public:
      *
      */
     void Init();
+
+    /**
+     * @brief Allocates transition actions & sets state to ONGOING.
+     * You must call this function before using Transition.
+     *
+     * Calling Init() of the second transition object after calling Destroy() of the first transition object,
+     * you can prevent having FADE and other blendings at the same time,
+     * while keeping both Transition objects alive.
+     *
+     */
+    void Init(Types types, Direction direction, int updateCount);
 
     /**
      * @brief Updates transition actions.
@@ -84,10 +98,58 @@ public:
         return state_;
     }
 
+    /**
+     * @brief Mimics constructing a new effect::Transition object.
+     * You can't use this if transition is ongoing.
+     *
+     */
+    void Set(Types types, Direction direction, int updateCount);
+
+    /**
+     * @brief Get the transition types.
+     *
+     */
+    Types GetTypes() const;
+
+    /**
+     * @brief Set the transition types.
+     * You can't set the transition if it is ongoing.
+     *
+     */
+    void SetTypes(Types types);
+
+    Direction GetDirection() const;
+
+    /**
+     * @brief Set the direction
+     * You can't set it if it is ongoing.
+     *
+     */
+    void SetDirection(Direction);
+
+    /**
+     * @brief Get the update count, which is used to set the blending actions.
+     *
+     */
+    int GetUpdateCount() const;
+
+    /**
+     * @brief Set the update count
+     * You can't set it if it is ongoing.
+     *
+     */
+    void SetUpdateCount(int updateCount);
+
+    /**
+     * @brief Get the remaining update count before it is done.
+     *
+     */
+    int GetRemainingUpdateCount() const;
+
 private:
-    const Types types_;
-    const Direction direction_;
-    const int updateCount_;
+    Types types_;
+    Direction direction_;
+    int updateCount_;
     int updateCountDown_;
 
     State state_ = State::NOT_READY;
@@ -99,12 +161,12 @@ private:
     bn::optional<bn::bgs_mosaic_stretch_to_action> bgMosaicAction_;
 };
 
-inline Transition::Types operator|(Transition::Types t1, Transition::Types t2)
+[[nodiscard]] constexpr Transition::Types operator|(Transition::Types t1, Transition::Types t2)
 {
     return static_cast<Transition::Types>(static_cast<int>(t1) | static_cast<int>(t2));
 }
 
-inline Transition::Types operator&(Transition::Types t1, Transition::Types t2)
+[[nodiscard]] constexpr Transition::Types operator&(Transition::Types t1, Transition::Types t2)
 {
     return static_cast<Transition::Types>(static_cast<int>(t1) & static_cast<int>(t2));
 }

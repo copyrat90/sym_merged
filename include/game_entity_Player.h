@@ -40,22 +40,28 @@ public:
     bool GetControllable() const;
     void SetControllable(bool isControllable);
 
-    enum class ActionState
+    enum class AnimationState
     {
         IDLE,
         JUMP,
         FALL,
         LAND,
         MERGE_START,
-        MERGE_END
+        MERGE_END,
     };
 
-    ActionState GetActionState() const;
+    AnimationState GetAnimationState() const;
+    bool GetAnimationDone() const;
+
+    bn::fixed_point GetLastSafePosition() const;
+    void SetLastSafePosition(bn::fixed_point safePosition);
 
 private:
-    bn::optional<bn::sprite_animate_action<2>> action2_;
-    bn::optional<bn::sprite_animate_action<3>> action3_;
-    ActionState actionState_ = ActionState::IDLE;
+    bn::fixed_point lastSafePosition_;
+
+    bn::optional<bn::sprite_animate_action<2>> animation2_;
+    bn::optional<bn::sprite_animate_action<3>> animation3_;
+    AnimationState animationState_ = AnimationState::IDLE;
     /**
      * @brief Additional wait update before the InitIdleAction() is called.
      * If it is `-1`, InitIdleAction() is not called.
@@ -67,12 +73,12 @@ private:
     bool isControllable_ = true;
 
     /**
-     * @brief Updates action.
+     * @brief Updates animation.
      *
-     * @return `true` if action is done, otherwise `false`
+     * @return `true` if animation is done, otherwise `false`
      */
-    bool UpdateAction_();
-    void DestroyActions_();
+    bool UpdateAnimation_();
+    void DestroyAnimation_();
 
     void AddRelativeYPos_(bn::fixed_point& resultPos, bool isFront) const;
 };

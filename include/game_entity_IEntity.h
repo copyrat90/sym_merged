@@ -4,6 +4,7 @@
 #include <bn_fixed_rect.h>
 #include <bn_optional.h>
 #include <bn_sprite_item.h>
+#include <bn_sprite_palette_ptr.h>
 #include <bn_sprite_ptr.h>
 
 namespace sym::game::entity
@@ -54,25 +55,36 @@ public:
     virtual void FreeGraphicResource();
     virtual void AllocateGraphicResource(int z_order);
 
+    virtual void SetBlendingEnabled(bool isEnable);
+    [[nodiscard]] bool GetBlendingEnabled() const;
+    virtual void SetMosaicEnabled(bool isEnable);
+    [[nodiscard]] bool GetMosaicEnabled() const;
+    virtual void SetVisible(bool isVisible);
+    [[nodiscard]] bool GetVisible() const;
+    virtual void SetColors(const bn::sprite_palette_item& paletteItem);
     virtual void SetCamera(const bn::camera_ptr& camera);
 
-    bn::fixed_point GetPosition() const;
+    [[nodiscard]] bn::fixed_point GetPosition() const;
     void SetPosition(const bn::fixed_point& position);
-    bn::fixed GetX() const;
-    bn::fixed GetY() const;
+    [[nodiscard]] bn::fixed GetX() const;
+    [[nodiscard]] bn::fixed GetY() const;
     void SetX(bn::fixed x);
     void SetY(bn::fixed y);
 
     void SetHorizontalFlip(bool flip);
-    bool GetHorizontalFlip() const;
+    [[nodiscard]] bool GetHorizontalFlip() const;
     void SetVerticalFlip(bool flip);
-    bool GetVerticalFlip() const;
+    [[nodiscard]] bool GetVerticalFlip() const;
 
 protected:
     bn::fixed_point position_;
     bn::fixed_rect relativeInteractRange_;
     bn::optional<bn::sprite_ptr> sprite_;
     const bn::sprite_item* spriteItem_;
+    const bn::sprite_palette_item* paletteItem_;
+    bool isBlendingEnabled_ = true;
+    bool isMosaicEnabled_ = true;
+    bool isVisible_ = true;
 
     void SyncSpritePositionToPosition_();
 };

@@ -2,6 +2,8 @@
 
 #include "game_system_ISystem.h"
 
+#include "game_entity_Symbol.h"
+
 namespace sym::game::system
 {
 
@@ -32,6 +34,14 @@ private:
 
     static constexpr int MAX_PLAYER_JUMP_COUNT = 1;
     int playerJumpCount = MAX_PLAYER_JUMP_COUNT;
+
+    // enum class SpikeRespawnState
+    // {
+    //     NONE,
+    //     FADE_OUT,
+    //     FADE_IN
+    // };
+    // SpikeRespawnState spikeRespawnState_ = SpikeRespawnState::NONE;
 };
 
 } // namespace sym::game::system

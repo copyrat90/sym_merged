@@ -8,6 +8,7 @@
 #include "bn_sound_items.h"
 #include "constant.h"
 #include "helper_math.h"
+#include "scene_GameState.h"
 
 namespace sym::game::system
 {

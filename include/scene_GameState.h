@@ -11,6 +11,11 @@
 #include "game_entity_PressureButton.h"
 #include "game_entity_Shutter.h"
 #include "game_stage_StageInfo.h"
+#include "game_system_KeyPress.h"
+#include "game_system_PhysicsMovement.h"
+#include "game_system_Transition.h"
+#include "game_system_TriggerInteraction.h"
+#include "game_system_ZoneSwitch.h"
 #include "helper_tilemap.h"
 #include "scene_Param.h"
 
@@ -33,9 +38,6 @@ struct GameState
 
     scene::Param& sceneParam_;
     const game::stage::StageInfo& stageInfo;
-
-    effect::Transition fadeIn;
-    effect::Transition fadeOut;
 
     int currentZoneIdx;
     bn::affine_bg_ptr currentMapBg;
@@ -65,6 +67,12 @@ struct GameState
     // static constexpr int KEYPRESS_COOLDOWN_UPDATE_COUNT = 20;
     // int lKeyCooldownCount;
     // int rKeyCooldownCount;
+
+    game::system::KeyPress keyPress;
+    game::system::TriggerInteraction triggerInteraction;
+    game::system::PhysicsMovement physicsMovement;
+    game::system::ZoneSwitch zoneSwitch;
+    game::system::Transition transition;
 };
 
 } // namespace sym::scene

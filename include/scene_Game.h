@@ -21,21 +21,12 @@ public:
     [[nodiscard]] bn::optional<Type> Update() final;
 
 private:
-    static constexpr int FADE_IN_UPDATE_COUNT = 30;
-    static constexpr int FADE_OUT_UPDATE_COUNT = 30;
-
     /**
      * @brief All member variables reside in here.
      * to easily pass states by reference into Systems.
      *
      */
     GameState state_;
-
-    system::KeyPress keyPress_;
-    system::TriggerInteraction triggerInteraction_;
-    // system::SymbolInteraction symbolInteraction_;
-    system::PhysicsMovement physicsMovement_;
-    system::ZoneSwitch zoneSwitch_;
 
     void SetCurrentZone_(int zoneIdx);
 };

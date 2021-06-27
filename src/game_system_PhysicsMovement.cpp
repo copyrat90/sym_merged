@@ -2,18 +2,23 @@
 
 #include <bn_affine_bg_map_ptr.h>
 #include <bn_assert.h>
+#include <bn_blending.h>
 #include <bn_keypad.h>
 #include <bn_log.h>
 #include <bn_math.h>
 #include <bn_optional.h>
+#include <bn_vector.h>
 
-#include "bn_vector.h"
 #include "helper_keypad.h"
 #include "helper_math.h"
 #include "helper_tilemap.h"
+#include "scene_GameState.h"
 
 #include "bn_sound_items.h"
 #include "constant.h"
+
+#include "bn_sprite_items_spr_ingame_protagonist_star.h"
+#include "bn_sprite_palette_items_pal_ingame_protagonist_star_damage.h"
 
 namespace sym::game::system
 {
@@ -27,8 +32,19 @@ constexpr bn::fixed JUMP_VEL = -2.8;
 constexpr bn::fixed_point SYMBOL_DELTA_VEL = {0.3, 0.3};
 constexpr bn::fixed VEL_FRICTION = 1.2;
 constexpr bn::fixed COLLISION_DELTA_EPSILON = 0.01;
+constexpr int SPIKE_SIZE = 3;
+
+constexpr int PLAYER_DAMAGE_TRANSPARENCY_UPDATE_COUNT = 20;
+constexpr int PLAYER_DAMAGE_WAIT_BETWEEN_TRANSPARENCY_AND_FADE = 10;
+constexpr int PLAYER_DAMAGE_FADE_UPDATE_COUNT = 20;
+constexpr int PLAYER_DAMAGE_WAIT_BETWEEN_FO_AND_FI = 5;
 
 constexpr int COLLISION_LOOP_MAX_COUNT = 100;
+
+constexpr const bn::sprite_palette_item& PLAYER_NORMAL_PAL =
+    bn::sprite_items::spr_ingame_protagonist_star.palette_item();
+constexpr const bn::sprite_palette_item& PLAYER_DAMAGE_PAL =
+    bn::sprite_palette_items::pal_ingame_protagonist_star_damage;
 
 static_assert(bn::abs(JUMP_VEL) <= MAX_ENTITY_VEL.y());
 
@@ -37,7 +53,8 @@ enum class PushbackDirection
     UP,
     DOWN,
     LEFT,
-    RIGHT
+    RIGHT,
+    SPIKE
 };
 
 [[nodiscard]] bn::optional<PushbackDirection> FloorCollisionResolution_(entity::IPhysicsEntity& entity)
@@ -96,6 +113,60 @@ enum class PushbackDirection
     const TileInfo::Flags bottomRightTileFlag = mapTileInfo.GetTileFlagsByPosition(collider.bottom_right());
 
     const MoveDirections moveDirs = entity.GetMoveDirections();
+
+    // spike detection
+    if (!!(topLeftTileFlag & TileInfo::Flags::SPIKE))
+    {
+        if (!!(topLeftTileFlag & TileInfo::Flags::CEILING))
+        {
+            if ((collider.top() % 8) <= SPIKE_SIZE)
+                return PushbackDirection::SPIKE;
+        }
+        else if (!!(topLeftTileFlag & TileInfo::Flags::LEFT_BLOCKING_WALL))
+        {
+            if ((collider.left() % 8) <= SPIKE_SIZE)
+                return PushbackDirection::SPIKE;
+        }
+    }
+    if (!!(topRightTileFlag & TileInfo::Flags::SPIKE))
+    {
+        if (!!(topRightTileFlag & TileInfo::Flags::CEILING))
+        {
+            if ((collider.top() % 8) <= SPIKE_SIZE)
+                return PushbackDirection::SPIKE;
+        }
+        else if (!!(topRightTileFlag & TileInfo::Flags::RIGHT_BLOCKING_WALL))
+        {
+            if ((collider.right() % 8) >= 8 - SPIKE_SIZE)
+                return PushbackDirection::SPIKE;
+        }
+    }
+    if (!!(bottomLeftTileFlag & TileInfo::Flags::SPIKE))
+    {
+        if (!!(bottomLeftTileFlag & TileInfo::Flags::FLOOR))
+        {
+            if ((collider.bottom() % 8) >= 8 - SPIKE_SIZE)
+                return PushbackDirection::SPIKE;
+        }
+        else if (!!(bottomLeftTileFlag & TileInfo::Flags::LEFT_BLOCKING_WALL))
+        {
+            if ((collider.left() % 8) <= SPIKE_SIZE)
+                return PushbackDirection::SPIKE;
+        }
+    }
+    if (!!(bottomRightTileFlag & TileInfo::Flags::SPIKE))
+    {
+        if (!!(bottomRightTileFlag & TileInfo::Flags::FLOOR))
+        {
+            if ((collider.bottom() % 8) >= 8 - SPIKE_SIZE)
+                return PushbackDirection::SPIKE;
+        }
+        else if (!!(bottomRightTileFlag & TileInfo::Flags::RIGHT_BLOCKING_WALL))
+        {
+            if ((collider.right() % 8) >= 8 - SPIKE_SIZE)
+                return PushbackDirection::SPIKE;
+        }
+    }
 
     // diagonal approach to a corner
     if (!!(moveDirs & MoveDirections::DOWN) && !!(moveDirs & MoveDirections::RIGHT))
@@ -231,6 +302,9 @@ enum class PushbackDirection
 
 void ApplyGravity_(entity::IPhysicsEntity& entity)
 {
+    if (!entity.GetGravityEnabled())
+        return;
+
     bn::fixed_point velocity = entity.GetVelocity();
     velocity.set_y(velocity.y() + entity.GetGravityScale());
     entity.SetVelocity(velocity);
@@ -266,14 +340,17 @@ void PhysicsMovement::Update()
 
 void PhysicsMovement::UpdatePlayer_()
 {
-    ApplyGravity_(state_.player);
-    PlayerKeyboardHandle_();
+    if (state_.player.GetControllable())
+    {
+        ApplyGravity_(state_.player);
+        PlayerKeyboardHandle_();
 
-    ClampVelocity_(state_.player);
-    state_.player.SetPosition(state_.player.GetPosition() + state_.player.GetVelocity());
+        ClampVelocity_(state_.player);
+        state_.player.SetPosition(state_.player.GetPosition() + state_.player.GetVelocity());
 
-    PlayerCollision_();
-    helper::tilemap::SnapEntityToZoneBoundary(state_.player, state_.zoneBoundary);
+        PlayerCollision_();
+        helper::tilemap::SnapEntityToZoneBoundary(state_.player, state_.zoneBoundary);
+    }
     PlayerAnimation_();
 }
 
@@ -312,6 +389,8 @@ void PhysicsMovement::PlayerCollision_()
 {
     bn::optional<PushbackDirection> collisionResult;
     bool nextGrounded = false;
+    bool nextSafe = true;
+
     for (int i = 0; i < COLLISION_LOOP_MAX_COUNT; ++i)
     {
         // resolve collision
@@ -327,6 +406,41 @@ void PhysicsMovement::PlayerCollision_()
         // additional work to do when collision is detected
         switch (*collisionResult)
         {
+        case PushbackDirection::SPIKE:
+            state_.player.SetControllable(false);
+            state_.player.SetGravityEnabled(false);
+            state_.player.SetVelocity({0, 0});
+            state_.player.SetColors(PLAYER_DAMAGE_PAL);
+            bn::sound_items::sfx_player_damage.play(constant::volume::sfx_player_damage);
+            state_.transition.SetBlendingAppliedItems(Transition::AppliedItems::PLAYER |
+                                                      Transition::AppliedItems::SYMBOLS_IN_HANDS);
+            state_.transition.InitOut(Transition::Types::TRANSPARENCY, PLAYER_DAMAGE_TRANSPARENCY_UPDATE_COUNT,
+                                      PLAYER_DAMAGE_WAIT_BETWEEN_TRANSPARENCY_AND_FADE);
+            state_.transition.SetDoneEventHandler([this] {
+                state_.player.SetVisible(false);
+                if (state_.symbolsInHands[0])
+                    state_.symbolsInHands[0]->SetVisible(false);
+                if (state_.symbolsInHands[1])
+                    state_.symbolsInHands[1]->SetVisible(false);
+                bn::blending::set_transparency_alpha(1);
+                state_.transition.SetBlendingAppliedItems(Transition::AppliedItems::ALL);
+                state_.transition.InitOutAndIn(Transition::Types::FADE, PLAYER_DAMAGE_FADE_UPDATE_COUNT,
+                                               PLAYER_DAMAGE_FADE_UPDATE_COUNT, PLAYER_DAMAGE_WAIT_BETWEEN_FO_AND_FI);
+                state_.transition.SetWaitBetweenEventHandler([this] {
+                    state_.player.SetColors(PLAYER_NORMAL_PAL);
+                    state_.player.SetVisible(true);
+                    if (state_.symbolsInHands[0])
+                        state_.symbolsInHands[0]->SetVisible(true);
+                    if (state_.symbolsInHands[1])
+                        state_.symbolsInHands[1]->SetVisible(true);
+                    state_.player.SetPosition(state_.player.GetLastSafePosition());
+                });
+                state_.transition.SetDoneEventHandler([this] {
+                    state_.player.SetControllable(true);
+                    state_.player.SetGravityEnabled(true);
+                });
+            });
+            break;
         case PushbackDirection::UP:
             if (!nextGrounded)
             {
@@ -348,40 +462,52 @@ void PhysicsMovement::PlayerCollision_()
             BN_ERROR("Invalid PushbackDirection: ", static_cast<int>(*collisionResult));
         }
 
+        if (collisionResult == PushbackDirection::SPIKE)
+        {
+            nextSafe = false;
+            break;
+        }
+
         if (i == COLLISION_LOOP_MAX_COUNT - 1)
             BN_LOG("[WARN] Collision detection loop max count reached!");
     }
     state_.player.SetGrounded(nextGrounded);
+
+    if (nextGrounded && nextSafe && state_.player.GetControllable())
+    {
+        state_.player.SetLastSafePosition(state_.player.GetPosition());
+    }
 }
 
 void PhysicsMovement::PlayerAnimation_()
 {
     using entity::IPhysicsEntity;
     bn::fixed_point velocity = state_.player.GetVelocity();
+    const entity::Player::AnimationState prevPlayerActionState = state_.player.GetAnimationState();
 
     if (velocity.y() > IPhysicsEntity::EPSILON_VEL)
     {
-        if (state_.player.GetActionState() != entity::Player::ActionState::FALL)
+        if (prevPlayerActionState != entity::Player::AnimationState::FALL)
             state_.player.InitFallAction();
     }
     else if (bn::keypad::left_held())
     {
         state_.player.SetHorizontalFlip(true);
-        if (state_.player.GetActionState() == entity::Player::ActionState::IDLE &&
+        if (prevPlayerActionState == entity::Player::AnimationState::IDLE &&
             state_.player.GetVelocity().x() < -IPhysicsEntity::EPSILON_VEL)
             state_.player.InitFallAction();
     }
     else if (bn::keypad::right_held())
     {
         state_.player.SetHorizontalFlip(false);
-        if (state_.player.GetActionState() == entity::Player::ActionState::IDLE &&
+        if (prevPlayerActionState == entity::Player::AnimationState::IDLE &&
             state_.player.GetVelocity().x() > IPhysicsEntity::EPSILON_VEL)
             state_.player.InitFallAction();
     }
-    else if (state_.player.GetGrounded() && state_.player.GetActionState() == entity::Player::ActionState::FALL &&
+    else if (state_.player.GetGrounded() && prevPlayerActionState == entity::Player::AnimationState::FALL &&
              bn::abs(velocity.x()) < IPhysicsEntity::EPSILON_VEL && bn::abs(velocity.y()) < IPhysicsEntity::EPSILON_VEL)
     {
-        if (state_.player.GetActionState() != entity::Player::ActionState::IDLE)
+        if (prevPlayerActionState != entity::Player::AnimationState::IDLE)
             state_.player.InitIdleAction();
     }
 }
@@ -436,13 +562,16 @@ void PhysicsMovement::SymbolCollision_(entity::Symbol& symbol)
         // additional work to do when collision is detected
         switch (*collisionResult)
         {
+        case PushbackDirection::SPIKE:
+            // TODO
+            break;
         case PushbackDirection::UP:
             if (!nextGrounded)
             {
                 nextGrounded = true;
                 if (!symbol.GetGrounded())
                 {
-                    if (state_.fadeIn.GetState() != effect::Transition::State::ONGOING)
+                    if (!state_.transition.IsOngoing())
                         bn::sound_items::sfx_symbol_ground_bump.play(constant::volume::sfx_symbol_ground_bump);
                 }
             }

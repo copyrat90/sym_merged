@@ -70,10 +70,12 @@ int main()
             textGen->generate({-120, -70}, bn::format<9>("CPU: {}%", bn::core::last_cpu_usage().integer()),
                               resourceUsageSprites);
 
-            const int iwramUsedPercent = (bn::fixed(bn::memory::used_static_iwram()) / IWRAM_BYTES * 100).integer();
+            const int iwramUsedPercent =
+                (bn::fixed(bn::memory::used_static_iwram() + bn::memory::used_stack_iwram()) / IWRAM_BYTES * 100)
+                    .integer();
             const int ewramUsedPercent =
                 (bn::fixed(EWRAM_BYTES - bn::memory::available_alloc_ewram()) / EWRAM_BYTES * 100).integer();
-            const int iwramFree = IWRAM_BYTES - bn::memory::used_static_iwram();
+            const int iwramFree = IWRAM_BYTES - bn::memory::used_static_iwram() - bn::memory::used_stack_iwram();
             const int ewramFree = bn::memory::available_alloc_ewram();
 
             textGen->set_right_alignment();

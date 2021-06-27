@@ -1,0 +1,6 @@
+Sound name : Hurt00.wav
+Made by : sharesynth
+Link : https://freesound.org/people/sharesynth/sounds/341245/
+License : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
+
+This sound is embedded into GBA, thus modified to 22050Hz, 8bit PCM.

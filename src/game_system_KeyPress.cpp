@@ -2,6 +2,8 @@
 
 #include <bn_keypad.h>
 
+#include "scene_GameState.h"
+
 namespace sym::game::system
 {
 
