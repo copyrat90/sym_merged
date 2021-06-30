@@ -56,8 +56,9 @@ constexpr ZoneInfo::EntranceInfo Z0_entranceInfos_[] = {
     {{289 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2}},
 };
 
-constexpr bn::span<ZoneInfo::SymbolInfo> Z1_symbolInfos_ = {
-
+constexpr ZoneInfo::SymbolInfo Z1_symbolInfos_[] = {
+    {{472 - MAP_DIMENSIONS[0].width() / 2, 886 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::BAR},
+    {{493 - MAP_DIMENSIONS[0].width() / 2, 886 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::XOR},
 };
 
 constexpr bn::span<ZoneInfo::DoorInfo> Z1_doorInfos_ = {

@@ -1,6 +1,7 @@
 #include "game_entity_Player.h"
 
 #include <bn_assert.h>
+#include <bn_sound.h>
 #include <bn_sprite_animate_actions.h>
 #include <bn_utility.h>
 
@@ -55,15 +56,16 @@ constexpr int MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT = 3 * MERGE_ACTION_WAIT_UPDATE;
 constexpr int WAIT_UPDATE_BETWEEN_MERGE_START_AND_END =
     MERGE_START_TO_MERGED_UPDATE_COUNT + MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT - MERGE_ACTION_WAIT_UPDATE;
 
-constexpr bn::fixed_point RELATIVE_MERGE_SYMBOL_POS = {0, -21};
+constexpr bn::fixed_point LEFT_SYMBOL_MERGE_END_POS = {-1, -24};
+constexpr bn::fixed_point RIGHT_SYMBOL_MERGE_END_POS = {1, -24};
 constexpr bn::fixed_point LEFT_SYMBOL_MERGE_START_POS = {-12, -3};
 constexpr bn::fixed_point RIGHT_SYMBOL_MERGE_START_POS = {12, -3};
 constexpr bn::fixed_point LEFT_SYMBOL_MERGE_POS_DELTA = {
-    (RELATIVE_MERGE_SYMBOL_POS.x() - LEFT_SYMBOL_MERGE_START_POS.x()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT,
-    (RELATIVE_MERGE_SYMBOL_POS.y() - LEFT_SYMBOL_MERGE_START_POS.y()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT};
+    (LEFT_SYMBOL_MERGE_END_POS.x() - LEFT_SYMBOL_MERGE_START_POS.x()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT,
+    (LEFT_SYMBOL_MERGE_END_POS.y() - LEFT_SYMBOL_MERGE_START_POS.y()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT};
 constexpr bn::fixed_point RIGHT_SYMBOL_MERGE_POS_DELTA = {
-    (RELATIVE_MERGE_SYMBOL_POS.x() - RIGHT_SYMBOL_MERGE_START_POS.x()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT,
-    (RELATIVE_MERGE_SYMBOL_POS.y() - RIGHT_SYMBOL_MERGE_START_POS.y()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT};
+    (RIGHT_SYMBOL_MERGE_END_POS.x() - RIGHT_SYMBOL_MERGE_START_POS.x()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT,
+    (RIGHT_SYMBOL_MERGE_END_POS.y() - RIGHT_SYMBOL_MERGE_START_POS.y()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT};
 
 } // namespace
 
@@ -123,7 +125,10 @@ void Player::Update()
 void Player::InitIdleAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
+    if (animationState_ == AnimationState::MERGE_START)
+        bn::sound::stop_all();
     DestroyAnimation_();
+    ResetMergePosDeltaCounter_();
     animationState_ = AnimationState::IDLE;
     spriteAnimation_ = bn::sprite_animate_action<ANIMATION_MAX_FRAMES>::forever(
         *sprite_, IDLE_ACTION_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(),
@@ -133,7 +138,10 @@ void Player::InitIdleAction()
 void Player::InitJumpAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
+    if (animationState_ == AnimationState::MERGE_START)
+        bn::sound::stop_all();
     DestroyAnimation_();
+    ResetMergePosDeltaCounter_();
     animationState_ = AnimationState::JUMP;
     spriteAnimation_ = bn::create_sprite_animate_action_once(
         *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 2, 3, 4);
@@ -142,7 +150,10 @@ void Player::InitJumpAction()
 void Player::InitFallAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
+    if (animationState_ == AnimationState::MERGE_START)
+        bn::sound::stop_all();
     DestroyAnimation_();
+    ResetMergePosDeltaCounter_();
     animationState_ = AnimationState::FALL;
     spriteAnimation_ = bn::sprite_animate_action<ANIMATION_MAX_FRAMES>::once(
         *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(),
@@ -152,7 +163,10 @@ void Player::InitFallAction()
 void Player::InitLandAction()
 {
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
+    if (animationState_ == AnimationState::MERGE_START)
+        bn::sound::stop_all();
     DestroyAnimation_();
+    ResetMergePosDeltaCounter_();
     animationState_ = AnimationState::LAND;
     spriteAnimation_ = bn::create_sprite_animate_action_once(
         *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 7, 8, 0);
@@ -233,7 +247,7 @@ bn::fixed_point Player::GetRightSymbolPosition() const
 
 bn::fixed_point Player::GetMergeSymbolPosition() const
 {
-    return position_ + RELATIVE_MERGE_SYMBOL_POS;
+    return position_ + LEFT_SYMBOL_MERGE_END_POS;
 }
 
 bool Player::GetControllable() const
@@ -331,7 +345,7 @@ void Player::MergeSymbolsInHands_()
     auto mergedSymbol = constant::symbol::GetMergedSymbolType(gameState_.symbolsInHands[0]->GetType(),
                                                               gameState_.symbolsInHands[1]->GetType());
     gameState_.symbolsInHands[0].reset();
-    gameState_.symbolsInHands[1] = Symbol(position_ + RELATIVE_MERGE_SYMBOL_POS, mergedSymbol);
+    gameState_.symbolsInHands[1] = Symbol(position_ + LEFT_SYMBOL_MERGE_END_POS, mergedSymbol);
     gameState_.symbolsInHands[1]->AllocateGraphicResource(constant::SYMBOL_Z_ORDER);
     gameState_.symbolsInHands[1]->SetCamera(gameState_.camera);
 }
@@ -347,12 +361,17 @@ void Player::SplitSymbolsInHands_()
         BN_ERROR("Player::SplitSymbolsInHands_() called without holding 1 symbol");
 
     auto syms = constant::symbol::GetSplitSymbolTypes(gameState_.symbolsInHands[isRightHand]->GetType());
-    gameState_.symbolsInHands[0] = Symbol(position_ + RELATIVE_MERGE_SYMBOL_POS, syms.first);
-    gameState_.symbolsInHands[1] = Symbol(position_ + RELATIVE_MERGE_SYMBOL_POS, syms.second);
+    gameState_.symbolsInHands[0] = Symbol(position_ + LEFT_SYMBOL_MERGE_END_POS, syms.first);
+    gameState_.symbolsInHands[1] = Symbol(position_ + LEFT_SYMBOL_MERGE_END_POS, syms.second);
     gameState_.symbolsInHands[0]->AllocateGraphicResource(constant::SYMBOL_Z_ORDER);
     gameState_.symbolsInHands[0]->SetCamera(gameState_.camera);
     gameState_.symbolsInHands[1]->AllocateGraphicResource(constant::SYMBOL_Z_ORDER);
     gameState_.symbolsInHands[1]->SetCamera(gameState_.camera);
+}
+
+void Player::ResetMergePosDeltaCounter_()
+{
+    mergePosDeltaCounter_ = 0;
 }
 
 } // namespace sym::game::entity

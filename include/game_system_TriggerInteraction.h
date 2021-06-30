@@ -37,8 +37,6 @@ private:
         RIGHT
     };
 
-    bool isMergeOrSplitTriggered = false;
-
     [[nodiscard]] bn::pair<EntityType, Hand> GetNearestInteractableFromPlayer_(
         bn::ilist<entity::Symbol>::iterator& outSymbolIter, int& outHoverButtonIdx);
 

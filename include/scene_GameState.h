@@ -73,6 +73,8 @@ struct GameState
     game::system::PhysicsMovement physicsMovement;
     game::system::ZoneSwitch zoneSwitch;
     game::system::Transition transition;
+
+    bool isMergeOrSplitTriggered = false;
 };
 
 } // namespace sym::scene

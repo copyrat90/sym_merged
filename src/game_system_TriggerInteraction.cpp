@@ -22,23 +22,30 @@ TriggerInteraction::TriggerInteraction(scene::GameState& state) : ISystem(state)
 
 void TriggerInteraction::Update()
 {
+    if (state_.isPaused)
+        return;
+    if (!state_.player.GetControllable())
+        return;
+
     // WIP
     if (bn::keypad::b_held())
     {
-        if (!isMergeOrSplitTriggered)
+        if (!state_.isMergeOrSplitTriggered)
         {
             if (state_.player.GetAnimationState() != entity::Player::AnimationState::MERGE_START)
             {
-                if ((state_.player.GetGrounded() && !state_.isPaused && state_.symbolsInHands[0] &&
-                     state_.symbolsInHands[1] &&
-                     state_.symbolsInHands[0]->GetType() < entity::Symbol::COMPLEX_SYMBOL_START_NUM &&
-                     state_.symbolsInHands[1]->GetType() < entity::Symbol::COMPLEX_SYMBOL_START_NUM) ||
-                    (state_.symbolsInHands[0] && !state_.symbolsInHands[1] &&
-                     state_.symbolsInHands[0]->GetType() >= entity::Symbol::COMPLEX_SYMBOL_START_NUM) ||
-                    (state_.symbolsInHands[1] && !state_.symbolsInHands[0] &&
-                     state_.symbolsInHands[1]->GetType() >= entity::Symbol::COMPLEX_SYMBOL_START_NUM))
+                const bool mergeCheck =
+                    (state_.player.GetGrounded() && !state_.isPaused) &&
+                    ((state_.symbolsInHands[0] && state_.symbolsInHands[1] &&
+                      state_.symbolsInHands[0]->GetType() < entity::Symbol::COMPLEX_SYMBOL_START_NUM &&
+                      state_.symbolsInHands[1]->GetType() < entity::Symbol::COMPLEX_SYMBOL_START_NUM) ||
+                     (state_.symbolsInHands[0] && !state_.symbolsInHands[1] &&
+                      state_.symbolsInHands[0]->GetType() >= entity::Symbol::COMPLEX_SYMBOL_START_NUM) ||
+                     (state_.symbolsInHands[1] && !state_.symbolsInHands[0] &&
+                      state_.symbolsInHands[1]->GetType() >= entity::Symbol::COMPLEX_SYMBOL_START_NUM));
+                if (mergeCheck)
                 {
-                    isMergeOrSplitTriggered = true;
+                    state_.isMergeOrSplitTriggered = true;
                     state_.player.InitMergeStartAction();
                     bn::sound_items::sfx_symbol_merge.play(constant::volume::sfx_symbol_merge);
                 }
@@ -51,12 +58,14 @@ void TriggerInteraction::Update()
     }
     else
     {
-        isMergeOrSplitTriggered = false;
-
-        if (state_.player.GetAnimationState() == entity::Player::AnimationState::MERGE_START)
+        if (state_.isMergeOrSplitTriggered)
         {
-            state_.player.InitMergeEndAction();
-            bn::sound::stop_all();
+            state_.isMergeOrSplitTriggered = false;
+            if (state_.player.GetAnimationState() == entity::Player::AnimationState::MERGE_START)
+            {
+                state_.player.InitMergeEndAction();
+                bn::sound::stop_all();
+            }
         }
 
         if (IsLKeyPressLasts_() || IsRKeyPressLasts_())

@@ -97,6 +97,8 @@ private:
     // What a design flaw.  망했어요...
     void MergeSymbolsInHands_();
     void SplitSymbolsInHands_();
+
+    void ResetMergePosDeltaCounter_();
 };
 
 } // namespace sym::game::entity
