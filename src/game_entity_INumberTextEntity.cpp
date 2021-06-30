@@ -43,9 +43,9 @@ void INumberTextEntity::AllocateGraphicResource(int z_order)
     numberSprite_->set_blending_enabled(isBlendingEnabled_);
     numberSprite_->set_mosaic_enabled(isMosaicEnabled_);
     numberSprite_->set_visible(isVisible_);
-    // TODO: Override SetColors()
+    // TODO: Override SetPalette()
     // if (paletteItem_)
-    // SetColors(*paletteItem_);
+    // SetPalette(*paletteItem_);
 }
 
 void INumberTextEntity::SetBlendingEnabled(bool isEnable)

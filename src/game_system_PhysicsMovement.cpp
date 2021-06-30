@@ -412,7 +412,7 @@ void PhysicsMovement::PlayerCollision_()
             state_.player.SetControllable(false);
             state_.player.SetGravityEnabled(false);
             state_.player.SetVelocity({0, 0});
-            state_.player.SetColors(PLAYER_DAMAGE_PAL);
+            state_.player.SetPalette(PLAYER_DAMAGE_PAL);
             bn::sound_items::sfx_player_damage.play(constant::volume::sfx_player_damage);
             state_.transition.SetBlendingAppliedItems(Transition::AppliedItems::PLAYER |
                                                       Transition::AppliedItems::SYMBOLS_IN_HANDS);
@@ -429,7 +429,7 @@ void PhysicsMovement::PlayerCollision_()
                 state_.transition.InitOutAndIn(Transition::Types::FADE, PLAYER_DAMAGE_FADE_UPDATE_COUNT,
                                                PLAYER_DAMAGE_FADE_UPDATE_COUNT, PLAYER_DAMAGE_WAIT_BETWEEN_FO_AND_FI);
                 state_.transition.SetWaitBetweenEventHandler([this] {
-                    state_.player.SetColors(PLAYER_NORMAL_PAL);
+                    state_.player.SetPalette(PLAYER_NORMAL_PAL);
                     state_.player.SetVisible(true);
                     if (state_.symbolsInHands[0])
                         state_.symbolsInHands[0]->SetVisible(true);

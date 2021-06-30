@@ -61,7 +61,7 @@ public:
     [[nodiscard]] bool GetMosaicEnabled() const;
     virtual void SetVisible(bool isVisible);
     [[nodiscard]] bool GetVisible() const;
-    virtual void SetColors(const bn::sprite_palette_item& paletteItem);
+    virtual void SetPalette(const bn::sprite_palette_item& paletteItem);
     virtual void SetCamera(const bn::camera_ptr& camera);
 
     [[nodiscard]] bn::fixed_point GetPosition() const;

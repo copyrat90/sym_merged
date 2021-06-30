@@ -47,6 +47,7 @@ constexpr bn::fixed sfx_hover_button_toggle = SFX_DEFAULT;
 constexpr bn::fixed sfx_pressure_button_toggle = SFX_DEFAULT;
 constexpr bn::fixed sfx_player_damage = 0.5;
 constexpr bn::fixed sfx_symbol_merge = SFX_DEFAULT;
+constexpr bn::fixed sfx_error = SFX_DEFAULT;
 
 constexpr bn::fixed ClampVolume(bn::fixed volume)
 {

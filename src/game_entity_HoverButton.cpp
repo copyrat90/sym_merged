@@ -41,7 +41,7 @@ void HoverButton::AllocateGraphicResource(int z_order)
     sprite_->set_mosaic_enabled(isMosaicEnabled_);
     sprite_->set_visible(isVisible_);
     if (paletteItem_)
-        SetColors(*paletteItem_);
+        SetPalette(*paletteItem_);
 }
 
 void HoverButton::FreeGraphicResource()

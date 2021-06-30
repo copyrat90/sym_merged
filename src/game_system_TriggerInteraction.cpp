@@ -11,6 +11,8 @@
 #include "helper_math.h"
 #include "scene_GameState.h"
 
+#include "bn_sound_items.h"
+
 namespace sym::game::system
 {
 
@@ -27,20 +29,22 @@ void TriggerInteraction::Update()
         {
             if (state_.player.GetAnimationState() != entity::Player::AnimationState::MERGE_START)
             {
-                if (state_.player.GetGrounded() && !state_.isPaused)
+                if ((state_.player.GetGrounded() && !state_.isPaused && state_.symbolsInHands[0] &&
+                     state_.symbolsInHands[1] &&
+                     state_.symbolsInHands[0]->GetType() < entity::Symbol::COMPLEX_SYMBOL_START_NUM &&
+                     state_.symbolsInHands[1]->GetType() < entity::Symbol::COMPLEX_SYMBOL_START_NUM) ||
+                    (state_.symbolsInHands[0] && !state_.symbolsInHands[1] &&
+                     state_.symbolsInHands[0]->GetType() >= entity::Symbol::COMPLEX_SYMBOL_START_NUM) ||
+                    (state_.symbolsInHands[1] && !state_.symbolsInHands[0] &&
+                     state_.symbolsInHands[1]->GetType() >= entity::Symbol::COMPLEX_SYMBOL_START_NUM))
                 {
-                    if ((state_.symbolsInHands[0] && state_.symbolsInHands[1] &&
-                         state_.symbolsInHands[0]->GetType() < entity::Symbol::COMPLEX_SYMBOL_START_NUM &&
-                         state_.symbolsInHands[1]->GetType() < entity::Symbol::COMPLEX_SYMBOL_START_NUM) ||
-                        (state_.symbolsInHands[0] && !state_.symbolsInHands[1] &&
-                         state_.symbolsInHands[0]->GetType() >= entity::Symbol::COMPLEX_SYMBOL_START_NUM) ||
-                        (state_.symbolsInHands[1] && !state_.symbolsInHands[0] &&
-                         state_.symbolsInHands[1]->GetType() >= entity::Symbol::COMPLEX_SYMBOL_START_NUM))
-                    {
-                        isMergeOrSplitTriggered = true;
-                        state_.player.InitMergeStartAction();
-                        bn::sound_items::sfx_symbol_merge.play(constant::volume::sfx_symbol_merge);
-                    }
+                    isMergeOrSplitTriggered = true;
+                    state_.player.InitMergeStartAction();
+                    bn::sound_items::sfx_symbol_merge.play(constant::volume::sfx_symbol_merge);
+                }
+                else if (bn::keypad::b_pressed())
+                {
+                    bn::sound_items::sfx_error.play(constant::volume::sfx_error);
                 }
             }
         }

@@ -60,7 +60,7 @@ void IEntity::AllocateGraphicResource(int z_order)
         sprite_->set_mosaic_enabled(isMosaicEnabled_);
         sprite_->set_visible(isVisible_);
         if (paletteItem_)
-            SetColors(*paletteItem_);
+            SetPalette(*paletteItem_);
     }
 }
 
@@ -100,14 +100,11 @@ bool IEntity::GetVisible() const
     return isVisible_;
 }
 
-void IEntity::SetColors(const bn::sprite_palette_item& paletteItem)
+void IEntity::SetPalette(const bn::sprite_palette_item& paletteItem)
 {
     paletteItem_ = &paletteItem;
     if (sprite_)
-    {
-        bn::sprite_palette_ptr pal = sprite_->palette();
-        pal.set_colors(paletteItem);
-    }
+        sprite_->set_palette(paletteItem);
 }
 
 void IEntity::SetCamera(const bn::camera_ptr& camera)
