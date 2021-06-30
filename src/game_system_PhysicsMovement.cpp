@@ -358,10 +358,12 @@ void PhysicsMovement::PlayerKeyboardHandle_()
 {
     if (!state_.player.GetControllable())
         return;
+    const bool mergeOngoing = state_.player.GetAnimationState() == entity::Player::AnimationState::MERGE_START ||
+                              state_.player.GetAnimationState() == entity::Player::AnimationState::MERGE_END;
 
     bn::fixed_point velocity = state_.player.GetVelocity();
 
-    if (bn::keypad::a_pressed() && state_.player.GetGrounded() && playerJumpCount > 0)
+    if (!mergeOngoing && bn::keypad::a_pressed() && state_.player.GetGrounded() && playerJumpCount > 0)
     {
         state_.player.SetGrounded(false);
         state_.player.InitJumpAction();
@@ -369,11 +371,11 @@ void PhysicsMovement::PlayerKeyboardHandle_()
         bn::sound_items::sfx_player_jump.play(constant::volume::sfx_player_jump);
         velocity.set_y(JUMP_VEL);
     }
-    if (bn::keypad::left_held())
+    if (!mergeOngoing && bn::keypad::left_held())
     {
         velocity.set_x(velocity.x() - PLAYER_DELTA_VEL.x());
     }
-    else if (bn::keypad::right_held())
+    else if (!mergeOngoing && bn::keypad::right_held())
     {
         velocity.set_x(velocity.x() + PLAYER_DELTA_VEL.x());
     }

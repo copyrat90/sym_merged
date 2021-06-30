@@ -48,7 +48,7 @@ Game::Game(scene::Param& sceneParam)
                               bn::camera_ptr::create(0, 0),
                               helper::tilemap::ConvertIndexRectToPositionRect(
                                   state_.stageInfo.zoneInfos[state_.currentZoneIdx].zoneBoundary),
-                              bn::fixed_point{0, 0},
+                              {bn::fixed_point{0, 0}, state_},
                               {},
                               {},
                               {},

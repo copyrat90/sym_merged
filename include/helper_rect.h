@@ -1,3 +1,5 @@
+#pragma once
+
 #include <bn_fixed_rect.h>
 
 namespace sym::helper::rect

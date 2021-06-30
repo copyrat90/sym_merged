@@ -4,13 +4,15 @@
 
 #include <bn_sprite_animate_actions.h>
 
+#include "scene_GameState_fwd.h"
+
 namespace sym::game::entity
 {
 
 class Player final : public IPhysicsEntity
 {
 public:
-    Player(bn::fixed_point position);
+    Player(bn::fixed_point position, scene::GameState& gameState);
 
     Player(Player&& other) = delete;
     Player& operator=(Player&& other) = delete;
@@ -48,6 +50,8 @@ public:
         LAND,
         MERGE_START,
         MERGE_END,
+        SPLIT_START = MERGE_START,
+        SPLIT_END = MERGE_END
     };
 
     AnimationState GetAnimationState() const;
@@ -57,20 +61,27 @@ public:
     void SetLastSafePosition(bn::fixed_point safePosition);
 
 private:
+    static constexpr int ANIMATION_MAX_FRAMES = 3;
+
     bn::fixed_point lastSafePosition_;
 
-    bn::optional<bn::sprite_animate_action<2>> animation2_;
-    bn::optional<bn::sprite_animate_action<3>> animation3_;
+    bn::optional<bn::sprite_animate_action<ANIMATION_MAX_FRAMES>> spriteAnimation_;
     AnimationState animationState_ = AnimationState::IDLE;
+
     /**
      * @brief Additional wait update before the InitIdleAction() is called.
+     (for MERGE_START, InitMergeEndAction() is called instead).
      * If it is `-1`, InitIdleAction() is not called.
      * (i.e. the last animation frame is used after the action ends.)
      *
      */
     int additionalWaitUpdateCount_ = -1;
 
+    int mergePosDeltaCounter_ = 0;
+
     bool isControllable_ = true;
+
+    scene::GameState& gameState_;
 
     /**
      * @brief Updates animation.
@@ -81,6 +92,11 @@ private:
     void DestroyAnimation_();
 
     void AddRelativeYPos_(bn::fixed_point& resultPos, bool isFront) const;
+
+    // Something's utterly wrong, why entity::Player deals with this?
+    // What a design flaw.  망했어요...
+    void MergeSymbolsInHands_();
+    void SplitSymbolsInHands_();
 };
 
 } // namespace sym::game::entity

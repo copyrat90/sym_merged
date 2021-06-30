@@ -7,6 +7,7 @@
 #include <bn_sprite_text_generator.h>
 
 #include "bn_music_items.h"
+#include "game_entity_Symbol.h"
 #include "global.h"
 
 namespace sym::constant
@@ -45,6 +46,7 @@ constexpr bn::fixed sfx_symbol_throw = SFX_DEFAULT;
 constexpr bn::fixed sfx_hover_button_toggle = SFX_DEFAULT;
 constexpr bn::fixed sfx_pressure_button_toggle = SFX_DEFAULT;
 constexpr bn::fixed sfx_player_damage = 0.5;
+constexpr bn::fixed sfx_symbol_merge = SFX_DEFAULT;
 
 constexpr bn::fixed ClampVolume(bn::fixed volume)
 {
@@ -70,5 +72,33 @@ constexpr bn::fixed GetVolume(const bn::music_item& music)
 }
 
 } // namespace volume
+
+namespace symbol
+{
+
+[[nodiscard]] constexpr game::entity::Symbol::Type GetMergedSymbolType(game::entity::Symbol::Type sym1,
+                                                                       game::entity::Symbol::Type sym2)
+{
+    using SymType = game::entity::Symbol::Type;
+    constexpr SymType SYMBOL_MERGE_LUT[2][2] = {
+        {SymType::PLUS, SymType::UP},
+        {SymType::UP, SymType::VV},
+    };
+    return SYMBOL_MERGE_LUT[sym1][sym2];
+}
+
+[[nodiscard]] constexpr bn::pair<game::entity::Symbol::Type, game::entity::Symbol::Type> GetSplitSymbolTypes(
+    game::entity::Symbol::Type sym)
+{
+    using SymType = game::entity::Symbol::Type;
+    constexpr bn::pair<SymType, SymType> SYMBOL_SPLIT_LUT[3] = {
+        {SymType::BAR, SymType::XOR},
+        {SymType::XOR, SymType::XOR},
+        {SymType::BAR, SymType::BAR},
+    };
+    return SYMBOL_SPLIT_LUT[sym - game::entity::Symbol::COMPLEX_SYMBOL_START_NUM];
+}
+
+} // namespace symbol
 
 } // namespace sym::constant

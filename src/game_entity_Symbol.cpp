@@ -3,6 +3,7 @@
 #include <bn_assert.h>
 #include <bn_sprite_tiles_ptr.h>
 
+#include "bn_log.h"
 #include "helper_rect.h"
 
 #include "bn_sprite_items_spr_basic_symbols.h"
@@ -102,6 +103,9 @@ void Symbol::AllocateGraphicResource(int z_order)
         spriteIdx -= COMPLEX_SYMBOL_START_NUM;
     spriteItem_ =
         IsComplexSymbol_(type_) ? &bn::sprite_items::spr_complex_symbols : &bn::sprite_items::spr_basic_symbols;
+
+    BN_LOG("sprite_idx: ", spriteIdx);
+    BN_LOG("IsComplex?: ", IsComplexSymbol_(type_) ? 1 : 0);
 
     sprite_ = spriteItem_->create_sprite(position_, spriteIdx);
     sprite_->set_z_order(z_order);

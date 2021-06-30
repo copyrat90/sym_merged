@@ -17,7 +17,8 @@ IPhysicsEntity::IPhysicsEntity(bn::fixed_point position, bn::fixed_rect relative
 
 IPhysicsEntity::IPhysicsEntity(IPhysicsEntity&& other)
     : IEntity(bn::move(other)), relativePhysicsCollider_(other.relativePhysicsCollider_),
-      isGravityEnabled_(other.isGravityEnabled_), gravityScale_(other.gravityScale_)
+      isGravityEnabled_(other.isGravityEnabled_), gravityScale_(other.gravityScale_), velocity_(other.velocity_),
+      isGrounded_(other.isGrounded_)
 {
 }
 
@@ -27,6 +28,8 @@ IPhysicsEntity& IPhysicsEntity::operator=(IPhysicsEntity&& other)
     relativePhysicsCollider_ = other.relativePhysicsCollider_;
     isGravityEnabled_ = other.isGravityEnabled_;
     gravityScale_ = other.gravityScale_;
+    velocity_ = other.velocity_;
+    isGrounded_ = other.isGrounded_;
     return *this;
 }
 

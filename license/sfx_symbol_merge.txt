@@ -1,0 +1,12 @@
+This sound is embedded into GBA, thus modified to 22050Hz, 8bit PCM.
+2 sound sources below are used to create this sound.
+
+Sound name : Dark Transition.sse.wav
+Made by : snapssound
+Link : https://freesound.org/people/snapssound/sounds/536637/
+License : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
+
+Sound name : Reverse transition.sse.wav
+Made by : snapssound
+Link : https://freesound.org/people/snapssound/sounds/536633/
+License : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)

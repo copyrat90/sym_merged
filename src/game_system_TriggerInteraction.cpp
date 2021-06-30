@@ -4,6 +4,7 @@
 #include <bn_assert.h>
 #include <bn_fixed_rect.h>
 #include <bn_keypad.h>
+#include <bn_sound.h>
 
 #include "bn_sound_items.h"
 #include "constant.h"
@@ -20,46 +21,81 @@ TriggerInteraction::TriggerInteraction(scene::GameState& state) : ISystem(state)
 void TriggerInteraction::Update()
 {
     // WIP
-    if (IsLKeyPressLasts_() || IsRKeyPressLasts_())
+    if (bn::keypad::b_held())
     {
-        if (bn::keypad::down_held())
+        if (!isMergeOrSplitTriggered)
         {
-            if (IsLKeyPressLasts_())
+            if (state_.player.GetAnimationState() != entity::Player::AnimationState::MERGE_START)
             {
-                PlayerPutsDownSymbol_(Hand::LEFT);
-                ResetLKeyPress_();
-            }
-            else if (IsRKeyPressLasts_())
-            {
-                PlayerPutsDownSymbol_(Hand::RIGHT);
-                ResetRKeyPress_();
+                if (state_.player.GetGrounded() && !state_.isPaused)
+                {
+                    if ((state_.symbolsInHands[0] && state_.symbolsInHands[1] &&
+                         state_.symbolsInHands[0]->GetType() < entity::Symbol::COMPLEX_SYMBOL_START_NUM &&
+                         state_.symbolsInHands[1]->GetType() < entity::Symbol::COMPLEX_SYMBOL_START_NUM) ||
+                        (state_.symbolsInHands[0] && !state_.symbolsInHands[1] &&
+                         state_.symbolsInHands[0]->GetType() >= entity::Symbol::COMPLEX_SYMBOL_START_NUM) ||
+                        (state_.symbolsInHands[1] && !state_.symbolsInHands[0] &&
+                         state_.symbolsInHands[1]->GetType() >= entity::Symbol::COMPLEX_SYMBOL_START_NUM))
+                    {
+                        isMergeOrSplitTriggered = true;
+                        state_.player.InitMergeStartAction();
+                        bn::sound_items::sfx_symbol_merge.play(constant::volume::sfx_symbol_merge);
+                    }
+                }
             }
         }
-        else
+    }
+    else
+    {
+        isMergeOrSplitTriggered = false;
+
+        if (state_.player.GetAnimationState() == entity::Player::AnimationState::MERGE_START)
         {
-            auto symbolIter = state_.symbolsOfZones[state_.currentZoneIdx].end();
-            int entityIdx = -1;
-            auto [nearestEntityType, interactHand] = GetNearestInteractableFromPlayer_(symbolIter, entityIdx);
-            switch (nearestEntityType)
+            state_.player.InitMergeEndAction();
+            bn::sound::stop_all();
+        }
+
+        if (IsLKeyPressLasts_() || IsRKeyPressLasts_())
+        {
+            if (bn::keypad::down_held())
             {
-            case EntityType::NONE:
-                break;
-            case EntityType::SYMBOL:
-                PlayerPicksUpSymbol_(interactHand, symbolIter);
-                if (interactHand == Hand::LEFT)
+                if (IsLKeyPressLasts_())
+                {
+                    PlayerPutsDownSymbol_(Hand::LEFT);
                     ResetLKeyPress_();
-                else
+                }
+                else if (IsRKeyPressLasts_())
+                {
+                    PlayerPutsDownSymbol_(Hand::RIGHT);
                     ResetRKeyPress_();
-                break;
-            case EntityType::HOVER_BUTTON:
-                PlayerClicksHoverButton_(entityIdx);
-                if (interactHand == Hand::LEFT)
-                    ResetLKeyPress_();
-                else
-                    ResetRKeyPress_();
-                break;
-            default:
-                BN_ERROR("Invalid TriggerInteraction::EntityType : ", static_cast<int>(nearestEntityType));
+                }
+            }
+            else
+            {
+                auto symbolIter = state_.symbolsOfZones[state_.currentZoneIdx].end();
+                int entityIdx = -1;
+                auto [nearestEntityType, interactHand] = GetNearestInteractableFromPlayer_(symbolIter, entityIdx);
+                switch (nearestEntityType)
+                {
+                case EntityType::NONE:
+                    break;
+                case EntityType::SYMBOL:
+                    PlayerPicksUpSymbol_(interactHand, symbolIter);
+                    if (interactHand == Hand::LEFT)
+                        ResetLKeyPress_();
+                    else
+                        ResetRKeyPress_();
+                    break;
+                case EntityType::HOVER_BUTTON:
+                    PlayerClicksHoverButton_(entityIdx);
+                    if (interactHand == Hand::LEFT)
+                        ResetLKeyPress_();
+                    else
+                        ResetRKeyPress_();
+                    break;
+                default:
+                    BN_ERROR("Invalid TriggerInteraction::EntityType : ", static_cast<int>(nearestEntityType));
+                }
             }
         }
     }

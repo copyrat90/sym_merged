@@ -21,4 +21,9 @@ constexpr bn::fixed EPSILON = 0.01;
     return (p2.x() - p1.x()) * (p2.x() - p1.x()) + (p2.y() - p1.y()) * (p2.y() - p1.y());
 }
 
+[[nodiscard]] constexpr bn::fixed_point operator*(int num, bn::fixed_point vector)
+{
+    return {num * vector.x(), num * vector.y()};
+}
+
 } // namespace sym::helper::math

@@ -9,13 +9,16 @@ IEntity::~IEntity() = default;
 
 IEntity::IEntity(bn::fixed_point position, bn::fixed_rect relativeInteractRange,
                  const bn::sprite_item* const spriteItem)
-    : position_(position), relativeInteractRange_(relativeInteractRange), spriteItem_(spriteItem)
+    : position_(position), relativeInteractRange_(relativeInteractRange), spriteItem_(spriteItem),
+      paletteItem_(&spriteItem->palette_item())
 {
 }
 
 IEntity::IEntity(IEntity&& other)
     : position_(other.position_), relativeInteractRange_(other.relativeInteractRange_),
-      sprite_(bn::move(other.sprite_)), spriteItem_(other.spriteItem_)
+      sprite_(bn::move(other.sprite_)), spriteItem_(other.spriteItem_), paletteItem_(other.paletteItem_),
+      isBlendingEnabled_(other.isBlendingEnabled_), isMosaicEnabled_(other.isMosaicEnabled_),
+      isVisible_(other.isVisible_)
 {
 }
 
@@ -25,6 +28,10 @@ IEntity& IEntity::operator=(IEntity&& other)
     relativeInteractRange_ = other.relativeInteractRange_;
     sprite_ = bn::move(other.sprite_);
     spriteItem_ = other.spriteItem_;
+    paletteItem_ = other.paletteItem_;
+    isBlendingEnabled_ = other.isBlendingEnabled_;
+    isMosaicEnabled_ = other.isMosaicEnabled_;
+    isVisible_ = other.isVisible_;
     return *this;
 }
 

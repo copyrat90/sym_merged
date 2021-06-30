@@ -2,9 +2,13 @@
 
 #include <bn_assert.h>
 #include <bn_sprite_animate_actions.h>
+#include <bn_utility.h>
 
 #include "bn_sprite_items_spr_ingame_protagonist_star.h"
+#include "constant.h"
+#include "helper_math.h"
 #include "helper_rect.h"
+#include "scene_GameState.h"
 
 namespace sym::game::entity
 {
@@ -39,21 +43,34 @@ constexpr bn::fixed FALL_BACK_SYMBOL_Y_POSITIONS[] = {UNUSED, -2, -4};
 constexpr bn::fixed LAND_FRONT_SYMBOL_Y_POSITIONS[] = {UNUSED, -1, 0, IDLE_FRONT_SYMBOL_Y_POSITIONS[1]};
 constexpr bn::fixed LAND_BACK_SYMBOL_Y_POSITIONS[] = {UNUSED, -2, 1, IDLE_BACK_SYMBOL_Y_POSITIONS[1]};
 
-constexpr bn::fixed_point RELATIVE_MERGE_SYMBOL_POS = {0, -21};
-
 constexpr bn::fixed_rect RELATIVE_PHYSICS_COLLIDER = {{0, 0}, {26, 26}};
 constexpr bool IS_GRAVITY_ENABLED_BY_DEFAULT = true;
 constexpr bn::fixed GRAVITY_SCALE = 0.1;
 
 constexpr int IDLE_ACTION_WAIT_UPDATE = 30;
 constexpr int OTHER_ACTIONS_WAIT_UPDATE = 5;
-constexpr int DAMAGE_TRANSITION_UPDATE_COUNT = 30;
+constexpr int MERGE_ACTION_WAIT_UPDATE = OTHER_ACTIONS_WAIT_UPDATE;
+constexpr int MERGE_START_TO_MERGED_UPDATE_COUNT = 90;
+constexpr int MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT = 3 * MERGE_ACTION_WAIT_UPDATE;
+constexpr int WAIT_UPDATE_BETWEEN_MERGE_START_AND_END =
+    MERGE_START_TO_MERGED_UPDATE_COUNT + MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT - MERGE_ACTION_WAIT_UPDATE;
+
+constexpr bn::fixed_point RELATIVE_MERGE_SYMBOL_POS = {0, -21};
+constexpr bn::fixed_point LEFT_SYMBOL_MERGE_START_POS = {-12, -3};
+constexpr bn::fixed_point RIGHT_SYMBOL_MERGE_START_POS = {12, -3};
+constexpr bn::fixed_point LEFT_SYMBOL_MERGE_POS_DELTA = {
+    (RELATIVE_MERGE_SYMBOL_POS.x() - LEFT_SYMBOL_MERGE_START_POS.x()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT,
+    (RELATIVE_MERGE_SYMBOL_POS.y() - LEFT_SYMBOL_MERGE_START_POS.y()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT};
+constexpr bn::fixed_point RIGHT_SYMBOL_MERGE_POS_DELTA = {
+    (RELATIVE_MERGE_SYMBOL_POS.x() - RIGHT_SYMBOL_MERGE_START_POS.x()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT,
+    (RELATIVE_MERGE_SYMBOL_POS.y() - RIGHT_SYMBOL_MERGE_START_POS.y()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT};
 
 } // namespace
 
-Player::Player(bn::fixed_point position)
+Player::Player(bn::fixed_point position, scene::GameState& gameState)
     : IPhysicsEntity(position, RELATIVE_INTERACT_RANGE, RELATIVE_PHYSICS_COLLIDER, IS_GRAVITY_ENABLED_BY_DEFAULT,
-                     GRAVITY_SCALE, &bn::sprite_items::spr_ingame_protagonist_star)
+                     GRAVITY_SCALE, &bn::sprite_items::spr_ingame_protagonist_star),
+      gameState_(gameState)
 {
 }
 
@@ -69,11 +86,36 @@ void Player::Update()
 
     bool isAnimationDone = UpdateAnimation_();
 
+    if (animationState_ == AnimationState::MERGE_START)
+    {
+        if (mergePosDeltaCounter_ < MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT)
+            ++mergePosDeltaCounter_;
+    }
+    else if (animationState_ == AnimationState::MERGE_END)
+    {
+        if (mergePosDeltaCounter_ > 0)
+            --mergePosDeltaCounter_;
+    }
+
     if (isAnimationDone && additionalWaitUpdateCount_ >= 0)
     {
         if (additionalWaitUpdateCount_-- == 0)
         {
-            InitIdleAction();
+            if (animationState_ == AnimationState::MERGE_START)
+            {
+                if (gameState_.symbolsInHands[0] && gameState_.symbolsInHands[1])
+                    MergeSymbolsInHands_();
+                else if ((gameState_.symbolsInHands[0] && !gameState_.symbolsInHands[1]) ||
+                         (!gameState_.symbolsInHands[0] && gameState_.symbolsInHands[1]))
+                    SplitSymbolsInHands_();
+                else
+                    BN_ERROR("No symbols in hands but merge or split actions ongoing");
+                InitMergeEndAction();
+            }
+            else
+            {
+                InitIdleAction();
+            }
         }
     }
 }
@@ -83,8 +125,9 @@ void Player::InitIdleAction()
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
     DestroyAnimation_();
     animationState_ = AnimationState::IDLE;
-    animation2_ = bn::create_sprite_animate_action_forever(
-        *sprite_, IDLE_ACTION_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 0, 1);
+    spriteAnimation_ = bn::sprite_animate_action<ANIMATION_MAX_FRAMES>::forever(
+        *sprite_, IDLE_ACTION_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(),
+        bn::array<uint16_t, 2>{0, 1});
 }
 
 void Player::InitJumpAction()
@@ -92,7 +135,7 @@ void Player::InitJumpAction()
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
     DestroyAnimation_();
     animationState_ = AnimationState::JUMP;
-    animation3_ = bn::create_sprite_animate_action_once(
+    spriteAnimation_ = bn::create_sprite_animate_action_once(
         *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 2, 3, 4);
 }
 
@@ -101,8 +144,9 @@ void Player::InitFallAction()
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
     DestroyAnimation_();
     animationState_ = AnimationState::FALL;
-    animation2_ = bn::create_sprite_animate_action_once(
-        *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 5, 6);
+    spriteAnimation_ = bn::sprite_animate_action<ANIMATION_MAX_FRAMES>::once(
+        *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(),
+        bn::array<uint16_t, 2>{5, 6});
 }
 
 void Player::InitLandAction()
@@ -110,7 +154,7 @@ void Player::InitLandAction()
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
     DestroyAnimation_();
     animationState_ = AnimationState::LAND;
-    animation3_ = bn::create_sprite_animate_action_once(
+    spriteAnimation_ = bn::create_sprite_animate_action_once(
         *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 7, 8, 0);
     additionalWaitUpdateCount_ = OTHER_ACTIONS_WAIT_UPDATE;
 }
@@ -120,8 +164,9 @@ void Player::InitMergeStartAction()
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
     DestroyAnimation_();
     animationState_ = AnimationState::MERGE_START;
-    animation3_ = bn::create_sprite_animate_action_once(
-        *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 9, 10, 11);
+    spriteAnimation_ = bn::create_sprite_animate_action_once(
+        *sprite_, MERGE_ACTION_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 9, 10, 11);
+    additionalWaitUpdateCount_ = WAIT_UPDATE_BETWEEN_MERGE_START_AND_END;
 }
 
 void Player::InitMergeEndAction()
@@ -129,9 +174,9 @@ void Player::InitMergeEndAction()
     BN_ASSERT(sprite_, "Player action cannot be init without allocating graphics!");
     DestroyAnimation_();
     animationState_ = AnimationState::MERGE_END;
-    animation3_ = bn::create_sprite_animate_action_once(
-        *sprite_, OTHER_ACTIONS_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 10, 9, 0);
-    additionalWaitUpdateCount_ = OTHER_ACTIONS_WAIT_UPDATE;
+    spriteAnimation_ = bn::create_sprite_animate_action_once(
+        *sprite_, MERGE_ACTION_WAIT_UPDATE, bn::sprite_items::spr_ingame_protagonist_star.tiles_item(), 10, 9, 0);
+    additionalWaitUpdateCount_ = MERGE_ACTION_WAIT_UPDATE;
 }
 
 bn::fixed_rect Player::GetLeftSymbolPickupRange() const
@@ -161,6 +206,11 @@ bn::fixed_rect Player::GetRightButtonInteractRange() const
 bn::fixed_point Player::GetLeftSymbolPosition() const
 {
     bn::fixed_point resultPos = position_;
+    if (animationState_ == AnimationState::MERGE_START || animationState_ == AnimationState::MERGE_END)
+    {
+        using helper::math::operator*;
+        return resultPos + LEFT_SYMBOL_MERGE_START_POS + mergePosDeltaCounter_ * LEFT_SYMBOL_MERGE_POS_DELTA;
+    }
     resultPos.set_x(resultPos.x() + RELATIVE_LEFT_SYMBOL_X_POS);
     const bool leftIsFront = GetHorizontalFlip();
     AddRelativeYPos_(resultPos, leftIsFront);
@@ -170,6 +220,11 @@ bn::fixed_point Player::GetLeftSymbolPosition() const
 bn::fixed_point Player::GetRightSymbolPosition() const
 {
     bn::fixed_point resultPos = position_;
+    if (animationState_ == AnimationState::MERGE_START || animationState_ == AnimationState::MERGE_END)
+    {
+        using helper::math::operator*;
+        return resultPos + RIGHT_SYMBOL_MERGE_START_POS + mergePosDeltaCounter_ * RIGHT_SYMBOL_MERGE_POS_DELTA;
+    }
     resultPos.set_x(resultPos.x() + RELATIVE_RIGHT_SYMBOL_X_POS);
     const bool rightIsFront = !GetHorizontalFlip();
     AddRelativeYPos_(resultPos, rightIsFront);
@@ -188,6 +243,7 @@ bool Player::GetControllable() const
 
 void Player::SetControllable(bool isControllable)
 {
+
     isControllable_ = isControllable;
 }
 
@@ -198,10 +254,8 @@ Player::AnimationState Player::GetAnimationState() const
 
 bool Player::GetAnimationDone() const
 {
-    if (animation2_)
-        return animation2_->done();
-    else if (animation3_)
-        return animation3_->done();
+    if (spriteAnimation_)
+        return spriteAnimation_->done();
     BN_ERROR("GetAnimationDone() is called when there is no animation");
     return true;
 }
@@ -219,19 +273,11 @@ void Player::SetLastSafePosition(bn::fixed_point safePosition)
 bool Player::UpdateAnimation_()
 {
     bool isActionDone = true;
-    if (animation2_)
+    if (spriteAnimation_)
     {
-        if (!animation2_->done())
+        if (!spriteAnimation_->done())
         {
-            animation2_->update();
-            isActionDone = false;
-        }
-    }
-    else if (animation3_)
-    {
-        if (!animation3_->done())
-        {
-            animation3_->update();
+            spriteAnimation_->update();
             isActionDone = false;
         }
     }
@@ -241,8 +287,7 @@ bool Player::UpdateAnimation_()
 void Player::DestroyAnimation_()
 {
     additionalWaitUpdateCount_ = -1;
-    animation2_.reset();
-    animation3_.reset();
+    spriteAnimation_.reset();
 }
 
 void Player::AddRelativeYPos_(bn::fixed_point& resultPos, bool isFront) const
@@ -251,37 +296,63 @@ void Player::AddRelativeYPos_(bn::fixed_point& resultPos, bool isFront) const
     {
     case AnimationState::IDLE:
         if (isFront)
-            resultPos.set_y(resultPos.y() + IDLE_FRONT_SYMBOL_Y_POSITIONS[animation2_->current_index()]);
+            resultPos.set_y(resultPos.y() + IDLE_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         else
-            resultPos.set_y(resultPos.y() + IDLE_BACK_SYMBOL_Y_POSITIONS[animation2_->current_index()]);
+            resultPos.set_y(resultPos.y() + IDLE_BACK_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         break;
     case AnimationState::JUMP:
         if (isFront)
-            resultPos.set_y(resultPos.y() + JUMP_FRONT_SYMBOL_Y_POSITIONS[animation3_->current_index()]);
+            resultPos.set_y(resultPos.y() + JUMP_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         else
-            resultPos.set_y(resultPos.y() + JUMP_BACK_SYMBOL_Y_POSITIONS[animation3_->current_index()]);
+            resultPos.set_y(resultPos.y() + JUMP_BACK_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         break;
     case AnimationState::FALL:
         if (isFront)
-            resultPos.set_y(resultPos.y() + FALL_FRONT_SYMBOL_Y_POSITIONS[animation2_->current_index()]);
+            resultPos.set_y(resultPos.y() + FALL_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         else
-            resultPos.set_y(resultPos.y() + FALL_BACK_SYMBOL_Y_POSITIONS[animation2_->current_index()]);
+            resultPos.set_y(resultPos.y() + FALL_BACK_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         break;
     case AnimationState::LAND:
         if (isFront)
-            resultPos.set_y(resultPos.y() + LAND_FRONT_SYMBOL_Y_POSITIONS[animation3_->current_index()]);
+            resultPos.set_y(resultPos.y() + LAND_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         else
-            resultPos.set_y(resultPos.y() + LAND_BACK_SYMBOL_Y_POSITIONS[animation3_->current_index()]);
-        break;
-        break;
-    case AnimationState::MERGE_START:
-    case AnimationState::MERGE_END:
-        BN_ERROR("Merge Symbol Position not implemented!");
+            resultPos.set_y(resultPos.y() + LAND_BACK_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         break;
     default:
         BN_ERROR("Invalid Player::AnimationState : ", static_cast<int>(animationState_));
         break;
     }
+}
+
+void Player::MergeSymbolsInHands_()
+{
+    BN_ASSERT(gameState_.symbolsInHands[0] && gameState_.symbolsInHands[1],
+              "Player::MergeSymbolsInHands_() called without holding 2 symbols");
+    auto mergedSymbol = constant::symbol::GetMergedSymbolType(gameState_.symbolsInHands[0]->GetType(),
+                                                              gameState_.symbolsInHands[1]->GetType());
+    gameState_.symbolsInHands[0].reset();
+    gameState_.symbolsInHands[1] = Symbol(position_ + RELATIVE_MERGE_SYMBOL_POS, mergedSymbol);
+    gameState_.symbolsInHands[1]->AllocateGraphicResource(constant::SYMBOL_Z_ORDER);
+    gameState_.symbolsInHands[1]->SetCamera(gameState_.camera);
+}
+
+void Player::SplitSymbolsInHands_()
+{
+    bool isRightHand = false;
+    if (gameState_.symbolsInHands[0] && !gameState_.symbolsInHands[1])
+        isRightHand = false;
+    else if (gameState_.symbolsInHands[1] && !gameState_.symbolsInHands[0])
+        isRightHand = true;
+    else
+        BN_ERROR("Player::SplitSymbolsInHands_() called without holding 1 symbol");
+
+    auto syms = constant::symbol::GetSplitSymbolTypes(gameState_.symbolsInHands[isRightHand]->GetType());
+    gameState_.symbolsInHands[0] = Symbol(position_ + RELATIVE_MERGE_SYMBOL_POS, syms.first);
+    gameState_.symbolsInHands[1] = Symbol(position_ + RELATIVE_MERGE_SYMBOL_POS, syms.second);
+    gameState_.symbolsInHands[0]->AllocateGraphicResource(constant::SYMBOL_Z_ORDER);
+    gameState_.symbolsInHands[0]->SetCamera(gameState_.camera);
+    gameState_.symbolsInHands[1]->AllocateGraphicResource(constant::SYMBOL_Z_ORDER);
+    gameState_.symbolsInHands[1]->SetCamera(gameState_.camera);
 }
 
 } // namespace sym::game::entity
