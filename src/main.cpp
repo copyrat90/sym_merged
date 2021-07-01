@@ -10,6 +10,7 @@
 #include <bn_fixed_point.h>
 #include <bn_format.h>
 #include <bn_keypad.h>
+#include <bn_music.h>
 #include <bn_sprite_ptr.h>
 #include <bn_string.h>
 #include <bn_vector.h>
@@ -34,7 +35,7 @@ int main()
 
     scene::Param sceneParam;
     // Test
-    // bn::unique_ptr<scene::IScene> scene(new scene::Splash);
+    // bn::unique_ptr<scene::IScene> scene(new scene::Splash(sceneParam));
     bn::unique_ptr<scene::IScene> scene(new scene::Game(sceneParam));
     bn::optional<scene::Type> nextScene;
 
@@ -61,13 +62,20 @@ int main()
                 resourceUsageSprites.clear();
             }
         }
+        if (bn::keypad::start_pressed())
+        {
+            if (bn::music::paused())
+                bn::music::resume();
+            else
+                bn::music::pause();
+        }
         if (isDebugViewOn && --resourceUsageUpdateCountDown <= 0)
         {
             resourceUsageSprites.clear();
             auto* const textGen = sym::global::GetTextGen();
             auto prevAlignment = textGen->alignment();
             textGen->set_left_alignment();
-            textGen->generate({-120, -70}, bn::format<9>("CPU: {}%", bn::core::last_cpu_usage().integer()),
+            textGen->generate({-120, -70}, bn::format<9>("CPU: {}%", (bn::core::last_cpu_usage() * 100).integer()),
                               resourceUsageSprites);
 
             const int iwramUsedPercent =

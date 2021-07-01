@@ -21,8 +21,9 @@ public:
     void Update() final;
 
 private:
-    bool pressAJumping = false;
-    bool symbolJumping = false;
+    bool pressAJumping_ = false;
+    bool symbolJumping_ = false;
+    bool umbrellaApplied_ = false;
 
     void UpdatePlayer_();
     void PlayerKeyboardHandle_();
@@ -35,6 +36,7 @@ private:
     void UpdateSymbolsThrown_();
     void SymbolCollision_(entity::Symbol&);
 
+    void ResetAbilitiesToReadyInHands_();
     void SetAbilityStateOfCertainTypeSymbols_(entity::Symbol::Type type, entity::Symbol::AbilityState);
 };
 

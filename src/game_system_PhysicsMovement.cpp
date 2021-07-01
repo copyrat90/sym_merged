@@ -7,6 +7,7 @@
 #include <bn_log.h>
 #include <bn_math.h>
 #include <bn_optional.h>
+#include <bn_sound.h>
 #include <bn_vector.h>
 
 #include "helper_keypad.h"
@@ -27,6 +28,7 @@ namespace
 {
 
 constexpr bn::fixed_point MAX_ENTITY_VEL = {2, 4};
+constexpr bn::fixed PLAYER_UMBRELLA_VEL = 1;
 constexpr bn::fixed_point PLAYER_DELTA_VEL = {0.3, 0.3};
 constexpr bn::fixed PRESS_A_JUMP_VEL = -2.8;
 constexpr bn::fixed SYMBOL_JUMP_VEL = -2;
@@ -49,6 +51,7 @@ constexpr const bn::sprite_palette_item& PLAYER_DAMAGE_PAL =
 
 static_assert(bn::abs(PRESS_A_JUMP_VEL) <= MAX_ENTITY_VEL.y());
 static_assert(bn::abs(SYMBOL_JUMP_VEL) <= MAX_ENTITY_VEL.y());
+static_assert(bn::abs(PLAYER_UMBRELLA_VEL) <= MAX_ENTITY_VEL.y());
 
 enum class PushbackDirection
 {
@@ -98,10 +101,12 @@ enum class PushbackDirection
 /**
  * @brief Detect and Resolve colision.
  * You need to call this once again, if if returns value other than `bn::nullopt`.
+ * TODO: after handling symbol collision resolution properly, isSpikeCollisionDisabled should be removed.
  *
  */
 [[nodiscard]] bn::optional<PushbackDirection> PlatformCollisionResolution_(entity::IPhysicsEntity& entity,
-                                                                           const helper::tilemap::TileInfo& mapTileInfo)
+                                                                           const helper::tilemap::TileInfo& mapTileInfo,
+                                                                           bool isSpikeCollisionDisabled = false)
 {
     using namespace helper::tilemap;
     using namespace helper::math;
@@ -116,57 +121,61 @@ enum class PushbackDirection
 
     const MoveDirections moveDirs = entity.GetMoveDirections();
 
-    // spike detection
-    if (!!(topLeftTileFlag & TileInfo::Flags::SPIKE))
+    // TODO: after handling symbol collision resolution properly, isSpikeCollisionDisabled should be removed.
+    if (!isSpikeCollisionDisabled)
     {
-        if (!!(topLeftTileFlag & TileInfo::Flags::CEILING))
+        // spike detection
+        if (!!(topLeftTileFlag & TileInfo::Flags::SPIKE))
         {
-            if ((collider.top() % 8) <= SPIKE_SIZE)
-                return PushbackDirection::SPIKE;
+            if (!!(topLeftTileFlag & TileInfo::Flags::CEILING))
+            {
+                if ((collider.top() % 8) <= SPIKE_SIZE)
+                    return PushbackDirection::SPIKE;
+            }
+            else if (!!(topLeftTileFlag & TileInfo::Flags::LEFT_BLOCKING_WALL))
+            {
+                if ((collider.left() % 8) <= SPIKE_SIZE)
+                    return PushbackDirection::SPIKE;
+            }
         }
-        else if (!!(topLeftTileFlag & TileInfo::Flags::LEFT_BLOCKING_WALL))
+        if (!!(topRightTileFlag & TileInfo::Flags::SPIKE))
         {
-            if ((collider.left() % 8) <= SPIKE_SIZE)
-                return PushbackDirection::SPIKE;
+            if (!!(topRightTileFlag & TileInfo::Flags::CEILING))
+            {
+                if ((collider.top() % 8) <= SPIKE_SIZE)
+                    return PushbackDirection::SPIKE;
+            }
+            else if (!!(topRightTileFlag & TileInfo::Flags::RIGHT_BLOCKING_WALL))
+            {
+                if ((collider.right() % 8) >= 8 - SPIKE_SIZE)
+                    return PushbackDirection::SPIKE;
+            }
         }
-    }
-    if (!!(topRightTileFlag & TileInfo::Flags::SPIKE))
-    {
-        if (!!(topRightTileFlag & TileInfo::Flags::CEILING))
+        if (!!(bottomLeftTileFlag & TileInfo::Flags::SPIKE))
         {
-            if ((collider.top() % 8) <= SPIKE_SIZE)
-                return PushbackDirection::SPIKE;
+            if (!!(bottomLeftTileFlag & TileInfo::Flags::FLOOR))
+            {
+                if ((collider.bottom() % 8) >= 8 - SPIKE_SIZE)
+                    return PushbackDirection::SPIKE;
+            }
+            else if (!!(bottomLeftTileFlag & TileInfo::Flags::LEFT_BLOCKING_WALL))
+            {
+                if ((collider.left() % 8) <= SPIKE_SIZE)
+                    return PushbackDirection::SPIKE;
+            }
         }
-        else if (!!(topRightTileFlag & TileInfo::Flags::RIGHT_BLOCKING_WALL))
+        if (!!(bottomRightTileFlag & TileInfo::Flags::SPIKE))
         {
-            if ((collider.right() % 8) >= 8 - SPIKE_SIZE)
-                return PushbackDirection::SPIKE;
-        }
-    }
-    if (!!(bottomLeftTileFlag & TileInfo::Flags::SPIKE))
-    {
-        if (!!(bottomLeftTileFlag & TileInfo::Flags::FLOOR))
-        {
-            if ((collider.bottom() % 8) >= 8 - SPIKE_SIZE)
-                return PushbackDirection::SPIKE;
-        }
-        else if (!!(bottomLeftTileFlag & TileInfo::Flags::LEFT_BLOCKING_WALL))
-        {
-            if ((collider.left() % 8) <= SPIKE_SIZE)
-                return PushbackDirection::SPIKE;
-        }
-    }
-    if (!!(bottomRightTileFlag & TileInfo::Flags::SPIKE))
-    {
-        if (!!(bottomRightTileFlag & TileInfo::Flags::FLOOR))
-        {
-            if ((collider.bottom() % 8) >= 8 - SPIKE_SIZE)
-                return PushbackDirection::SPIKE;
-        }
-        else if (!!(bottomRightTileFlag & TileInfo::Flags::RIGHT_BLOCKING_WALL))
-        {
-            if ((collider.right() % 8) >= 8 - SPIKE_SIZE)
-                return PushbackDirection::SPIKE;
+            if (!!(bottomRightTileFlag & TileInfo::Flags::FLOOR))
+            {
+                if ((collider.bottom() % 8) >= 8 - SPIKE_SIZE)
+                    return PushbackDirection::SPIKE;
+            }
+            else if (!!(bottomRightTileFlag & TileInfo::Flags::RIGHT_BLOCKING_WALL))
+            {
+                if ((collider.right() % 8) >= 8 - SPIKE_SIZE)
+                    return PushbackDirection::SPIKE;
+            }
         }
     }
 
@@ -348,6 +357,8 @@ void PhysicsMovement::UpdatePlayer_()
         PlayerKeyboardHandle_();
 
         ClampVelocity_(state_.player);
+        if (umbrellaApplied_ && state_.player.GetVelocity().y() > PLAYER_UMBRELLA_VEL)
+            state_.player.SetYVelocity(PLAYER_UMBRELLA_VEL);
         state_.player.SetPosition(state_.player.GetPosition() + state_.player.GetVelocity());
 
         PlayerCollision_();
@@ -365,28 +376,33 @@ void PhysicsMovement::PlayerKeyboardHandle_()
 
     bn::fixed_point velocity = state_.player.GetVelocity();
 
-    auto symbolAbility = [&](entity::Symbol& symbol) {
+    auto symbolAbilityPress = [&](entity::Symbol& symbol) {
         using SymType = entity::Symbol::Type;
         using AbilityState = entity::Symbol::AbilityState;
         switch (symbol.GetType())
         {
         case SymType::PLUS:
-            if (!symbolJumping)
+            if (!symbolJumping_)
             {
-                symbolJumping = true;
+                symbolJumping_ = true;
+                SetAbilityStateOfCertainTypeSymbols_(SymType::PLUS, AbilityState::NOT_READY);
                 state_.player.SetGrounded(false);
                 state_.player.InitJumpAction();
-                bn::sound_items::sfx_player_jump.play(constant::volume::sfx_player_jump);
+                bn::sound_items::sfx_symbol_jump.play(constant::volume::sfx_symbol_jump);
                 if (SYMBOL_JUMP_VEL < velocity.y())
                     velocity.set_y(SYMBOL_JUMP_VEL);
-                SetAbilityStateOfCertainTypeSymbols_(SymType::PLUS, AbilityState::NOT_READY);
             }
-            break;
-        case SymType::UP:
-
             break;
         case SymType::VV:
             // TODO: invert gravity
+            break;
+        case SymType::UP:
+            if (!umbrellaApplied_)
+            {
+                umbrellaApplied_ = true;
+                SetAbilityStateOfCertainTypeSymbols_(SymType::UP, AbilityState::USING);
+                bn::sound_items::sfx_umbrella_open.play(constant::volume::sfx_umbrella_open);
+            }
             break;
         default:
             BN_ERROR("Invalid complex SymType: ", static_cast<int>(state_.symbolsInHands[0]->GetType()));
@@ -394,24 +410,61 @@ void PhysicsMovement::PlayerKeyboardHandle_()
         }
     };
 
-    // left symbol ability
+    auto symbolAbilityRelease = [&](entity::Symbol& symbol) {
+        using SymType = entity::Symbol::Type;
+        using AbilityState = entity::Symbol::AbilityState;
+        switch (symbol.GetType())
+        {
+        case SymType::UP:
+            if (umbrellaApplied_)
+            {
+                umbrellaApplied_ = false;
+                SetAbilityStateOfCertainTypeSymbols_(SymType::UP, AbilityState::READY_TO_USE);
+                bn::sound::stop_all();
+            }
+            break;
+
+        case SymType::VV:
+        case SymType::PLUS:
+            // Disabling ability is handled somewhere else,
+            // hence no need to do anything here.
+            break;
+        default:
+            BN_ERROR("Invalid complex SymType: ", static_cast<int>(state_.symbolsInHands[0]->GetType()));
+            break;
+        }
+    };
+
+    // left symbol ability: Press
     if (!mergeOngoing && state_.triggerInteraction.IsLKeyPressLasts() && state_.symbolsInHands[0] &&
         state_.symbolsInHands[0]->GetAbilityState() == entity::Symbol::AbilityState::READY_TO_USE)
     {
-        symbolAbility(*state_.symbolsInHands[0]);
+        symbolAbilityPress(*state_.symbolsInHands[0]);
         state_.triggerInteraction.ResetLKeyPress();
     }
-    // right symbol ability
+    // right symbol ability: Press
     if (!mergeOngoing && state_.triggerInteraction.IsRKeyPressLasts() && state_.symbolsInHands[1] &&
         state_.symbolsInHands[1]->GetAbilityState() == entity::Symbol::AbilityState::READY_TO_USE)
     {
-        symbolAbility(*state_.symbolsInHands[1]);
+        symbolAbilityPress(*state_.symbolsInHands[1]);
         state_.triggerInteraction.ResetRKeyPress();
     }
-
-    if (!mergeOngoing && bn::keypad::a_pressed() && state_.player.GetGrounded() && !pressAJumping)
+    // left symbol ability: Release
+    if (!mergeOngoing && bn::keypad::l_released() && state_.symbolsInHands[0] &&
+        state_.symbolsInHands[0]->GetAbilityState() == entity::Symbol::AbilityState::USING)
     {
-        pressAJumping = true;
+        symbolAbilityRelease(*state_.symbolsInHands[0]);
+    }
+    // right symbol ability: Release
+    if (!mergeOngoing && bn::keypad::r_released() && state_.symbolsInHands[1] &&
+        state_.symbolsInHands[1]->GetAbilityState() == entity::Symbol::AbilityState::USING)
+    {
+        symbolAbilityRelease(*state_.symbolsInHands[1]);
+    }
+
+    if (!mergeOngoing && bn::keypad::a_pressed() && state_.player.GetGrounded() && !pressAJumping_)
+    {
+        pressAJumping_ = true;
         state_.player.SetGrounded(false);
         state_.player.InitJumpAction();
         bn::sound_items::sfx_player_jump.play(constant::volume::sfx_player_jump);
@@ -466,6 +519,7 @@ void PhysicsMovement::PlayerCollision_()
             state_.transition.InitOut(Transition::Types::TRANSPARENCY, PLAYER_DAMAGE_TRANSPARENCY_UPDATE_COUNT,
                                       PLAYER_DAMAGE_WAIT_BETWEEN_TRANSPARENCY_AND_FADE);
             state_.transition.SetDoneEventHandler([this] {
+                ResetAbilitiesToReadyInHands_();
                 state_.player.SetVisible(false);
                 if (state_.symbolsInHands[0])
                     state_.symbolsInHands[0]->SetVisible(false);
@@ -499,8 +553,8 @@ void PhysicsMovement::PlayerCollision_()
                     state_.player.InitLandAction();
                 }
             }
-            pressAJumping = false;
-            symbolJumping = false;
+            pressAJumping_ = false;
+            symbolJumping_ = false;
             SetAbilityStateOfCertainTypeSymbols_(entity::Symbol::Type::PLUS,
                                                  entity::Symbol::AbilityState::READY_TO_USE);
             break;
@@ -603,7 +657,7 @@ void PhysicsMovement::SymbolCollision_(entity::Symbol& symbol)
     for (int i = 0; i < COLLISION_LOOP_MAX_COUNT; ++i)
     {
         // resolve collision
-        collisionResult = PlatformCollisionResolution_(symbol, state_.currentMapTileInfo);
+        collisionResult = PlatformCollisionResolution_(symbol, state_.currentMapTileInfo, true);
         if (!collisionResult)
         {
             collisionResult = ShuttersCollisionResolution_(symbol, state_.shuttersOfZones[state_.currentZoneIdx]);
@@ -662,6 +716,40 @@ void PhysicsMovement::SetAbilityStateOfCertainTypeSymbols_(entity::Symbol::Type 
     {
         if (symbol.GetType() == type)
             symbol.SetAbilityState(newState);
+    }
+}
+
+void PhysicsMovement::ResetAbilitiesToReadyInHands_()
+{
+    using SymType = entity::Symbol::Type;
+    using AbilityState = entity::Symbol::AbilityState;
+
+    auto resetOneHand = [this](entity::Symbol& symbol) {
+        SetAbilityStateOfCertainTypeSymbols_(symbol.GetType(), AbilityState::READY_TO_USE);
+        switch (symbol.GetType())
+        {
+        case SymType::PLUS:
+            symbolJumping_ = false;
+            break;
+        case SymType::UP:
+            umbrellaApplied_ = false;
+            break;
+        case SymType::VV:
+        default:
+            BN_ERROR("Invalid SymType: ", static_cast<int>(symbol.GetType()), " to reset");
+        }
+    };
+
+    if (state_.symbolsInHands[0] && state_.symbolsInHands[0]->IsComplexSymbol() &&
+        state_.symbolsInHands[0]->GetAbilityState() != entity::Symbol::AbilityState::NOT_READY)
+    {
+        resetOneHand(*state_.symbolsInHands[0]);
+    }
+
+    if (state_.symbolsInHands[1] && state_.symbolsInHands[1]->IsComplexSymbol() &&
+        state_.symbolsInHands[1]->GetAbilityState() != entity::Symbol::AbilityState::NOT_READY)
+    {
+        resetOneHand(*state_.symbolsInHands[1]);
     }
 }
 
