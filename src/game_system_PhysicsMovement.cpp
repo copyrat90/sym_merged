@@ -26,9 +26,10 @@ namespace sym::game::system
 namespace
 {
 
-constexpr bn::fixed_point MAX_ENTITY_VEL = {2, 3};
+constexpr bn::fixed_point MAX_ENTITY_VEL = {2, 4};
 constexpr bn::fixed_point PLAYER_DELTA_VEL = {0.3, 0.3};
-constexpr bn::fixed JUMP_VEL = -2.8;
+constexpr bn::fixed PRESS_A_JUMP_VEL = -2.8;
+constexpr bn::fixed SYMBOL_JUMP_VEL = -2;
 constexpr bn::fixed_point SYMBOL_DELTA_VEL = {0.3, 0.3};
 constexpr bn::fixed VEL_FRICTION = 1.2;
 constexpr bn::fixed COLLISION_DELTA_EPSILON = 0.01;
@@ -46,7 +47,8 @@ constexpr const bn::sprite_palette_item& PLAYER_NORMAL_PAL =
 constexpr const bn::sprite_palette_item& PLAYER_DAMAGE_PAL =
     bn::sprite_palette_items::pal_ingame_protagonist_star_damage;
 
-static_assert(bn::abs(JUMP_VEL) <= MAX_ENTITY_VEL.y());
+static_assert(bn::abs(PRESS_A_JUMP_VEL) <= MAX_ENTITY_VEL.y());
+static_assert(bn::abs(SYMBOL_JUMP_VEL) <= MAX_ENTITY_VEL.y());
 
 enum class PushbackDirection
 {
@@ -363,13 +365,58 @@ void PhysicsMovement::PlayerKeyboardHandle_()
 
     bn::fixed_point velocity = state_.player.GetVelocity();
 
-    if (!mergeOngoing && bn::keypad::a_pressed() && state_.player.GetGrounded() && playerJumpCount > 0)
+    auto symbolAbility = [&](entity::Symbol& symbol) {
+        using SymType = entity::Symbol::Type;
+        using AbilityState = entity::Symbol::AbilityState;
+        switch (symbol.GetType())
+        {
+        case SymType::PLUS:
+            if (!symbolJumping)
+            {
+                symbolJumping = true;
+                state_.player.SetGrounded(false);
+                state_.player.InitJumpAction();
+                bn::sound_items::sfx_player_jump.play(constant::volume::sfx_player_jump);
+                if (SYMBOL_JUMP_VEL < velocity.y())
+                    velocity.set_y(SYMBOL_JUMP_VEL);
+                SetAbilityStateOfCertainTypeSymbols_(SymType::PLUS, AbilityState::NOT_READY);
+            }
+            break;
+        case SymType::UP:
+
+            break;
+        case SymType::VV:
+            // TODO: invert gravity
+            break;
+        default:
+            BN_ERROR("Invalid complex SymType: ", static_cast<int>(state_.symbolsInHands[0]->GetType()));
+            break;
+        }
+    };
+
+    // left symbol ability
+    if (!mergeOngoing && state_.triggerInteraction.IsLKeyPressLasts() && state_.symbolsInHands[0] &&
+        state_.symbolsInHands[0]->GetAbilityState() == entity::Symbol::AbilityState::READY_TO_USE)
     {
+        symbolAbility(*state_.symbolsInHands[0]);
+        state_.triggerInteraction.ResetLKeyPress();
+    }
+    // right symbol ability
+    if (!mergeOngoing && state_.triggerInteraction.IsRKeyPressLasts() && state_.symbolsInHands[1] &&
+        state_.symbolsInHands[1]->GetAbilityState() == entity::Symbol::AbilityState::READY_TO_USE)
+    {
+        symbolAbility(*state_.symbolsInHands[1]);
+        state_.triggerInteraction.ResetRKeyPress();
+    }
+
+    if (!mergeOngoing && bn::keypad::a_pressed() && state_.player.GetGrounded() && !pressAJumping)
+    {
+        pressAJumping = true;
         state_.player.SetGrounded(false);
         state_.player.InitJumpAction();
-        --playerJumpCount;
         bn::sound_items::sfx_player_jump.play(constant::volume::sfx_player_jump);
-        velocity.set_y(JUMP_VEL);
+        if (PRESS_A_JUMP_VEL < velocity.y())
+            velocity.set_y(PRESS_A_JUMP_VEL);
     }
     if (!mergeOngoing && bn::keypad::left_held())
     {
@@ -452,7 +499,10 @@ void PhysicsMovement::PlayerCollision_()
                     state_.player.InitLandAction();
                 }
             }
-            playerJumpCount = MAX_PLAYER_JUMP_COUNT;
+            pressAJumping = false;
+            symbolJumping = false;
+            SetAbilityStateOfCertainTypeSymbols_(entity::Symbol::Type::PLUS,
+                                                 entity::Symbol::AbilityState::READY_TO_USE);
             break;
         case PushbackDirection::DOWN:
             break;
@@ -599,6 +649,20 @@ void PhysicsMovement::SymbolCollision_(entity::Symbol& symbol)
 
 void PhysicsMovement::UpdateSymbolsThrown_()
 {
+}
+
+void PhysicsMovement::SetAbilityStateOfCertainTypeSymbols_(entity::Symbol::Type type,
+                                                           entity::Symbol::AbilityState newState)
+{
+    if (state_.symbolsInHands[0] && state_.symbolsInHands[0]->GetType() == type)
+        state_.symbolsInHands[0]->SetAbilityState(newState);
+    if (state_.symbolsInHands[1] && state_.symbolsInHands[1]->GetType() == type)
+        state_.symbolsInHands[1]->SetAbilityState(newState);
+    for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
+    {
+        if (symbol.GetType() == type)
+            symbol.SetAbilityState(newState);
+    }
 }
 
 } // namespace sym::game::system

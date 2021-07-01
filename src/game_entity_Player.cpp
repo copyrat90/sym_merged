@@ -7,6 +7,7 @@
 
 #include "bn_sprite_items_spr_ingame_protagonist_star.h"
 #include "constant.h"
+#include "global.h"
 #include "helper_math.h"
 #include "helper_rect.h"
 #include "scene_GameState.h"
@@ -67,6 +68,8 @@ constexpr bn::fixed_point RIGHT_SYMBOL_MERGE_POS_DELTA = {
     (RIGHT_SYMBOL_MERGE_END_POS.x() - RIGHT_SYMBOL_MERGE_START_POS.x()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT,
     (RIGHT_SYMBOL_MERGE_END_POS.y() - RIGHT_SYMBOL_MERGE_START_POS.y()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT};
 
+constexpr int DIVERGE_RESET_UPDATE_COUNT = 2;
+
 } // namespace
 
 Player::Player(bn::fixed_point position, scene::GameState& gameState)
@@ -92,6 +95,15 @@ void Player::Update()
     {
         if (mergePosDeltaCounter_ < MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT)
             ++mergePosDeltaCounter_;
+        else
+        {
+            if (++divergeResetCounter_ > DIVERGE_RESET_UPDATE_COUNT)
+            {
+                diverge_ = {static_cast<int>(global::GetRandomNumber() % 3) - 1,
+                            static_cast<int>(global::GetRandomNumber() % 3) - 1};
+                divergeResetCounter_ = 0;
+            }
+        }
     }
     else if (animationState_ == AnimationState::MERGE_END)
     {
@@ -223,7 +235,7 @@ bn::fixed_point Player::GetLeftSymbolPosition() const
     if (animationState_ == AnimationState::MERGE_START || animationState_ == AnimationState::MERGE_END)
     {
         using helper::math::operator*;
-        return resultPos + LEFT_SYMBOL_MERGE_START_POS + mergePosDeltaCounter_ * LEFT_SYMBOL_MERGE_POS_DELTA;
+        return resultPos + LEFT_SYMBOL_MERGE_START_POS + mergePosDeltaCounter_ * LEFT_SYMBOL_MERGE_POS_DELTA + diverge_;
     }
     resultPos.set_x(resultPos.x() + RELATIVE_LEFT_SYMBOL_X_POS);
     const bool leftIsFront = GetHorizontalFlip();
@@ -237,7 +249,9 @@ bn::fixed_point Player::GetRightSymbolPosition() const
     if (animationState_ == AnimationState::MERGE_START || animationState_ == AnimationState::MERGE_END)
     {
         using helper::math::operator*;
-        return resultPos + RIGHT_SYMBOL_MERGE_START_POS + mergePosDeltaCounter_ * RIGHT_SYMBOL_MERGE_POS_DELTA;
+
+        return resultPos + RIGHT_SYMBOL_MERGE_START_POS + mergePosDeltaCounter_ * RIGHT_SYMBOL_MERGE_POS_DELTA +
+               diverge_;
     }
     resultPos.set_x(resultPos.x() + RELATIVE_RIGHT_SYMBOL_X_POS);
     const bool rightIsFront = !GetHorizontalFlip();

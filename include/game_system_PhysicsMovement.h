@@ -21,6 +21,9 @@ public:
     void Update() final;
 
 private:
+    bool pressAJumping = false;
+    bool symbolJumping = false;
+
     void UpdatePlayer_();
     void PlayerKeyboardHandle_();
     void PlayerCollision_();
@@ -32,16 +35,7 @@ private:
     void UpdateSymbolsThrown_();
     void SymbolCollision_(entity::Symbol&);
 
-    static constexpr int MAX_PLAYER_JUMP_COUNT = 1;
-    int playerJumpCount = MAX_PLAYER_JUMP_COUNT;
-
-    // enum class SpikeRespawnState
-    // {
-    //     NONE,
-    //     FADE_OUT,
-    //     FADE_IN
-    // };
-    // SpikeRespawnState spikeRespawnState_ = SpikeRespawnState::NONE;
+    void SetAbilityStateOfCertainTypeSymbols_(entity::Symbol::Type type, entity::Symbol::AbilityState);
 };
 
 } // namespace sym::game::system

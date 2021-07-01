@@ -78,6 +78,8 @@ private:
     int additionalWaitUpdateCount_ = -1;
 
     int mergePosDeltaCounter_ = 0;
+    int divergeResetCounter_ = 0;
+    bn::fixed_point diverge_ = {0, 0};
 
     bool isControllable_ = true;
 

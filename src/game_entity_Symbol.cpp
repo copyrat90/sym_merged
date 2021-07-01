@@ -4,10 +4,15 @@
 #include <bn_sprite_tiles_ptr.h>
 
 #include "bn_log.h"
+#include "bn_sprite_palette_item.h"
 #include "helper_rect.h"
 
 #include "bn_sprite_items_spr_basic_symbols.h"
 #include "bn_sprite_items_spr_complex_symbols.h"
+
+#include "bn_sprite_palette_items_pal_symbol_ability_not_ready.h"
+#include "bn_sprite_palette_items_pal_symbol_ability_ready_to_use.h"
+#include "bn_sprite_palette_items_pal_symbol_ability_using.h"
 
 namespace sym::game::entity
 {
@@ -76,13 +81,13 @@ Symbol::Symbol(bn::fixed_point position, Symbol::Type type)
                      IS_GRAVITY_ENABLED_BY_DEFAULT, GRAVITY_SCALE,
                      IsComplexSymbol_(type) ? &bn::sprite_items::spr_complex_symbols
                                             : &bn::sprite_items::spr_basic_symbols),
-      type_(type)
+      type_(type), abilityState_(IsComplexSymbol_(type) ? AbilityState::READY_TO_USE : AbilityState::UNAVAILABLE)
 {
 }
 
 Symbol::Symbol(Symbol&& other)
-    : IPhysicsEntity(bn::move(other)), type_(other.type_), isPickedUp_(other.isPickedUp_), isThrown_(other.isThrown_),
-      animationState_(other.animationState_)
+    : IPhysicsEntity(bn::move(other)), type_(other.type_), abilityState_(other.abilityState_),
+      isPickedUp_(other.isPickedUp_), isThrown_(other.isThrown_)
 {
 }
 
@@ -90,22 +95,21 @@ Symbol& Symbol::operator=(Symbol&& other)
 {
     IPhysicsEntity::operator=(bn::move(other));
     type_ = other.type_;
+    abilityState_ = other.abilityState_;
     isPickedUp_ = other.isPickedUp_;
     isThrown_ = other.isThrown_;
-    animationState_ = other.animationState_;
     return *this;
 }
 
 void Symbol::AllocateGraphicResource(int z_order)
 {
     int spriteIdx = static_cast<int>(type_);
-    if (IsComplexSymbol_(type_))
+    if (IsComplexSymbol())
         spriteIdx -= COMPLEX_SYMBOL_START_NUM;
-    spriteItem_ =
-        IsComplexSymbol_(type_) ? &bn::sprite_items::spr_complex_symbols : &bn::sprite_items::spr_basic_symbols;
+    spriteItem_ = IsComplexSymbol() ? &bn::sprite_items::spr_complex_symbols : &bn::sprite_items::spr_basic_symbols;
 
     BN_LOG("sprite_idx: ", spriteIdx);
-    BN_LOG("IsComplex?: ", IsComplexSymbol_(type_) ? 1 : 0);
+    BN_LOG("IsComplex?: ", IsComplexSymbol() ? 1 : 0);
 
     sprite_ = spriteItem_->create_sprite(position_, spriteIdx);
     sprite_->set_z_order(z_order);
@@ -119,24 +123,6 @@ void Symbol::AllocateGraphicResource(int z_order)
 void Symbol::Update()
 {
     IPhysicsEntity::Update();
-
-    UpdateAnimation_();
-}
-
-void Symbol::InitMergeStartAction()
-{
-    BN_ASSERT(sprite_, "Symbol action cannot be init without allocating graphics!");
-    DestroyAnimation_();
-    animationState_ = AnimationState::MERGE_START;
-    // TODO
-}
-
-void Symbol::InitMergeEndAction()
-{
-    BN_ASSERT(sprite_, "Symbol action cannot be init without allocating graphics!");
-    DestroyAnimation_();
-    animationState_ = AnimationState::MERGE_END;
-    // TODO
 }
 
 Symbol::Type Symbol::GetType() const
@@ -144,13 +130,42 @@ Symbol::Type Symbol::GetType() const
     return type_;
 }
 
-void Symbol::SetType(Symbol::Type newType)
+// void Symbol::SetType(Symbol::Type newType)
+// {
+//     if (type_ != newType)
+//     {
+//         type_ = newType;
+//         if (sprite_)
+//             AllocateGraphicResource(sprite_->z_order());
+//     }
+// }
+
+Symbol::AbilityState Symbol::GetAbilityState() const
 {
-    if (type_ != newType)
+    return abilityState_;
+}
+
+void Symbol::SetAbilityState(AbilityState newState)
+{
+    BN_ASSERT(IsComplexSymbol(), "Can't change basic symbol's AbilityState");
+    if (abilityState_ == newState)
+        return;
+
+    abilityState_ = newState;
+
+    switch (newState)
     {
-        type_ = newType;
-        if (sprite_)
-            AllocateGraphicResource(sprite_->z_order());
+    case AbilityState::READY_TO_USE:
+        SetPalette(bn::sprite_palette_items::pal_symbol_ability_ready_to_use);
+        break;
+    case AbilityState::USING:
+        SetPalette(bn::sprite_palette_items::pal_symbol_ability_using);
+        break;
+    case AbilityState::NOT_READY:
+        SetPalette(bn::sprite_palette_items::pal_symbol_ability_not_ready);
+        break;
+    default:
+        BN_ERROR("Unknown AbilityState: ", static_cast<int>(newState));
     }
 }
 
@@ -174,26 +189,9 @@ void Symbol::SetThrown(bool isThrown)
     isThrown_ = isThrown;
 }
 
-Symbol::AnimationState Symbol::GetAnimationState() const
+bool Symbol::IsComplexSymbol() const
 {
-    return animationState_;
-}
-
-bool Symbol::GetAnimationDone() const
-{
-    // TODO
-    return true;
-}
-
-bool Symbol::UpdateAnimation_()
-{
-    // TODO
-    return true;
-}
-
-void Symbol::DestroyAnimation_()
-{
-    // TODO
+    return IsComplexSymbol_(type_);
 }
 
 } // namespace sym::game::entity

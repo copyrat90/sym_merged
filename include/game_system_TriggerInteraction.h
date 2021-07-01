@@ -24,6 +24,11 @@ public:
 
     void Update() final;
 
+    [[nodiscard]] bool IsLKeyPressLasts() const;
+    [[nodiscard]] bool IsRKeyPressLasts() const;
+    void ResetLKeyPress();
+    void ResetRKeyPress();
+
 private:
     enum class EntityType
     {
@@ -47,10 +52,6 @@ private:
     void InteractPressureButtonsAndEntities_();
 
     void UpdateKeyLastingCount_();
-    [[nodiscard]] bool IsLKeyPressLasts_() const;
-    [[nodiscard]] bool IsRKeyPressLasts_() const;
-    void ResetLKeyPress_();
-    void ResetRKeyPress_();
     void ToggleOpenedHoverButtonAssociatedOpenables_(int hoverButtonIdx);
     void ToggleOpenedPressureButtonAssociatedOpenables_(int pressureButtonIdx);
 };

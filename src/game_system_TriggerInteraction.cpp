@@ -68,19 +68,19 @@ void TriggerInteraction::Update()
             }
         }
 
-        if (IsLKeyPressLasts_() || IsRKeyPressLasts_())
+        if (IsLKeyPressLasts() || IsRKeyPressLasts())
         {
             if (bn::keypad::down_held())
             {
-                if (IsLKeyPressLasts_())
+                if (IsLKeyPressLasts())
                 {
                     PlayerPutsDownSymbol_(Hand::LEFT);
-                    ResetLKeyPress_();
+                    ResetLKeyPress();
                 }
-                else if (IsRKeyPressLasts_())
+                else if (IsRKeyPressLasts())
                 {
                     PlayerPutsDownSymbol_(Hand::RIGHT);
-                    ResetRKeyPress_();
+                    ResetRKeyPress();
                 }
             }
             else
@@ -95,16 +95,16 @@ void TriggerInteraction::Update()
                 case EntityType::SYMBOL:
                     PlayerPicksUpSymbol_(interactHand, symbolIter);
                     if (interactHand == Hand::LEFT)
-                        ResetLKeyPress_();
+                        ResetLKeyPress();
                     else
-                        ResetRKeyPress_();
+                        ResetRKeyPress();
                     break;
                 case EntityType::HOVER_BUTTON:
                     PlayerClicksHoverButton_(entityIdx);
                     if (interactHand == Hand::LEFT)
-                        ResetLKeyPress_();
+                        ResetLKeyPress();
                     else
-                        ResetRKeyPress_();
+                        ResetRKeyPress();
                     break;
                 default:
                     BN_ERROR("Invalid TriggerInteraction::EntityType : ", static_cast<int>(nearestEntityType));
@@ -271,22 +271,22 @@ void TriggerInteraction::InteractPressureButtonsAndEntities_()
     }
 }
 
-bool TriggerInteraction::IsLKeyPressLasts_() const
+bool TriggerInteraction::IsLKeyPressLasts() const
 {
     return state_.lKeyLastingCount >= 0;
 }
 
-bool TriggerInteraction::IsRKeyPressLasts_() const
+bool TriggerInteraction::IsRKeyPressLasts() const
 {
     return state_.rKeyLastingCount >= 0;
 }
 
-void TriggerInteraction::ResetLKeyPress_()
+void TriggerInteraction::ResetLKeyPress()
 {
     state_.lKeyLastingCount = -1;
 }
 
-void TriggerInteraction::ResetRKeyPress_()
+void TriggerInteraction::ResetRKeyPress()
 {
     state_.rKeyLastingCount = -1;
 }

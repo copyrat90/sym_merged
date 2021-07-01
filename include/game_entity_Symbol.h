@@ -24,6 +24,14 @@ public:
         PLUS
     };
 
+    enum class AbilityState
+    {
+        UNAVAILABLE,
+        READY_TO_USE,
+        USING,
+        NOT_READY
+    };
+
     Symbol(bn::fixed_point position, Symbol::Type type);
     Symbol(Symbol&& other);
     Symbol& operator=(Symbol&& other);
@@ -35,42 +43,25 @@ public:
 
     void Update() final;
 
-    void InitMergeStartAction();
-    void InitMergeEndAction();
+    [[nodiscard]] Type GetType() const;
+    // void SetType(Type);
 
-    Type GetType() const;
-    void SetType(Type);
+    [[nodiscard]] AbilityState GetAbilityState() const;
+    void SetAbilityState(AbilityState);
 
-    bool GetPickedUp() const;
+    [[nodiscard]] bool GetPickedUp() const;
     void SetPickedUp(bool isPickedUp);
 
-    bool GetThrown() const;
+    [[nodiscard]] bool GetThrown() const;
     void SetThrown(bool isThrown);
 
-    enum class AnimationState
-    {
-        IDLE,
-        MERGE_START,
-        MERGE_END
-    };
-
-    AnimationState GetAnimationState() const;
-    bool GetAnimationDone() const;
+    [[nodiscard]] bool IsComplexSymbol() const;
 
 private:
     Symbol::Type type_;
+    AbilityState abilityState_;
     bool isPickedUp_ = false;
     bool isThrown_ = false;
-
-    AnimationState animationState_ = AnimationState::IDLE;
-
-    /**
-     * @brief Updates action.
-     *
-     * @return `true` if action is done, otherwise `false`
-     */
-    bool UpdateAnimation_();
-    void DestroyAnimation_();
 };
 
 } // namespace sym::game::entity

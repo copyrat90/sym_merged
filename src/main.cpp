@@ -29,7 +29,7 @@ using namespace sym;
 int main()
 {
     bn::core::init();
-    sym::global::setting::Init();
+    sym::global::Init();
     bn::bg_palettes::set_transparent_color(constant::TRANSPARENT_BG_COLOR);
 
     scene::Param sceneParam;

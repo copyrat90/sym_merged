@@ -1,6 +1,7 @@
 #include "global.h"
 
 #include <bn_assert.h>
+#include <bn_random.h>
 #include <bn_sprite_text_generator.h>
 #include <bn_sram.h>
 #include <bn_sstream.h>
@@ -129,15 +130,12 @@ TextGenManager textGenManager_;
 
 bool isInitialized_ = false;
 
-} // anonymous namespace
-
-namespace setting
+/**
+ * @brief Initialize SRAM save.
+ *
+ */
+void InitSram_()
 {
-
-void Init()
-{
-    isInitialized_ = true;
-
     if (!sramSave_.Read())
     {
         sramSave_.Init();
@@ -145,13 +143,25 @@ void Init()
     }
     else
     {
-        textGenManager_.SetLang(GetLang());
+        textGenManager_.SetLang(setting::GetLang());
     }
 }
 
+bn::random* rng;
+
+void InitRNG_()
+{
+    rng = new bn::random;
+}
+
+} // anonymous namespace
+
+namespace setting
+{
+
 void SetLang(Lang lang)
 {
-    BN_ASSERT(isInitialized_, "setting::Init() must be called before using global functions");
+    BN_ASSERT(isInitialized_, "global::Init() must be called before using global functions");
     sramSave_.currentLang = lang;
     sramSave_.Write();
 
@@ -160,15 +170,22 @@ void SetLang(Lang lang)
 
 Lang GetLang()
 {
-    BN_ASSERT(isInitialized_, "setting::Init() must be called before using global functions");
+    BN_ASSERT(isInitialized_, "global::Init() must be called before using global functions");
     return sramSave_.currentLang;
 }
 
 } // namespace setting
 
+void Init()
+{
+    isInitialized_ = true;
+    InitSram_();
+    InitRNG_();
+}
+
 bn::sprite_text_generator* GetTextGen()
 {
-    BN_ASSERT(isInitialized_, "setting::Init() must be called before using global functions");
+    BN_ASSERT(isInitialized_, "global::Init() must be called before using global functions");
     switch (setting::GetLang())
     {
     case setting::Lang::ENG:
@@ -179,6 +196,12 @@ bn::sprite_text_generator* GetTextGen()
         BN_ERROR("Unknown setting::Lang : ", static_cast<int>(setting::GetLang()));
     }
     return nullptr;
+}
+
+unsigned GetRandomNumber()
+{
+    BN_ASSERT(isInitialized_, "global::Init() must be called before using global functions");
+    return rng->get();
 }
 
 bool IsSeenOpening()

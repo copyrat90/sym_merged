@@ -17,13 +17,6 @@ enum class Lang : uint8_t
 };
 
 /**
- * @brief Initialize SRAM save.
- * This must be called first before using any global functions, as it read/writes SRAM save.
- *
- */
-void Init();
-
-/**
  * @brief Set the Language used for sprite_text_generator.
  * Also writes language setting to SRAM save.
  *
@@ -34,10 +27,19 @@ Lang GetLang();
 } // namespace setting
 
 /**
+ * @brief Initialize globals
+ * This must be called first before using any global functions.
+ *
+ */
+void Init();
+
+/**
  * @brief Get the sprite_text_generator of the current language.
  *
  */
 bn::sprite_text_generator* GetTextGen();
+
+unsigned GetRandomNumber();
 
 bool IsSeenOpening();
 void SetSeenOpening();
