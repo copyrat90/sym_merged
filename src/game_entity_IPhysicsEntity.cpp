@@ -9,16 +9,18 @@ IPhysicsEntity::~IPhysicsEntity() = default;
 
 IPhysicsEntity::IPhysicsEntity(bn::fixed_point position, bn::fixed_rect relativeInteractRange,
                                bn::fixed_rect relativePhysicsCollider, bool isGravityEnabledByDefault,
-                               bn::fixed gravityScale, const bn::sprite_item* spriteItem)
+                               bool isGravityReversedByDefault, bn::fixed gravityScale,
+                               const bn::sprite_item* spriteItem)
     : IEntity(position, relativeInteractRange, spriteItem), relativePhysicsCollider_(relativePhysicsCollider),
-      isGravityEnabled_(isGravityEnabledByDefault), gravityScale_(gravityScale)
+      isGravityEnabled_(isGravityEnabledByDefault), isGravityReversed_(isGravityReversedByDefault),
+      gravityScale_(gravityScale)
 {
 }
 
 IPhysicsEntity::IPhysicsEntity(IPhysicsEntity&& other)
     : IEntity(bn::move(other)), relativePhysicsCollider_(other.relativePhysicsCollider_),
-      isGravityEnabled_(other.isGravityEnabled_), gravityScale_(other.gravityScale_), velocity_(other.velocity_),
-      isGrounded_(other.isGrounded_)
+      isGravityEnabled_(other.isGravityEnabled_), isGravityReversed_(other.isGravityReversed_),
+      gravityScale_(other.gravityScale_), velocity_(other.velocity_), isGrounded_(other.isGrounded_)
 {
 }
 
@@ -27,6 +29,7 @@ IPhysicsEntity& IPhysicsEntity::operator=(IPhysicsEntity&& other)
     IEntity::operator=(bn::move(other));
     relativePhysicsCollider_ = other.relativePhysicsCollider_;
     isGravityEnabled_ = other.isGravityEnabled_;
+    isGravityReversed_ = other.isGravityReversed_;
     gravityScale_ = other.gravityScale_;
     velocity_ = other.velocity_;
     isGrounded_ = other.isGrounded_;
@@ -49,6 +52,16 @@ void IPhysicsEntity::SetGravityEnabled(bool isGravityEnabled)
     isGravityEnabled_ = isGravityEnabled;
 }
 
+bool IPhysicsEntity::GetGravityReversed() const
+{
+    return isGravityReversed_;
+}
+
+void IPhysicsEntity::SetGravityReversed(bool isGravityReversed)
+{
+    isGravityReversed_ = isGravityReversed;
+}
+
 bn::fixed IPhysicsEntity::GetGravityScale() const
 {
     return gravityScale_;
@@ -62,6 +75,11 @@ void IPhysicsEntity::SetGravityScale(bn::fixed gravityScale)
 bool IPhysicsEntity::ToggleGravityEnabled()
 {
     return isGravityEnabled_ = !isGravityEnabled_;
+}
+
+bool IPhysicsEntity::ToggleGravityReversed()
+{
+    return isGravityReversed_ = !isGravityReversed_;
 }
 
 bn::fixed_point IPhysicsEntity::GetVelocity() const

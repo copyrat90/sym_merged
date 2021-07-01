@@ -11,8 +11,8 @@ public:
     virtual ~IPhysicsEntity() = 0;
 
     IPhysicsEntity(bn::fixed_point position, bn::fixed_rect relativeInteractRange,
-                   bn::fixed_rect relativePhysicsCollider, bool isGravityEnabledByDefault, bn::fixed gravityScale,
-                   const bn::sprite_item* spriteItem);
+                   bn::fixed_rect relativePhysicsCollider, bool isGravityEnabledByDefault,
+                   bool isGravityReversedByDefault, bn::fixed gravityScale, const bn::sprite_item* spriteItem);
 
     IPhysicsEntity(IPhysicsEntity&& other);
     IPhysicsEntity& operator=(IPhysicsEntity&& other);
@@ -30,10 +30,12 @@ public:
 
     [[nodiscard]] bool GetGravityEnabled() const;
     void SetGravityEnabled(bool isGravityEnabled);
-
+    [[nodiscard]] bool GetGravityReversed() const;
+    virtual void SetGravityReversed(bool isGravityReversed);
     [[nodiscard]] bn::fixed GetGravityScale() const;
     void SetGravityScale(bn::fixed gravityScale);
     [[maybe_unused]] bool ToggleGravityEnabled();
+    [[maybe_unused]] virtual bool ToggleGravityReversed();
 
     [[nodiscard]] bn::fixed_point GetVelocity() const;
     void SetVelocity(bn::fixed_point velocity);
@@ -61,6 +63,7 @@ protected:
      */
     bn::fixed_rect relativePhysicsCollider_;
     bool isGravityEnabled_;
+    bool isGravityReversed_;
     bn::fixed gravityScale_;
 
     bn::fixed_point velocity_ = {0, 0};

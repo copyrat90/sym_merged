@@ -21,8 +21,8 @@ constexpr bn::size MAP_DIMENSIONS[] = {
 };
 
 constexpr ZoneInfo::SymbolInfo Z0_symbolInfos_[] = {
-    {{106 - MAP_DIMENSIONS[0].width() / 2, 974 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::BAR},
-    {{127 - MAP_DIMENSIONS[0].width() / 2, 974 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::XOR},
+    {{106 - MAP_DIMENSIONS[0].width() / 2, 974 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::BAR, false},
+    {{127 - MAP_DIMENSIONS[0].width() / 2, 974 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::XOR, true},
 };
 
 constexpr ZoneInfo::DoorInfo Z0_doorInfos_[] = {
@@ -57,8 +57,8 @@ constexpr ZoneInfo::EntranceInfo Z0_entranceInfos_[] = {
 };
 
 constexpr ZoneInfo::SymbolInfo Z1_symbolInfos_[] = {
-    {{472 - MAP_DIMENSIONS[0].width() / 2, 886 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::BAR},
-    {{493 - MAP_DIMENSIONS[0].width() / 2, 886 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::XOR},
+    {{472 - MAP_DIMENSIONS[0].width() / 2, 886 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::BAR, false},
+    {{493 - MAP_DIMENSIONS[0].width() / 2, 886 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::XOR, false},
 };
 
 constexpr bn::span<ZoneInfo::DoorInfo> Z1_doorInfos_ = {
@@ -98,7 +98,7 @@ constexpr ZoneInfo zoneInfos_[] = {
              Z1_entranceInfos_),
 };
 
-constexpr StageInfo w0_s0_("W0-0", "Test stage", zoneInfos_, bn::music_items::music_detour);
+constexpr StageInfo w0_s0_("W0-0", "Test stage", false, bn::music_items::music_detour, zoneInfos_);
 
 } // namespace
 

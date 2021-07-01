@@ -72,9 +72,9 @@ constexpr int DIVERGE_RESET_UPDATE_COUNT = 2;
 
 } // namespace
 
-Player::Player(bn::fixed_point position, scene::GameState& gameState)
+Player::Player(bn::fixed_point position, bool isGravityReversedByDefault, scene::GameState& gameState)
     : IPhysicsEntity(position, RELATIVE_INTERACT_RANGE, RELATIVE_PHYSICS_COLLIDER, IS_GRAVITY_ENABLED_BY_DEFAULT,
-                     GRAVITY_SCALE, &bn::sprite_items::spr_ingame_protagonist_star),
+                     isGravityReversedByDefault, GRAVITY_SCALE, &bn::sprite_items::spr_ingame_protagonist_star),
       gameState_(gameState)
 {
 }
@@ -83,6 +83,13 @@ void Player::FreeGraphicResource()
 {
     DestroyAnimation_();
     IPhysicsEntity::FreeGraphicResource();
+}
+
+void Player::AllocateGraphicResource(int z_order)
+{
+    IPhysicsEntity::AllocateGraphicResource(z_order);
+    if (isGravityReversed_)
+        sprite_->set_vertical_flip(true);
 }
 
 void Player::Update()
@@ -205,6 +212,21 @@ void Player::InitMergeEndAction()
     additionalWaitUpdateCount_ = MERGE_ACTION_WAIT_UPDATE;
 }
 
+void Player::SetGravityReversed(bool isGravityReversed)
+{
+    IPhysicsEntity::SetGravityReversed(isGravityReversed);
+    if (sprite_)
+        sprite_->set_vertical_flip(isGravityReversed);
+}
+
+bool Player::ToggleGravityReversed()
+{
+    IPhysicsEntity::ToggleGravityReversed();
+    if (sprite_)
+        sprite_->set_vertical_flip(isGravityReversed_);
+    return isGravityReversed_;
+}
+
 bn::fixed_rect Player::GetLeftSymbolPickupRange() const
 {
     using helper::rect::operator+;
@@ -261,7 +283,7 @@ bn::fixed_point Player::GetRightSymbolPosition() const
 
 bn::fixed_point Player::GetMergeSymbolPosition() const
 {
-    return position_ + LEFT_SYMBOL_MERGE_END_POS;
+    return position_ + (isGravityReversed_ ? -LEFT_SYMBOL_MERGE_END_POS : LEFT_SYMBOL_MERGE_END_POS);
 }
 
 bool Player::GetControllable() const
@@ -298,6 +320,16 @@ void Player::SetLastSafePosition(bn::fixed_point safePosition)
     lastSafePosition_ = safePosition;
 }
 
+bool Player::GetLastSafeGravityIsReversed() const
+{
+    return lastSafeGravityIsReversed_;
+}
+
+void Player::SetLastSafeGravityIsReversed(bool lastSafeGravityIsReversed)
+{
+    lastSafeGravityIsReversed_ = lastSafeGravityIsReversed;
+}
+
 bool Player::UpdateAnimation_()
 {
     bool isActionDone = true;
@@ -324,25 +356,45 @@ void Player::AddRelativeYPos_(bn::fixed_point& resultPos, bool isFront) const
     {
     case AnimationState::IDLE:
         if (isFront)
-            resultPos.set_y(resultPos.y() + IDLE_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
+            if (isGravityReversed_)
+                resultPos.set_y(resultPos.y() - IDLE_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
+            else
+                resultPos.set_y(resultPos.y() + IDLE_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
+        else if (isGravityReversed_)
+            resultPos.set_y(resultPos.y() - IDLE_BACK_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         else
             resultPos.set_y(resultPos.y() + IDLE_BACK_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         break;
     case AnimationState::JUMP:
         if (isFront)
-            resultPos.set_y(resultPos.y() + JUMP_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
+            if (isGravityReversed_)
+                resultPos.set_y(resultPos.y() - JUMP_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
+            else
+                resultPos.set_y(resultPos.y() + JUMP_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
+        else if (isGravityReversed_)
+            resultPos.set_y(resultPos.y() - JUMP_BACK_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         else
             resultPos.set_y(resultPos.y() + JUMP_BACK_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         break;
     case AnimationState::FALL:
         if (isFront)
-            resultPos.set_y(resultPos.y() + FALL_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
+            if (isGravityReversed_)
+                resultPos.set_y(resultPos.y() - FALL_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
+            else
+                resultPos.set_y(resultPos.y() + FALL_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
+        else if (isGravityReversed_)
+            resultPos.set_y(resultPos.y() - FALL_BACK_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         else
             resultPos.set_y(resultPos.y() + FALL_BACK_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         break;
     case AnimationState::LAND:
         if (isFront)
-            resultPos.set_y(resultPos.y() + LAND_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
+            if (isGravityReversed_)
+                resultPos.set_y(resultPos.y() - LAND_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
+            else
+                resultPos.set_y(resultPos.y() + LAND_FRONT_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
+        else if (isGravityReversed_)
+            resultPos.set_y(resultPos.y() - LAND_BACK_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         else
             resultPos.set_y(resultPos.y() + LAND_BACK_SYMBOL_Y_POSITIONS[spriteAnimation_->current_index()]);
         break;
@@ -356,10 +408,12 @@ void Player::MergeSymbolsInHands_()
 {
     BN_ASSERT(gameState_.symbolsInHands[0] && gameState_.symbolsInHands[1],
               "Player::MergeSymbolsInHands_() called without holding 2 symbols");
-    auto mergedSymbol = constant::symbol::GetMergedSymbolType(gameState_.symbolsInHands[0]->GetType(),
-                                                              gameState_.symbolsInHands[1]->GetType());
+    const auto mergedSymbol = constant::symbol::GetMergedSymbolType(gameState_.symbolsInHands[0]->GetType(),
+                                                                    gameState_.symbolsInHands[1]->GetType());
     gameState_.symbolsInHands[0].reset();
-    gameState_.symbolsInHands[1] = Symbol(position_ + LEFT_SYMBOL_MERGE_END_POS, mergedSymbol);
+    gameState_.symbolsInHands[1] =
+        Symbol(position_ + ((isGravityReversed_) ? -LEFT_SYMBOL_MERGE_END_POS : LEFT_SYMBOL_MERGE_END_POS),
+               mergedSymbol, gameState_.player.isGravityReversed_);
     gameState_.symbolsInHands[1]->AllocateGraphicResource(constant::SYMBOL_Z_ORDER);
     gameState_.symbolsInHands[1]->SetCamera(gameState_.camera);
 }
@@ -375,8 +429,12 @@ void Player::SplitSymbolsInHands_()
         BN_ERROR("Player::SplitSymbolsInHands_() called without holding 1 symbol");
 
     auto syms = constant::symbol::GetSplitSymbolTypes(gameState_.symbolsInHands[isRightHand]->GetType());
-    gameState_.symbolsInHands[0] = Symbol(position_ + LEFT_SYMBOL_MERGE_END_POS, syms.first);
-    gameState_.symbolsInHands[1] = Symbol(position_ + LEFT_SYMBOL_MERGE_END_POS, syms.second);
+    gameState_.symbolsInHands[0] =
+        Symbol(position_ + (isGravityReversed_ ? -LEFT_SYMBOL_MERGE_END_POS : LEFT_SYMBOL_MERGE_END_POS), syms.first,
+               gameState_.player.isGravityReversed_);
+    gameState_.symbolsInHands[1] =
+        Symbol(position_ + (isGravityReversed_ ? -RIGHT_SYMBOL_MERGE_END_POS : RIGHT_SYMBOL_MERGE_END_POS), syms.second,
+               gameState_.player.isGravityReversed_);
     gameState_.symbolsInHands[0]->AllocateGraphicResource(constant::SYMBOL_Z_ORDER);
     gameState_.symbolsInHands[0]->SetCamera(gameState_.camera);
     gameState_.symbolsInHands[1]->AllocateGraphicResource(constant::SYMBOL_Z_ORDER);

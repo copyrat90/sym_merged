@@ -32,6 +32,7 @@ constexpr bn::fixed PLAYER_UMBRELLA_VEL = 1;
 constexpr bn::fixed_point PLAYER_DELTA_VEL = {0.3, 0.3};
 constexpr bn::fixed PRESS_A_JUMP_VEL = -2.8;
 constexpr bn::fixed SYMBOL_JUMP_VEL = -2;
+constexpr bn::fixed GRAVITY_REVERSE_INIT_VEL = 2;
 constexpr bn::fixed_point SYMBOL_DELTA_VEL = {0.3, 0.3};
 constexpr bn::fixed VEL_FRICTION = 1.2;
 constexpr bn::fixed COLLISION_DELTA_EPSILON = 0.01;
@@ -317,7 +318,13 @@ void ApplyGravity_(entity::IPhysicsEntity& entity)
         return;
 
     bn::fixed_point velocity = entity.GetVelocity();
-    velocity.set_y(velocity.y() + entity.GetGravityScale());
+    // this approach give fairly inaccurate result
+    // const int direction = entity.GetGravityReversed() ? -1 : 1;
+    // velocity.set_y(velocity.y() + direction * entity.GetGravityScale());
+    if (entity.GetGravityReversed())
+        velocity.set_y(velocity.y() - entity.GetGravityScale());
+    else
+        velocity.set_y(velocity.y() + entity.GetGravityScale());
     entity.SetVelocity(velocity);
 }
 
@@ -339,7 +346,8 @@ void ClampVelocity_(entity::IPhysicsEntity& entity)
 
 } // namespace
 
-PhysicsMovement::PhysicsMovement(scene::GameState& state) : ISystem(state)
+PhysicsMovement::PhysicsMovement(scene::GameState& state)
+    : ISystem(state), isGravityReversed_(state_.player.GetGravityReversed())
 {
 }
 
@@ -386,15 +394,34 @@ void PhysicsMovement::PlayerKeyboardHandle_()
             {
                 symbolJumping_ = true;
                 SetAbilityStateOfCertainTypeSymbols_(SymType::PLUS, AbilityState::NOT_READY);
-                state_.player.SetGrounded(false);
+                // state_.player.SetGrounded(false);
                 state_.player.InitJumpAction();
                 bn::sound_items::sfx_symbol_jump.play(constant::volume::sfx_symbol_jump);
-                if (SYMBOL_JUMP_VEL < velocity.y())
-                    velocity.set_y(SYMBOL_JUMP_VEL);
+                if (isGravityReversed_)
+                {
+                    if (-SYMBOL_JUMP_VEL > velocity.y())
+                        velocity.set_y(-SYMBOL_JUMP_VEL);
+                }
+                else
+                {
+                    if (SYMBOL_JUMP_VEL < velocity.y())
+                        velocity.set_y(SYMBOL_JUMP_VEL);
+                }
             }
             break;
         case SymType::VV:
-            // TODO: invert gravity
+            if (symbol.GetAbilityState() == AbilityState::READY_TO_USE)
+            {
+                SetAbilityStateOfCertainTypeSymbols_(SymType::VV, AbilityState::NOT_READY);
+                isGravityReversed_ = !isGravityReversed_;
+                bn::sound_items::sfx_gravity_reverse.play(constant::volume::sfx_gravity_reverse);
+                state_.player.SetGravityReversed(isGravityReversed_);
+                if (state_.symbolsInHands[0])
+                    state_.symbolsInHands[0]->ToggleGravityReversed();
+                if (state_.symbolsInHands[1])
+                    state_.symbolsInHands[1]->ToggleGravityReversed();
+                velocity = {velocity.x(), isGravityReversed_ ? -GRAVITY_REVERSE_INIT_VEL : GRAVITY_REVERSE_INIT_VEL};
+            }
             break;
         case SymType::UP:
             if (!umbrellaApplied_)
@@ -437,16 +464,31 @@ void PhysicsMovement::PlayerKeyboardHandle_()
 
     // left symbol ability: Press
     if (!mergeOngoing && state_.triggerInteraction.IsLKeyPressLasts() && state_.symbolsInHands[0] &&
-        state_.symbolsInHands[0]->GetAbilityState() == entity::Symbol::AbilityState::READY_TO_USE)
+        state_.symbolsInHands[0]->IsComplexSymbol())
+
     {
-        symbolAbilityPress(*state_.symbolsInHands[0]);
+        if (state_.symbolsInHands[0]->GetAbilityState() == entity::Symbol::AbilityState::READY_TO_USE)
+        {
+            symbolAbilityPress(*state_.symbolsInHands[0]);
+        }
+        else if (state_.symbolsInHands[0]->GetAbilityState() == entity::Symbol::AbilityState::NOT_READY)
+        {
+            bn::sound_items::sfx_error.play(constant::volume::sfx_error);
+        }
         state_.triggerInteraction.ResetLKeyPress();
     }
     // right symbol ability: Press
     if (!mergeOngoing && state_.triggerInteraction.IsRKeyPressLasts() && state_.symbolsInHands[1] &&
-        state_.symbolsInHands[1]->GetAbilityState() == entity::Symbol::AbilityState::READY_TO_USE)
+        state_.symbolsInHands[1]->IsComplexSymbol())
     {
-        symbolAbilityPress(*state_.symbolsInHands[1]);
+        if (state_.symbolsInHands[1]->GetAbilityState() == entity::Symbol::AbilityState::READY_TO_USE)
+        {
+            symbolAbilityPress(*state_.symbolsInHands[1]);
+        }
+        else if (state_.symbolsInHands[1]->GetAbilityState() == entity::Symbol::AbilityState::NOT_READY)
+        {
+            bn::sound_items::sfx_error.play(constant::volume::sfx_error);
+        }
         state_.triggerInteraction.ResetRKeyPress();
     }
     // left symbol ability: Release
@@ -465,11 +507,19 @@ void PhysicsMovement::PlayerKeyboardHandle_()
     if (!mergeOngoing && bn::keypad::a_pressed() && state_.player.GetGrounded() && !pressAJumping_)
     {
         pressAJumping_ = true;
-        state_.player.SetGrounded(false);
+        // state_.player.SetGrounded(false);
         state_.player.InitJumpAction();
         bn::sound_items::sfx_player_jump.play(constant::volume::sfx_player_jump);
-        if (PRESS_A_JUMP_VEL < velocity.y())
-            velocity.set_y(PRESS_A_JUMP_VEL);
+        if (isGravityReversed_)
+        {
+            if (-PRESS_A_JUMP_VEL > velocity.y())
+                velocity.set_y(-PRESS_A_JUMP_VEL);
+        }
+        else
+        {
+            if (PRESS_A_JUMP_VEL < velocity.y())
+                velocity.set_y(PRESS_A_JUMP_VEL);
+        }
     }
     if (!mergeOngoing && bn::keypad::left_held())
     {
@@ -537,6 +587,15 @@ void PhysicsMovement::PlayerCollision_()
                     if (state_.symbolsInHands[1])
                         state_.symbolsInHands[1]->SetVisible(true);
                     state_.player.SetPosition(state_.player.GetLastSafePosition());
+                    if (isGravityReversed_ != state_.player.GetLastSafeGravityIsReversed())
+                    {
+                        isGravityReversed_ = state_.player.GetLastSafeGravityIsReversed();
+                        state_.player.SetGravityReversed(isGravityReversed_);
+                        if (state_.symbolsInHands[0])
+                            state_.symbolsInHands[0]->ToggleGravityReversed();
+                        if (state_.symbolsInHands[1])
+                            state_.symbolsInHands[1]->ToggleGravityReversed();
+                    }
                 });
                 state_.transition.SetDoneEventHandler([this] {
                     state_.player.SetControllable(true);
@@ -545,20 +604,12 @@ void PhysicsMovement::PlayerCollision_()
             });
             break;
         case PushbackDirection::UP:
-            if (!nextGrounded)
-            {
+            if (!nextGrounded && !isGravityReversed_)
                 nextGrounded = true;
-                if (!state_.player.GetGrounded())
-                {
-                    state_.player.InitLandAction();
-                }
-            }
-            pressAJumping_ = false;
-            symbolJumping_ = false;
-            SetAbilityStateOfCertainTypeSymbols_(entity::Symbol::Type::PLUS,
-                                                 entity::Symbol::AbilityState::READY_TO_USE);
             break;
         case PushbackDirection::DOWN:
+            if (!nextGrounded && isGravityReversed_)
+                nextGrounded = true;
             break;
         case PushbackDirection::LEFT:
             break;
@@ -577,11 +628,25 @@ void PhysicsMovement::PlayerCollision_()
         if (i == COLLISION_LOOP_MAX_COUNT - 1)
             BN_LOG("[WARN] Collision detection loop max count reached!");
     }
+
+    if (!state_.player.GetGrounded() && nextGrounded)
+    {
+        state_.player.InitLandAction();
+        pressAJumping_ = false;
+        symbolJumping_ = false;
+        SetAbilityStateOfCertainTypeSymbols_(entity::Symbol::Type::PLUS, entity::Symbol::AbilityState::READY_TO_USE);
+        SetAbilityStateOfCertainTypeSymbols_(entity::Symbol::Type::VV, entity::Symbol::AbilityState::READY_TO_USE);
+    }
+    else if (state_.player.GetGrounded() && !nextGrounded)
+    {
+        SetAbilityStateOfCertainTypeSymbols_(entity::Symbol::Type::VV, entity::Symbol::AbilityState::NOT_READY);
+    }
     state_.player.SetGrounded(nextGrounded);
 
     if (nextGrounded && nextSafe && state_.player.GetControllable())
     {
         state_.player.SetLastSafePosition(state_.player.GetPosition());
+        state_.player.SetLastSafeGravityIsReversed(isGravityReversed_);
     }
 }
 
@@ -672,17 +737,13 @@ void PhysicsMovement::SymbolCollision_(entity::Symbol& symbol)
             // TODO
             break;
         case PushbackDirection::UP:
-            if (!nextGrounded)
-            {
+            if (!nextGrounded && !symbol.GetGravityReversed())
                 nextGrounded = true;
-                if (!symbol.GetGrounded())
-                {
-                    if (!state_.transition.IsOngoing())
-                        bn::sound_items::sfx_symbol_ground_bump.play(constant::volume::sfx_symbol_ground_bump);
-                }
-            }
             break;
         case PushbackDirection::DOWN:
+            if (!nextGrounded && symbol.GetGravityReversed())
+                nextGrounded = true;
+            break;
         case PushbackDirection::LEFT:
         case PushbackDirection::RIGHT:
             if (!symbol.GetGravityEnabled())
@@ -697,6 +758,12 @@ void PhysicsMovement::SymbolCollision_(entity::Symbol& symbol)
         }
         if (i == COLLISION_LOOP_MAX_COUNT - 1)
             BN_LOG("[WARN] Collision detection loop max count reached!");
+    }
+
+    if (!symbol.GetGrounded() && nextGrounded)
+    {
+        if (!state_.transition.IsOngoing())
+            bn::sound_items::sfx_symbol_ground_bump.play(constant::volume::sfx_symbol_ground_bump);
     }
     symbol.SetGrounded(nextGrounded);
 }
@@ -735,6 +802,7 @@ void PhysicsMovement::ResetAbilitiesToReadyInHands_()
             umbrellaApplied_ = false;
             break;
         case SymType::VV:
+            break;
         default:
             BN_ERROR("Invalid SymType: ", static_cast<int>(symbol.GetType()), " to reset");
         }

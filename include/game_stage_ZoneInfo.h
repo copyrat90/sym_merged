@@ -24,6 +24,7 @@ struct ZoneInfo
     {
         bn::fixed_point position;
         entity::Symbol::Type symbolType;
+        bool isGravityReversedByDefault;
     };
 
     struct DoorInfo

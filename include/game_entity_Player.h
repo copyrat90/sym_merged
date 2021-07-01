@@ -12,7 +12,7 @@ namespace sym::game::entity
 class Player final : public IPhysicsEntity
 {
 public:
-    Player(bn::fixed_point position, scene::GameState& gameState);
+    Player(bn::fixed_point position, bool isGravityReversedByDefault, scene::GameState& gameState);
 
     Player(Player&& other) = delete;
     Player& operator=(Player&& other) = delete;
@@ -21,6 +21,7 @@ public:
     Player& operator=(const Player& other) = delete;
 
     void FreeGraphicResource() final;
+    void AllocateGraphicResource(int z_order) final;
 
     void Update() final;
 
@@ -30,6 +31,9 @@ public:
     void InitLandAction();
     void InitMergeStartAction();
     void InitMergeEndAction();
+
+    void SetGravityReversed(bool isGravityReversed) final;
+    [[maybe_unused]] bool ToggleGravityReversed() final;
 
     [[nodiscard]] bn::fixed_rect GetLeftSymbolPickupRange() const;
     [[nodiscard]] bn::fixed_rect GetRightSymbolPickupRange() const;
@@ -59,11 +63,14 @@ public:
 
     bn::fixed_point GetLastSafePosition() const;
     void SetLastSafePosition(bn::fixed_point safePosition);
+    bool GetLastSafeGravityIsReversed() const;
+    void SetLastSafeGravityIsReversed(bool);
 
 private:
     static constexpr int ANIMATION_MAX_FRAMES = 3;
 
     bn::fixed_point lastSafePosition_;
+    bool lastSafeGravityIsReversed_;
 
     bn::optional<bn::sprite_animate_action<ANIMATION_MAX_FRAMES>> spriteAnimation_;
     AnimationState animationState_ = AnimationState::IDLE;

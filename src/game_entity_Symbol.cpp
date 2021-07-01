@@ -73,12 +73,12 @@ bn::fixed_rect GenerateColliderFromSymbolType_(Symbol::Type symbolType, const bn
 
 } // namespace
 
-Symbol::Symbol(bn::fixed_point position, Symbol::Type type)
+Symbol::Symbol(bn::fixed_point position, Symbol::Type type, bool isGravityReversedByDefault)
     : IPhysicsEntity(position, RELATIVE_INTERACT_RANGE,
                      GenerateColliderFromSymbolType_(type, IsComplexSymbol_(type)
                                                                ? bn::sprite_items::spr_complex_symbols.shape_size()
                                                                : bn::sprite_items::spr_basic_symbols.shape_size()),
-                     IS_GRAVITY_ENABLED_BY_DEFAULT, GRAVITY_SCALE,
+                     IS_GRAVITY_ENABLED_BY_DEFAULT, isGravityReversedByDefault, GRAVITY_SCALE,
                      IsComplexSymbol_(type) ? &bn::sprite_items::spr_complex_symbols
                                             : &bn::sprite_items::spr_basic_symbols),
       type_(type), abilityState_(IsComplexSymbol_(type) ? AbilityState::READY_TO_USE : AbilityState::UNAVAILABLE)
@@ -116,6 +116,7 @@ void Symbol::AllocateGraphicResource(int z_order)
     sprite_->set_blending_enabled(isBlendingEnabled_);
     sprite_->set_mosaic_enabled(isMosaicEnabled_);
     sprite_->set_visible(isVisible_);
+    sprite_->set_vertical_flip(isGravityReversed_);
     if (paletteItem_)
         SetPalette(*paletteItem_);
 }
@@ -139,6 +140,21 @@ Symbol::Type Symbol::GetType() const
 //             AllocateGraphicResource(sprite_->z_order());
 //     }
 // }
+
+void Symbol::SetGravityReversed(bool isGravityReversed)
+{
+    IPhysicsEntity::SetGravityReversed(isGravityReversed);
+    if (sprite_)
+        sprite_->set_vertical_flip(isGravityReversed);
+}
+
+bool Symbol::ToggleGravityReversed()
+{
+    IPhysicsEntity::ToggleGravityReversed();
+    if (sprite_)
+        sprite_->set_vertical_flip(isGravityReversed_);
+    return isGravityReversed_;
+}
 
 Symbol::AbilityState Symbol::GetAbilityState() const
 {

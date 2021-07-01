@@ -19,44 +19,45 @@ inline constexpr auto DEFAULT_TEXT_GEN_ALIGN = bn::sprite_text_generator::alignm
 
 // Sprites with higher z orders are drawn first
 // (and therefore can be covered by later sprites)
-constexpr int PLAYER_Z_ORDER = 0;
-constexpr int SYMBOL_Z_ORDER = -10;
-constexpr int DOOR_Z_ORDER = 10;
-constexpr int BUTTON_Z_ORDER = 5;
+inline constexpr int PLAYER_Z_ORDER = 0;
+inline constexpr int SYMBOL_Z_ORDER = -10;
+inline constexpr int DOOR_Z_ORDER = 10;
+inline constexpr int BUTTON_Z_ORDER = 5;
 
 namespace volume
 {
 
-constexpr bn::fixed MUSIC_DEFAULT = 0.5;
-constexpr bn::fixed SFX_DEFAULT = 1;
+inline constexpr bn::fixed MUSIC_DEFAULT = 0.5;
+inline constexpr bn::fixed SFX_DEFAULT = 1;
 
-constexpr bn::fixed music_detour = MUSIC_DEFAULT;
-constexpr bn::fixed music_autang = 0.125;
-constexpr bn::fixed music_fruity_radioactivity = 0.15;
-constexpr bn::fixed music_rene = 0.2;
+inline constexpr bn::fixed music_detour = MUSIC_DEFAULT;
+inline constexpr bn::fixed music_autang = 0.125;
+inline constexpr bn::fixed music_fruity_radioactivity = 0.15;
+inline constexpr bn::fixed music_rene = 0.2;
 
-constexpr bn::fixed sfx_menu_cursor = SFX_DEFAULT;
-constexpr bn::fixed sfx_menu_select = SFX_DEFAULT;
-constexpr bn::fixed sfx_player_jump = SFX_DEFAULT;
-constexpr bn::fixed sfx_symbol_pickup = 0.5;
-constexpr bn::fixed sfx_symbol_drop = SFX_DEFAULT;
-constexpr bn::fixed sfx_symbol_wall_bump = SFX_DEFAULT;
-constexpr bn::fixed sfx_symbol_ground_bump = SFX_DEFAULT;
-constexpr bn::fixed sfx_symbol_throw = SFX_DEFAULT;
-constexpr bn::fixed sfx_hover_button_toggle = SFX_DEFAULT;
-constexpr bn::fixed sfx_pressure_button_toggle = SFX_DEFAULT;
-constexpr bn::fixed sfx_player_damage = 0.5;
-constexpr bn::fixed sfx_symbol_merge = 0.75;
-constexpr bn::fixed sfx_error = SFX_DEFAULT;
-constexpr bn::fixed sfx_umbrella_open = SFX_DEFAULT;
-constexpr bn::fixed sfx_symbol_jump = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_menu_cursor = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_menu_select = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_player_jump = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_symbol_pickup = 0.5;
+inline constexpr bn::fixed sfx_symbol_drop = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_symbol_wall_bump = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_symbol_ground_bump = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_symbol_throw = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_hover_button_toggle = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_pressure_button_toggle = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_player_damage = 0.5;
+inline constexpr bn::fixed sfx_symbol_merge = 0.75;
+inline constexpr bn::fixed sfx_error = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_umbrella_open = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_symbol_jump = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_gravity_reverse = SFX_DEFAULT;
 
-constexpr bn::fixed ClampVolume(bn::fixed volume)
+inline constexpr bn::fixed ClampVolume(bn::fixed volume)
 {
     return bn::max(bn::min(volume, bn::fixed(1)), bn::fixed(0));
 }
 
-constexpr bn::fixed GetVolume(const bn::music_item& music)
+inline constexpr bn::fixed GetVolume(const bn::music_item& music)
 {
     constexpr bn::fixed NON_INIT_VAL = -999;
     bn::fixed volume = NON_INIT_VAL;
@@ -79,8 +80,8 @@ constexpr bn::fixed GetVolume(const bn::music_item& music)
 namespace symbol
 {
 
-[[nodiscard]] constexpr game::entity::Symbol::Type GetMergedSymbolType(game::entity::Symbol::Type sym1,
-                                                                       game::entity::Symbol::Type sym2)
+[[nodiscard]] inline constexpr game::entity::Symbol::Type GetMergedSymbolType(game::entity::Symbol::Type sym1,
+                                                                              game::entity::Symbol::Type sym2)
 {
     using SymType = game::entity::Symbol::Type;
     constexpr SymType SYMBOL_MERGE_LUT[2][2] = {
@@ -90,7 +91,7 @@ namespace symbol
     return SYMBOL_MERGE_LUT[sym1][sym2];
 }
 
-[[nodiscard]] constexpr bn::pair<game::entity::Symbol::Type, game::entity::Symbol::Type> GetSplitSymbolTypes(
+[[nodiscard]] inline constexpr bn::pair<game::entity::Symbol::Type, game::entity::Symbol::Type> GetSplitSymbolTypes(
     game::entity::Symbol::Type sym)
 {
     using SymType = game::entity::Symbol::Type;

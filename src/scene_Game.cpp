@@ -48,7 +48,7 @@ Game::Game(scene::Param& sceneParam)
                               bn::camera_ptr::create(0, 0),
                               helper::tilemap::ConvertIndexRectToPositionRect(
                                   state_.stageInfo.zoneInfos[state_.currentZoneIdx].zoneBoundary),
-                              {bn::fixed_point{0, 0}, state_},
+                              {bn::fixed_point{0, 0}, state_.stageInfo.isPlayerGravityReversedByDefault, state_},
                               {},
                               {},
                               {},
@@ -94,7 +94,8 @@ Game::Game(scene::Param& sceneParam)
         const auto& zoneInfo = state_.stageInfo.zoneInfos[i];
 
         for (const auto& symbolInfo : zoneInfo.symbols)
-            state_.symbolsOfZones[i].emplace_front(symbolInfo.position, symbolInfo.symbolType);
+            state_.symbolsOfZones[i].emplace_front(symbolInfo.position, symbolInfo.symbolType,
+                                                   symbolInfo.isGravityReversedByDefault);
         for (const auto& doorInfo : zoneInfo.doors)
             state_.doorsOfZones[i].emplace_back(doorInfo.position, doorInfo.isOpenedByDefault,
                                                 doorInfo.textSpriteNumber);

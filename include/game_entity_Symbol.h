@@ -32,7 +32,7 @@ public:
         NOT_READY
     };
 
-    Symbol(bn::fixed_point position, Symbol::Type type);
+    Symbol(bn::fixed_point position, Symbol::Type type, bool isGravityReversedByDefault);
     Symbol(Symbol&& other);
     Symbol& operator=(Symbol&& other);
 
@@ -45,6 +45,9 @@ public:
 
     [[nodiscard]] Type GetType() const;
     // void SetType(Type);
+
+    void SetGravityReversed(bool isGravityReversed) final;
+    [[maybe_unused]] bool ToggleGravityReversed() final;
 
     [[nodiscard]] AbilityState GetAbilityState() const;
     void SetAbilityState(AbilityState);

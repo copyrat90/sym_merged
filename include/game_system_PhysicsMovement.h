@@ -24,6 +24,7 @@ private:
     bool pressAJumping_ = false;
     bool symbolJumping_ = false;
     bool umbrellaApplied_ = false;
+    bool isGravityReversed_;
 
     void UpdatePlayer_();
     void PlayerKeyboardHandle_();
