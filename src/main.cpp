@@ -35,8 +35,9 @@ int main()
 
     scene::Param sceneParam;
     // Test
-    // bn::unique_ptr<scene::IScene> scene(new scene::Splash(sceneParam));
+    sceneParam.SetCurrentStage(game::stage::Id::W1_S0);
     bn::unique_ptr<scene::IScene> scene(new scene::Game(sceneParam));
+    // bn::unique_ptr<scene::IScene> scene(new scene::Splash(sceneParam));
     bn::optional<scene::Type> nextScene;
 
 #ifndef NDEBUG

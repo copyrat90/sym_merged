@@ -54,8 +54,8 @@ struct ZoneInfo
     struct SignInfo
     {
         bn::fixed_point position;
-        bn::string_view engMessage;
-        bn::string_view korMessage;
+        bn::span<const bn::string_view> engMessage;
+        bn::span<const bn::string_view> korMessage;
     };
 
     struct ExitInfo

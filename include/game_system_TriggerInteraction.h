@@ -44,7 +44,7 @@ private:
     };
 
     entity::Sign* collidedSign_ = nullptr;
-    bn::vector<bn::sprite_ptr, 8> tooltipTextSprites_;
+    bn::vector<bn::sprite_ptr, 20> tooltipTextSprites_;
 
     [[nodiscard]] bn::pair<EntityType, Hand> GetNearestInteractableFromPlayer_(
         bn::ilist<entity::Symbol>::iterator& outSymbolIter, int& outHoverButtonIdx);

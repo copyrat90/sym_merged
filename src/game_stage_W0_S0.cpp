@@ -81,8 +81,18 @@ constexpr ZoneInfo::ButtonInfo Z1_pressureButtonInfos_[] = {
     {{136 - MAP_DIMENSIONS[0].width() / 2, 984 - MAP_DIMENSIONS[0].height() / 2}, false, 3},
 };
 
+constexpr bn::array<const bn::string_view, 1> Z1_signTexts_English[] = {
+    {"Hello, world!"},
+};
+
+constexpr bn::array<const bn::string_view, 1> Z1_signTexts_Korean[] = {
+    {"안녕,세상아!"},
+};
+
 constexpr ZoneInfo::SignInfo Z1_signInfos_[] = {
-    {{409 - MAP_DIMENSIONS[0].width() / 2, 832 - MAP_DIMENSIONS[0].height() / 2}, "Hello, world!", "안녕,세상아!"},
+    {{409 - MAP_DIMENSIONS[0].width() / 2, 832 - MAP_DIMENSIONS[0].height() / 2},
+     Z1_signTexts_English[0],
+     Z1_signTexts_Korean[0]},
 };
 
 constexpr ZoneInfo::ExitInfo Z1_exitInfos_[] = {

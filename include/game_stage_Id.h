@@ -10,7 +10,8 @@ namespace sym::game::stage
  */
 enum class Id
 {
-    W0_S0,
+    W0_S0, // test map
+    W1_S0, // tutorial
     STAGE_ID_TOTAL_COUNT
 };
 

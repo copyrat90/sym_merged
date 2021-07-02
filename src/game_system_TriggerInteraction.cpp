@@ -2,17 +2,18 @@
 
 #include <bn_algorithm.h>
 #include <bn_assert.h>
+#include <bn_display.h>
 #include <bn_fixed_rect.h>
 #include <bn_keypad.h>
 #include <bn_sound.h>
 
-#include "bn_sound_items.h"
+#include "bn_log.h"
 #include "constant.h"
 #include "helper_math.h"
 #include "scene_GameState.h"
 
 #include "bn_sound_items.h"
-#include "bn_sprite_items_spr_sign.h"
+#include "bn_sprite_palette_items_pal_sign_text.h"
 
 namespace sym::game::system
 {
@@ -20,9 +21,9 @@ namespace sym::game::system
 namespace
 {
 
-constexpr bn::fixed_point RELATIVE_TOOLTIP_TEXT_POSITION = {0, -20};
+constexpr bn::fixed RELATIVE_TOOLTIP_TEXT_POS_DY = 20;
 
-}
+} // namespace
 
 TriggerInteraction::TriggerInteraction(scene::GameState& state) : ISystem(state)
 {
@@ -323,14 +324,40 @@ void TriggerInteraction::UpdateSignTooltipMessages_()
                 auto prevAlignment = textGen->alignment();
                 auto prevPalette = textGen->palette_item();
                 textGen->set_alignment(bn::sprite_text_generator::alignment_type::CENTER);
-                textGen->set_palette_item(bn::sprite_items::spr_sign.palette_item());
-                textGen->generate(sign.GetPosition() + RELATIVE_TOOLTIP_TEXT_POSITION,
-                                  isEnglish ? currentZoneInfo.signs[i].engMessage : currentZoneInfo.signs[i].korMessage,
-                                  tooltipTextSprites_);
+                textGen->set_palette_item(bn::sprite_palette_items::pal_sign_text);
+                auto generateText = [&](bn::span<const bn::string_view> rawMsgs) {
+                    using helper::math::operator*;
+                    const bool isMsgShownUp = state_.camera.position().y() < sign.GetPosition().y();
+                    if (isMsgShownUp)
+                    {
+                        for (int j = 0; j < rawMsgs.size(); ++j)
+                        {
+                            if (rawMsgs[j].empty())
+                                break;
+                            textGen->generate(0, -bn::display::height() / 2 + (j + 1) * RELATIVE_TOOLTIP_TEXT_POS_DY,
+                                              rawMsgs[j], tooltipTextSprites_);
+                        }
+                    }
+                    else
+                    {
+                        int lineCount = 0;
+                        for (int j = rawMsgs.size() - 1; j >= 0; --j)
+                        {
+                            if (rawMsgs[j].empty())
+                                continue;
+                            textGen->generate(0,
+                                              bn::display::height() / 2 - (++lineCount) * RELATIVE_TOOLTIP_TEXT_POS_DY,
+                                              rawMsgs[j], tooltipTextSprites_);
+                        }
+                    }
+                };
+
+                if (isEnglish)
+                    generateText(currentZoneInfo.signs[i].engMessage);
+                else
+                    generateText(currentZoneInfo.signs[i].korMessage);
                 textGen->set_alignment(prevAlignment);
                 textGen->set_palette_item(prevPalette);
-                for (auto& sprite : tooltipTextSprites_)
-                    sprite.set_camera(state_.camera);
 
                 collidedSign_ = &sign;
                 break;

@@ -28,7 +28,7 @@ namespace
 {
 
 constexpr bn::fixed_point MAX_ENTITY_VEL = {2, 4};
-constexpr bn::fixed PLAYER_UMBRELLA_VEL = 1;
+constexpr bn::fixed PLAYER_UMBRELLA_VEL = 0.75;
 constexpr bn::fixed_point PLAYER_DELTA_VEL = {0.3, 0.3};
 constexpr bn::fixed PRESS_A_JUMP_VEL = -2.8;
 constexpr bn::fixed SYMBOL_JUMP_VEL = -2;
