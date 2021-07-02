@@ -23,6 +23,7 @@ inline constexpr int PLAYER_Z_ORDER = 0;
 inline constexpr int SYMBOL_Z_ORDER = -10;
 inline constexpr int DOOR_Z_ORDER = 10;
 inline constexpr int BUTTON_Z_ORDER = 5;
+inline constexpr int SIGN_Z_ORDER = 7;
 
 namespace volume
 {

@@ -4,8 +4,6 @@
 
 #include "scene_GameState.h"
 
-#include "bn_log.h"
-
 namespace sym::game::system
 {
 
@@ -193,12 +191,8 @@ void Transition::SetBlendingAppliedItems(AppliedItems appliedItems)
         SetBlendingEnabledToEntites_(state_.pressureButtonsOfZones.begin(), state_.pressureButtonsOfZones.end(),
                                      isEnable);
         SetBlendingEnabledToEntites_(state_.symbolsOfZones.begin(), state_.symbolsOfZones.end(), isEnable);
+        SetBlendingEnabledToEntites_(state_.signsOfZones.begin(), state_.signsOfZones.end(), isEnable);
     }
-
-    BN_LOG("map_bg: ", !!(appliedItems & AppliedItems::MAP_BG) ? 1 : 0);
-    BN_LOG("player: ", !!(appliedItems & AppliedItems::PLAYER) ? 1 : 0);
-    BN_LOG("hands: ", !!(appliedItems & AppliedItems::SYMBOLS_IN_HANDS) ? 1 : 0);
-    BN_LOG("entity: ", !!(appliedItems & AppliedItems::SPRITES_OF_ZONES) ? 1 : 0);
 
     blendingAppliedItems_ = appliedItems;
 }

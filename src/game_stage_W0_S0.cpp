@@ -45,6 +45,10 @@ constexpr ZoneInfo::ButtonInfo Z0_pressureButtonInfos_[] = {
     {{210 - MAP_DIMENSIONS[0].width() / 2, 936 - MAP_DIMENSIONS[0].height() / 2}, false, 3},
 };
 
+constexpr bn::span<ZoneInfo::SignInfo> Z0_signInfos_ = {
+
+};
+
 constexpr ZoneInfo::ExitInfo Z0_exitInfos_[] = {
     {{312 - MAP_DIMENSIONS[0].width() / 2, 928 - MAP_DIMENSIONS[0].height() / 2, 2, 32}, 1, 0},
     {{312 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2, 2, 32}, 1, 1},
@@ -77,6 +81,10 @@ constexpr ZoneInfo::ButtonInfo Z1_pressureButtonInfos_[] = {
     {{136 - MAP_DIMENSIONS[0].width() / 2, 984 - MAP_DIMENSIONS[0].height() / 2}, false, 3},
 };
 
+constexpr ZoneInfo::SignInfo Z1_signInfos_[] = {
+    {{409 - MAP_DIMENSIONS[0].width() / 2, 832 - MAP_DIMENSIONS[0].height() / 2}, "Hello, world!", "안녕,세상아!"},
+};
+
 constexpr ZoneInfo::ExitInfo Z1_exitInfos_[] = {
     {{312 - MAP_DIMENSIONS[0].width() / 2, 928 - MAP_DIMENSIONS[0].height() / 2, 2, 32}, 0, 1},
     {{312 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2, 2, 32}, 0, 2},
@@ -90,12 +98,12 @@ constexpr ZoneInfo::EntranceInfo Z1_entranceInfos_[] = {
 constexpr ZoneInfo zoneInfos_[] = {
     ZoneInfo(bn::affine_bg_items::bg_w0_s0_0, Z0_symbolInfos_, Z0_doorInfos_, Z0_shutterInfos_, Z0_hoverButtonInfos_,
              Z0_pressureButtonInfos_,
-             helper::tilemap::IndexRect({0, 93}, bn::size{39, 35}, bg_w0_s0_0.map_item().dimensions()), Z0_exitInfos_,
-             Z0_entranceInfos_),
+             helper::tilemap::IndexRect({0, 93}, bn::size{39, 35}, bg_w0_s0_0.map_item().dimensions()), Z0_signInfos_,
+             Z0_exitInfos_, Z0_entranceInfos_),
     ZoneInfo(bn::affine_bg_items::bg_w0_s0_0, Z1_symbolInfos_, Z1_doorInfos_, Z1_shutterInfos_, Z1_hoverButtonInfos_,
              Z1_pressureButtonInfos_,
-             helper::tilemap::IndexRect({39, 93}, bn::size{30, 29}, bg_w0_s0_0.map_item().dimensions()), Z1_exitInfos_,
-             Z1_entranceInfos_),
+             helper::tilemap::IndexRect({39, 93}, bn::size{30, 29}, bg_w0_s0_0.map_item().dimensions()), Z1_signInfos_,
+             Z1_exitInfos_, Z1_entranceInfos_),
 };
 
 constexpr StageInfo w0_s0_("W0-0", "Test stage", false, bn::music_items::music_detour, zoneInfos_);

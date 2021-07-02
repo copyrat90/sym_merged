@@ -55,6 +55,7 @@ Game::Game(scene::Param& sceneParam)
                               {},
                               {},
                               {},
+                              {},
                               false,
                               helper::tilemap::TileInfo(state_.currentMapBg),
                               -1,
@@ -82,6 +83,7 @@ Game::Game(scene::Param& sceneParam)
     state_.hoverButtonsOfZones.resize(zoneCount);
     state_.pressureButtonsOfZones.resize(zoneCount);
     state_.shuttersOfZones.resize(zoneCount);
+    state_.signsOfZones.resize(zoneCount);
 
     // Initialize player and camera
     const bn::fixed_point& playerPosition = state_.stageInfo.zoneInfos[0].entrances[0].position;
@@ -108,6 +110,8 @@ Game::Game(scene::Param& sceneParam)
         for (const auto& pressureButtonInfo : zoneInfo.pressureButtons)
             state_.pressureButtonsOfZones[i].emplace_back(
                 pressureButtonInfo.position, pressureButtonInfo.textSpriteNumber, pressureButtonInfo.isOnByDefault);
+        for (const auto& signInfo : zoneInfo.signs)
+            state_.signsOfZones[i].emplace_back(signInfo.position);
     }
 
     // Allocate all graphics within current zone
@@ -137,6 +141,11 @@ Game::Game(scene::Param& sceneParam)
     {
         pressureButton.AllocateGraphicResource(constant::BUTTON_Z_ORDER);
         pressureButton.SetCamera(state_.camera);
+    }
+    for (auto& sign : state_.signsOfZones[state_.currentZoneIdx])
+    {
+        sign.AllocateGraphicResource(constant::SIGN_Z_ORDER);
+        sign.SetCamera(state_.camera);
     }
 
     // Initialize Idle action

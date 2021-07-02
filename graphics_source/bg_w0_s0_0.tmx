@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#00ff00" nextlayerid="10" nextobjectid="39">
+<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#00ff00" nextlayerid="10" nextobjectid="40">
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer id="1" name="ACTUAL STAGE MAP" width="128" height="128">
   <data encoding="csv">
@@ -133,7 +133,7 @@
 51,51,51,51,51,27,27,28,27,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <group id="5" name="MUST DISABLE BEFORE EXPORT" visible="0">
+ <group id="5" name="MUST DISABLE BEFORE EXPORT">
   <layer id="4" name="Numeric Helper" width="128" height="128">
    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -294,6 +294,12 @@
    <object id="36" name="hoverBtn2" x="205" y="870"/>
    <object id="37" name="bar" x="472" y="886"/>
    <object id="38" name="xor" x="493" y="886"/>
+   <object id="39" name="sign" x="409" y="832">
+    <properties>
+     <property name="eng" value="Hello, world!"/>
+     <property name="kor" value="안녕, 세상아!"/>
+    </properties>
+   </object>
   </objectgroup>
   <objectgroup id="9" name="Zone Boundary" locked="1">
    <object id="24" x="0" y="744" width="312" height="280">

@@ -5,6 +5,7 @@
 #include <bn_display.h>
 #include <bn_fixed_rect.h>
 #include <bn_span.h>
+#include <bn_string_view.h>
 
 #include "helper_tilemap.h"
 
@@ -50,6 +51,13 @@ struct ZoneInfo
         int textSpriteNumber;
     };
 
+    struct SignInfo
+    {
+        bn::fixed_point position;
+        bn::string_view engMessage;
+        bn::string_view korMessage;
+    };
+
     struct ExitInfo
     {
         bn::fixed_rect collider;
@@ -70,10 +78,11 @@ struct ZoneInfo
     constexpr ZoneInfo(const bn::affine_bg_item& mapBg_a, bn::span<const SymbolInfo> symbols_a,
                        bn::span<const DoorInfo> doors_a, bn::span<const ShutterInfo> shutters_a,
                        bn::span<const ButtonInfo> hoverButtons_a, bn::span<const ButtonInfo> pressureButtons_a,
-                       const helper::tilemap::IndexRect zoneBoundary_a, bn::span<const ExitInfo> exits_a,
-                       bn::span<const EntranceInfo> entrances_a)
+                       const helper::tilemap::IndexRect zoneBoundary_a, const bn::span<const SignInfo> signs_a,
+                       bn::span<const ExitInfo> exits_a, bn::span<const EntranceInfo> entrances_a)
         : mapBg(mapBg_a), symbols(symbols_a), doors(doors_a), shutters(shutters_a), hoverButtons(hoverButtons_a),
-          pressureButtons(pressureButtons_a), zoneBoundary(zoneBoundary_a), exits(exits_a), entrances(entrances_a)
+          pressureButtons(pressureButtons_a), zoneBoundary(zoneBoundary_a), signs(signs_a), exits(exits_a),
+          entrances(entrances_a)
     {
     }
 
@@ -88,6 +97,7 @@ struct ZoneInfo
 
     // Constant things. Constantly referenced.
     const helper::tilemap::IndexRect zoneBoundary;
+    const bn::span<const SignInfo> signs;
     const bn::span<const ExitInfo> exits;
     const bn::span<const EntranceInfo> entrances;
 };

@@ -10,6 +10,7 @@
 #include "game_entity_Player.h"
 #include "game_entity_PressureButton.h"
 #include "game_entity_Shutter.h"
+#include "game_entity_Sign.h"
 #include "game_stage_StageInfo.h"
 #include "game_system_KeyPress.h"
 #include "game_system_PhysicsMovement.h"
@@ -35,6 +36,7 @@ struct GameState
     static constexpr int ZONE_PRESSURE_BUTTON_MAX_COUNT = 8;
     static constexpr int ZONE_DOOR_MAX_COUNT = 8;
     static constexpr int ZONE_SHUTTER_MAX_COUNT = 8;
+    static constexpr int ZONE_SIGN_MAX_COUNT = 4;
 
     scene::Param& sceneParam_;
     const game::stage::StageInfo& stageInfo;
@@ -56,6 +58,7 @@ struct GameState
     bn::vector<bn::vector<game::entity::HoverButton, ZONE_HOVER_BUTTON_MAX_COUNT>, ZONE_MAX_COUNT> hoverButtonsOfZones;
     bn::vector<bn::vector<game::entity::PressureButton, ZONE_PRESSURE_BUTTON_MAX_COUNT>, ZONE_MAX_COUNT>
         pressureButtonsOfZones;
+    bn::vector<bn::vector<game::entity::Sign, ZONE_SIGN_MAX_COUNT>, ZONE_MAX_COUNT> signsOfZones;
 
     bool isPaused;
 

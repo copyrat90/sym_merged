@@ -12,9 +12,17 @@
 #include "scene_GameState.h"
 
 #include "bn_sound_items.h"
+#include "bn_sprite_items_spr_sign.h"
 
 namespace sym::game::system
 {
+
+namespace
+{
+
+constexpr bn::fixed_point RELATIVE_TOOLTIP_TEXT_POSITION = {0, -20};
+
+}
 
 TriggerInteraction::TriggerInteraction(scene::GameState& state) : ISystem(state)
 {
@@ -113,6 +121,7 @@ void TriggerInteraction::Update()
         }
     }
 
+    UpdateSignTooltipMessages_();
     InteractHoverButtonsAndThrownSymbol_();
     InteractPressureButtonsAndEntities_();
 }
@@ -289,6 +298,45 @@ void TriggerInteraction::ResetLKeyPress()
 void TriggerInteraction::ResetRKeyPress()
 {
     state_.rKeyLastingCount = -1;
+}
+
+void TriggerInteraction::UpdateSignTooltipMessages_()
+{
+    if (collidedSign_)
+    {
+        if (!collidedSign_->GetInteractRange().intersects(state_.player.GetInteractRange()))
+        {
+            tooltipTextSprites_.clear();
+            collidedSign_ = nullptr;
+        }
+    }
+    else
+    {
+        const stage::ZoneInfo& currentZoneInfo = state_.stageInfo.zoneInfos[state_.currentZoneIdx];
+        for (int i = 0; i < state_.signsOfZones[state_.currentZoneIdx].size(); ++i)
+        {
+            entity::Sign& sign = state_.signsOfZones[state_.currentZoneIdx][i];
+            if (sign.GetInteractRange().intersects(state_.player.GetInteractRange()))
+            {
+                const bool isEnglish = global::setting::GetLang() == global::setting::Lang::ENG;
+                auto* const textGen = global::GetTextGen();
+                auto prevAlignment = textGen->alignment();
+                auto prevPalette = textGen->palette_item();
+                textGen->set_alignment(bn::sprite_text_generator::alignment_type::CENTER);
+                textGen->set_palette_item(bn::sprite_items::spr_sign.palette_item());
+                textGen->generate(sign.GetPosition() + RELATIVE_TOOLTIP_TEXT_POSITION,
+                                  isEnglish ? currentZoneInfo.signs[i].engMessage : currentZoneInfo.signs[i].korMessage,
+                                  tooltipTextSprites_);
+                textGen->set_alignment(prevAlignment);
+                textGen->set_palette_item(prevPalette);
+                for (auto& sprite : tooltipTextSprites_)
+                    sprite.set_camera(state_.camera);
+
+                collidedSign_ = &sign;
+                break;
+            }
+        }
+    }
 }
 
 void TriggerInteraction::ToggleOpenedHoverButtonAssociatedOpenables_(int hoverButtonIdx)

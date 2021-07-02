@@ -5,8 +5,6 @@
 #include "constant.h"
 #include "scene_GameState.h"
 
-#include "bn_log.h"
-
 namespace sym::game::system
 {
 
@@ -75,6 +73,8 @@ void ZoneSwitch::SwitchToNextZone_()
         hoverButton.FreeGraphicResource();
     for (auto& pressureButton : state_.pressureButtonsOfZones[state_.currentZoneIdx])
         pressureButton.FreeGraphicResource();
+    for (auto& sign : state_.signsOfZones[state_.currentZoneIdx])
+        sign.FreeGraphicResource();
 
     // switch zone
     const int prevZoneIdx = state_.currentZoneIdx;
@@ -121,6 +121,11 @@ void ZoneSwitch::SwitchToNextZone_()
     {
         pressureButton.AllocateGraphicResource(constant::BUTTON_Z_ORDER);
         pressureButton.SetCamera(state_.camera);
+    }
+    for (auto& sign : state_.signsOfZones[state_.currentZoneIdx])
+    {
+        sign.AllocateGraphicResource(constant::SIGN_Z_ORDER);
+        sign.SetCamera(state_.camera);
     }
 }
 

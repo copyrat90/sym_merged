@@ -64,10 +64,16 @@ int main()
         }
         if (bn::keypad::start_pressed())
         {
-            if (bn::music::paused())
-                bn::music::resume();
+            using namespace sym::global::setting;
+            if (GetLang() == Lang::ENG)
+                SetLang(Lang::KOR);
             else
-                bn::music::pause();
+                SetLang(Lang::ENG);
+
+            // if (bn::music::paused())
+            //     bn::music::resume();
+            // else
+            //     bn::music::pause();
         }
         if (isDebugViewOn && --resourceUsageUpdateCountDown <= 0)
         {

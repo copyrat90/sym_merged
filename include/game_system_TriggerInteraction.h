@@ -6,6 +6,7 @@
 #include <bn_utility.h>
 
 #include "game_entity_HoverButton.h"
+#include "game_entity_Sign.h"
 #include "game_entity_Symbol.h"
 
 namespace sym::game::system
@@ -42,6 +43,9 @@ private:
         RIGHT
     };
 
+    entity::Sign* collidedSign_ = nullptr;
+    bn::vector<bn::sprite_ptr, 8> tooltipTextSprites_;
+
     [[nodiscard]] bn::pair<EntityType, Hand> GetNearestInteractableFromPlayer_(
         bn::ilist<entity::Symbol>::iterator& outSymbolIter, int& outHoverButtonIdx);
 
@@ -51,6 +55,7 @@ private:
     void InteractHoverButtonsAndThrownSymbol_();
     void InteractPressureButtonsAndEntities_();
 
+    void UpdateSignTooltipMessages_();
     void UpdateKeyLastingCount_();
     void ToggleOpenedHoverButtonAssociatedOpenables_(int hoverButtonIdx);
     void ToggleOpenedPressureButtonAssociatedOpenables_(int pressureButtonIdx);
