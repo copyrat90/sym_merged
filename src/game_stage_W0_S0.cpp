@@ -116,7 +116,8 @@ constexpr ZoneInfo zoneInfos_[] = {
              Z1_exitInfos_, Z1_entranceInfos_),
 };
 
-constexpr StageInfo w0_s0_("W0-0", "Test stage", false, bn::music_items::music_detour, zoneInfos_);
+constexpr StageInfo w0_s0_("W0-0", "Test stage", "W0-0", "테스트 스테이지", false, bn::music_items::music_detour,
+                           zoneInfos_);
 
 } // namespace
 

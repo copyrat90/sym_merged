@@ -24,6 +24,7 @@ inline constexpr int SYMBOL_Z_ORDER = -10;
 inline constexpr int DOOR_Z_ORDER = 10;
 inline constexpr int BUTTON_Z_ORDER = 5;
 inline constexpr int SIGN_Z_ORDER = 7;
+inline constexpr int MENU_Z_ORDER = -100;
 
 namespace volume
 {
@@ -36,6 +37,7 @@ inline constexpr bn::fixed music_autang = 0.125;
 inline constexpr bn::fixed music_fruity_radioactivity = 0.15;
 inline constexpr bn::fixed music_rene = 0.2;
 
+inline constexpr bn::fixed sfx_menu_open = SFX_DEFAULT;
 inline constexpr bn::fixed sfx_menu_cursor = SFX_DEFAULT;
 inline constexpr bn::fixed sfx_menu_select = SFX_DEFAULT;
 inline constexpr bn::fixed sfx_player_jump = SFX_DEFAULT;

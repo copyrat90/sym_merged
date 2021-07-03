@@ -16,8 +16,8 @@ public:
     HoverButton(HoverButton&& other) = delete;
     HoverButton& operator=(HoverButton&& other) = delete;
 
-    HoverButton(const HoverButton& other) = delete;
-    HoverButton& operator=(const HoverButton& other) = delete;
+    HoverButton(const HoverButton& other) = default;
+    HoverButton& operator=(const HoverButton& other) = default;
 
     void AllocateGraphicResource(int z_order) final;
     void FreeGraphicResource() final;

@@ -40,8 +40,8 @@ public:
      */
     IEntity& operator=(IEntity&& other);
 
-    IEntity(const IEntity& other) = delete;
-    IEntity& operator=(const IEntity& other) = delete;
+    IEntity(const IEntity& other) = default;
+    IEntity& operator=(const IEntity& other) = default;
 
     virtual void Update();
 

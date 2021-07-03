@@ -13,12 +13,14 @@
 #include "game_entity_Sign.h"
 #include "game_stage_StageInfo.h"
 #include "game_system_KeyPress.h"
+#include "game_system_Menu.h"
 #include "game_system_PhysicsMovement.h"
 #include "game_system_Transition.h"
 #include "game_system_TriggerInteraction.h"
 #include "game_system_ZoneSwitch.h"
 #include "helper_tilemap.h"
 #include "scene_Param.h"
+#include "scene_Type.h"
 
 namespace sym::scene
 {
@@ -60,6 +62,16 @@ struct GameState
         pressureButtonsOfZones;
     bn::vector<bn::vector<game::entity::Sign, ZONE_SIGN_MAX_COUNT>, ZONE_MAX_COUNT> signsOfZones;
 
+    // store initial state of current zone
+    // to copy back when restarting current zone.
+    bn::optional<game::stage::ZoneInfo::ExitInfo> initialExitInfo;
+    bn::list<game::entity::Symbol, STAGE_SYMBOL_MAX_COUNT> initialSymbolsOfCurrentZone;
+    bn::array<bn::optional<game::entity::Symbol>, 2> initialSymbolsInHandsOnCurrentZone;
+    bn::vector<game::entity::Door, ZONE_DOOR_MAX_COUNT> initialDoorsOfCurrentZone;
+    bn::vector<game::entity::Shutter, ZONE_SHUTTER_MAX_COUNT> initialShuttersOfCurrentZone;
+    bn::vector<game::entity::HoverButton, ZONE_HOVER_BUTTON_MAX_COUNT> initialHoverButtonsOfCurrentZone;
+    bn::vector<game::entity::PressureButton, ZONE_PRESSURE_BUTTON_MAX_COUNT> initialPressureButtonsOfCurrentZone;
+
     bool isPaused;
 
     helper::tilemap::TileInfo currentMapTileInfo;
@@ -76,8 +88,10 @@ struct GameState
     game::system::PhysicsMovement physicsMovement;
     game::system::ZoneSwitch zoneSwitch;
     game::system::Transition transition;
+    game::system::Menu menu;
 
     bool isMergeOrSplitTriggered = false;
+    bn::optional<scene::Type> nextScene = bn::nullopt;
 };
 
 } // namespace sym::scene

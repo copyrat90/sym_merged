@@ -24,21 +24,28 @@ void ZoneSwitch::Update()
     if (nextZone_)
         return;
 
-    nextZone_ = GetNextZone_();
-    if (nextZone_)
-        InitTransition_();
+    auto nextZone = GetNextZone_();
+    if (nextZone)
+        InitTransition(*nextZone);
 }
 
-void ZoneSwitch::InitTransition_()
+bool ZoneSwitch::InitTransition(ExitInfo nextZone, bool isRestartCurrentZone)
 {
+    if (state_.transition.IsOngoing())
+        return false;
+
+    nextZone_ = nextZone;
+    state_.initialExitInfo = nextZone;
     state_.player.SetControllable(false);
 
     state_.transition.SetBlendingAppliedItems(Transition::AppliedItems::ALL);
     state_.transition.SetMosaicAppliedItems(Transition::AppliedItems::ALL);
     state_.transition.InitOutAndIn(TRANSITION_TYPES, FADE_OUT_UPDATE_COUNT, FADE_IN_UPDATE_COUNT);
-    state_.transition.SetWaitBetweenEventHandler([this] { SwitchToNextZone_(); });
+    state_.transition.SetWaitBetweenEventHandler(
+        [this, isRestartCurrentZone] { SwitchToNextZone_(isRestartCurrentZone); });
     state_.transition.SetLastTransitionEventHandler([this] { state_.player.SetControllable(true); });
     state_.transition.SetDoneEventHandler([this] { nextZone_.reset(); });
+    return true;
 }
 
 bn::optional<ExitInfo> ZoneSwitch::GetNextZone_()
@@ -58,28 +65,101 @@ bn::optional<ExitInfo> ZoneSwitch::GetNextZone_()
     return bn::nullopt;
 }
 
-void ZoneSwitch::SwitchToNextZone_()
+void ZoneSwitch::SwitchToNextZone_(bool isRestartCurrentZone)
 {
     BN_ASSERT(nextZone_, "SwitchToNextZone_() called when there is no nextZone_");
+    const int prevZoneIdx = state_.currentZoneIdx;
 
-    // unload prev zone graphics
-    for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
-        symbol.FreeGraphicResource();
-    for (auto& door : state_.doorsOfZones[state_.currentZoneIdx])
-        door.FreeGraphicResource();
-    for (auto& shutter : state_.shuttersOfZones[state_.currentZoneIdx])
-        shutter.FreeGraphicResource();
-    for (auto& hoverButton : state_.hoverButtonsOfZones[state_.currentZoneIdx])
-        hoverButton.FreeGraphicResource();
-    for (auto& pressureButton : state_.pressureButtonsOfZones[state_.currentZoneIdx])
-        pressureButton.FreeGraphicResource();
-    for (auto& sign : state_.signsOfZones[state_.currentZoneIdx])
-        sign.FreeGraphicResource();
+    if ((prevZoneIdx != nextZone_->destinationZoneIndex) || isRestartCurrentZone)
+    {
+        // unload prev zone graphics
+        for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
+            symbol.FreeGraphicResource();
+        for (auto& door : state_.doorsOfZones[state_.currentZoneIdx])
+            door.FreeGraphicResource();
+        for (auto& shutter : state_.shuttersOfZones[state_.currentZoneIdx])
+            shutter.FreeGraphicResource();
+        for (auto& hoverButton : state_.hoverButtonsOfZones[state_.currentZoneIdx])
+            hoverButton.FreeGraphicResource();
+        for (auto& pressureButton : state_.pressureButtonsOfZones[state_.currentZoneIdx])
+            pressureButton.FreeGraphicResource();
+        for (auto& sign : state_.signsOfZones[state_.currentZoneIdx])
+            sign.FreeGraphicResource();
+    }
 
     // switch zone
-    const int prevZoneIdx = state_.currentZoneIdx;
     state_.currentZoneIdx = nextZone_->destinationZoneIndex;
     const auto& currentZoneInfo = state_.stageInfo.zoneInfos[state_.currentZoneIdx];
+
+    // Reset initial state of current zone
+    // to copy back when restarting current zone.
+    if (!isRestartCurrentZone)
+    {
+        state_.initialSymbolsOfCurrentZone.clear();
+        state_.initialDoorsOfCurrentZone.clear();
+        state_.initialShuttersOfCurrentZone.clear();
+        state_.initialHoverButtonsOfCurrentZone.clear();
+        state_.initialPressureButtonsOfCurrentZone.clear();
+
+        for (const auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
+        {
+            state_.initialSymbolsOfCurrentZone.push_back(symbol);
+            // state_.initialSymbolsOfCurrentZone.back().FreeGraphicResource();
+        }
+        state_.initialSymbolsInHandsOnCurrentZone[0] = state_.symbolsInHands[0];
+        if (state_.initialSymbolsInHandsOnCurrentZone[0])
+            state_.initialSymbolsInHandsOnCurrentZone[0]->FreeGraphicResource();
+        state_.initialSymbolsInHandsOnCurrentZone[1] = state_.symbolsInHands[1];
+        if (state_.initialSymbolsInHandsOnCurrentZone[1])
+            state_.initialSymbolsInHandsOnCurrentZone[1]->FreeGraphicResource();
+        for (const auto& door : state_.doorsOfZones[state_.currentZoneIdx])
+        {
+            state_.initialDoorsOfCurrentZone.push_back(door);
+            // state_.initialDoorsOfCurrentZone.back().FreeGraphicResource();
+        }
+        for (const auto& shutter : state_.shuttersOfZones[state_.currentZoneIdx])
+        {
+            state_.initialShuttersOfCurrentZone.push_back(shutter);
+            // state_.initialShuttersOfCurrentZone.back().FreeGraphicResource();
+        }
+        for (const auto& button : state_.hoverButtonsOfZones[state_.currentZoneIdx])
+        {
+            state_.initialHoverButtonsOfCurrentZone.push_back(button);
+            // state_.initialHoverButtonsOfCurrentZone.back().FreeGraphicResource();
+        }
+        for (const auto& button : state_.pressureButtonsOfZones[state_.currentZoneIdx])
+        {
+            state_.initialPressureButtonsOfCurrentZone.push_back(button);
+            // state_.initialPressureButtonsOfCurrentZone.back().FreeGraphicResource();
+        }
+    }
+    // Restart current zone
+    else
+    {
+        // WIP: Add symbols of zones, symbols in hands
+        state_.symbolsOfZones[state_.currentZoneIdx].clear();
+        state_.doorsOfZones[state_.currentZoneIdx].clear();
+        state_.shuttersOfZones[state_.currentZoneIdx].clear();
+        state_.hoverButtonsOfZones[state_.currentZoneIdx].clear();
+        state_.pressureButtonsOfZones[state_.currentZoneIdx].clear();
+
+        for (const auto& symbol : state_.initialSymbolsOfCurrentZone)
+            state_.symbolsOfZones[state_.currentZoneIdx].push_back(symbol);
+        state_.symbolsInHands[0] = state_.initialSymbolsInHandsOnCurrentZone[0];
+        if (state_.symbolsInHands[0])
+            state_.symbolsInHands[0]->AllocateGraphicResource(constant::SYMBOL_Z_ORDER);
+        state_.symbolsInHands[1] = state_.initialSymbolsInHandsOnCurrentZone[1];
+        if (state_.symbolsInHands[1])
+            state_.symbolsInHands[1]->AllocateGraphicResource(constant::SYMBOL_Z_ORDER);
+        for (const auto& door : state_.initialDoorsOfCurrentZone)
+            state_.doorsOfZones[state_.currentZoneIdx].push_back(door);
+        for (const auto& shutter : state_.initialShuttersOfCurrentZone)
+            state_.shuttersOfZones[state_.currentZoneIdx].push_back(shutter);
+        for (const auto& button : state_.initialHoverButtonsOfCurrentZone)
+            state_.hoverButtonsOfZones[state_.currentZoneIdx].push_back(button);
+        for (const auto& button : state_.initialPressureButtonsOfCurrentZone)
+            state_.pressureButtonsOfZones[state_.currentZoneIdx].push_back(button);
+    }
 
     // Set bg and tiles
     if (currentZoneInfo.mapBg != state_.stageInfo.zoneInfos[prevZoneIdx].mapBg)

@@ -301,6 +301,72 @@ void TriggerInteraction::ResetRKeyPress()
     state_.rKeyLastingCount = -1;
 }
 
+bn::vector<bn::sprite_ptr, 20>& TriggerInteraction::GetSignMessageTextSprites()
+{
+    return tooltipTextSprites_;
+}
+
+void TriggerInteraction::RedrawSignMessages()
+{
+    tooltipTextSprites_.clear();
+    const stage::ZoneInfo& currentZoneInfo = state_.stageInfo.zoneInfos[state_.currentZoneIdx];
+    for (int i = 0; i < state_.signsOfZones[state_.currentZoneIdx].size(); ++i)
+    {
+        entity::Sign& sign = state_.signsOfZones[state_.currentZoneIdx][i];
+        if (sign.GetInteractRange().intersects(state_.player.GetInteractRange()))
+        {
+            const bool isEnglish = global::setting::GetLang() == global::setting::Lang::ENG;
+            auto* const textGen = global::GetTextGen();
+            auto prevAlignment = textGen->alignment();
+            auto prevPalette = textGen->palette_item();
+            textGen->set_alignment(bn::sprite_text_generator::alignment_type::CENTER);
+            textGen->set_palette_item(bn::sprite_palette_items::pal_sign_text);
+            auto generateText = [&](bn::span<const bn::string_view> rawMsgs) {
+                using helper::math::operator*;
+                const bool isMsgShownUp = state_.camera.position().y() < sign.GetPosition().y();
+                if (isMsgShownUp)
+                {
+                    for (int j = 0; j < rawMsgs.size(); ++j)
+                    {
+                        if (rawMsgs[j].empty())
+                            break;
+                        textGen->generate(0, -bn::display::height() / 2 + (j + 1) * RELATIVE_TOOLTIP_TEXT_POS_DY,
+                                          rawMsgs[j], tooltipTextSprites_);
+                    }
+                }
+                else
+                {
+                    int lineCount = 0;
+                    for (int j = rawMsgs.size() - 1; j >= 0; --j)
+                    {
+                        if (rawMsgs[j].empty())
+                            continue;
+                        textGen->generate(0, bn::display::height() / 2 - (++lineCount) * RELATIVE_TOOLTIP_TEXT_POS_DY,
+                                          rawMsgs[j], tooltipTextSprites_);
+                    }
+                }
+            };
+
+            if (isEnglish)
+                generateText(currentZoneInfo.signs[i].engMessage);
+            else
+                generateText(currentZoneInfo.signs[i].korMessage);
+            for (auto& text : tooltipTextSprites_)
+            {
+                text.set_blending_enabled(
+                    !!(state_.transition.GetBlendingAppliedItems() & Transition::AppliedItems::SIGN_MESSAGES));
+                text.set_mosaic_enabled(
+                    !!(state_.transition.GetMosaicAppliedItems() & Transition::AppliedItems::SIGN_MESSAGES));
+            }
+            textGen->set_alignment(prevAlignment);
+            textGen->set_palette_item(prevPalette);
+
+            collidedSign_ = &sign;
+            break;
+        }
+    }
+}
+
 void TriggerInteraction::UpdateSignTooltipMessages_()
 {
     if (collidedSign_)
@@ -313,56 +379,7 @@ void TriggerInteraction::UpdateSignTooltipMessages_()
     }
     else
     {
-        const stage::ZoneInfo& currentZoneInfo = state_.stageInfo.zoneInfos[state_.currentZoneIdx];
-        for (int i = 0; i < state_.signsOfZones[state_.currentZoneIdx].size(); ++i)
-        {
-            entity::Sign& sign = state_.signsOfZones[state_.currentZoneIdx][i];
-            if (sign.GetInteractRange().intersects(state_.player.GetInteractRange()))
-            {
-                const bool isEnglish = global::setting::GetLang() == global::setting::Lang::ENG;
-                auto* const textGen = global::GetTextGen();
-                auto prevAlignment = textGen->alignment();
-                auto prevPalette = textGen->palette_item();
-                textGen->set_alignment(bn::sprite_text_generator::alignment_type::CENTER);
-                textGen->set_palette_item(bn::sprite_palette_items::pal_sign_text);
-                auto generateText = [&](bn::span<const bn::string_view> rawMsgs) {
-                    using helper::math::operator*;
-                    const bool isMsgShownUp = state_.camera.position().y() < sign.GetPosition().y();
-                    if (isMsgShownUp)
-                    {
-                        for (int j = 0; j < rawMsgs.size(); ++j)
-                        {
-                            if (rawMsgs[j].empty())
-                                break;
-                            textGen->generate(0, -bn::display::height() / 2 + (j + 1) * RELATIVE_TOOLTIP_TEXT_POS_DY,
-                                              rawMsgs[j], tooltipTextSprites_);
-                        }
-                    }
-                    else
-                    {
-                        int lineCount = 0;
-                        for (int j = rawMsgs.size() - 1; j >= 0; --j)
-                        {
-                            if (rawMsgs[j].empty())
-                                continue;
-                            textGen->generate(0,
-                                              bn::display::height() / 2 - (++lineCount) * RELATIVE_TOOLTIP_TEXT_POS_DY,
-                                              rawMsgs[j], tooltipTextSprites_);
-                        }
-                    }
-                };
-
-                if (isEnglish)
-                    generateText(currentZoneInfo.signs[i].engMessage);
-                else
-                    generateText(currentZoneInfo.signs[i].korMessage);
-                textGen->set_alignment(prevAlignment);
-                textGen->set_palette_item(prevPalette);
-
-                collidedSign_ = &sign;
-                break;
-            }
-        }
+        RedrawSignMessages();
     }
 }
 

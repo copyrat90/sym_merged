@@ -12,16 +12,21 @@ namespace sym::game::stage
 
 struct StageInfo
 {
-    constexpr StageInfo(bn::string_view stageName_a, bn::string_view stageSubName_a,
+    constexpr StageInfo(bn::string_view stageNameEng_a, bn::string_view stageSubNameEng_a,
+                        bn::string_view stageNameKor_a, bn::string_view stageSubNameKor_a,
                         bool isPlayerGravityReversedByDefault_a, const bn::music_item& backgroundMusic_a,
                         const bn::span<const ZoneInfo> zoneInfos_a)
-        : stageName(stageName_a), stageSubName(stageSubName_a), backgroundMusic(backgroundMusic_a),
+        : stageNameEng(stageNameEng_a), stageSubNameEng(stageSubNameEng_a), stageNameKor(stageNameKor_a),
+          stageSubNameKor(stageSubNameKor_a), backgroundMusic(backgroundMusic_a),
           isPlayerGravityReversedByDefault(isPlayerGravityReversedByDefault_a), zoneInfos(zoneInfos_a)
     {
     }
 
-    bn::string_view stageName;
-    bn::string_view stageSubName;
+    bn::string_view stageNameEng;
+    bn::string_view stageSubNameEng;
+    bn::string_view stageNameKor;
+    bn::string_view stageSubNameKor;
+
     const bn::optional<const bn::music_item> backgroundMusic;
 
     bool isPlayerGravityReversedByDefault;

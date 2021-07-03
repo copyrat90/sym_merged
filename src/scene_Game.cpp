@@ -56,10 +56,18 @@ Game::Game(scene::Param& sceneParam)
                               {},
                               {},
                               {},
+                              bn::nullopt,
+                              {},
+                              {},
+                              {},
+                              {},
+                              {},
+                              {},
                               false,
                               helper::tilemap::TileInfo(state_.currentMapBg),
                               -1,
                               -1,
+                              {state_},
                               {state_},
                               {state_},
                               {state_},
@@ -114,6 +122,46 @@ Game::Game(scene::Param& sceneParam)
             state_.signsOfZones[i].emplace_back(signInfo.position);
     }
 
+    // Copy initial state of current zone
+    // to copy back when restarting current zone.
+    state_.initialSymbolsOfCurrentZone.clear();
+    state_.initialDoorsOfCurrentZone.clear();
+    state_.initialShuttersOfCurrentZone.clear();
+    state_.initialHoverButtonsOfCurrentZone.clear();
+    state_.initialPressureButtonsOfCurrentZone.clear();
+
+    for (const auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
+    {
+        state_.initialSymbolsOfCurrentZone.push_back(symbol);
+        state_.initialSymbolsOfCurrentZone.back().FreeGraphicResource();
+    }
+    // state_.initialSymbolsInHandsOnCurrentZone[0] = state_.symbolsInHands[0];
+    // if (state_.initialSymbolsInHandsOnCurrentZone[0])
+    //     state_.initialSymbolsInHandsOnCurrentZone[0]->FreeGraphicResource();
+    // state_.initialSymbolsInHandsOnCurrentZone[1] = state_.symbolsInHands[1];
+    // if (state_.initialSymbolsInHandsOnCurrentZone[1])
+    //     state_.initialSymbolsInHandsOnCurrentZone[1]->FreeGraphicResource();
+    for (const auto& door : state_.doorsOfZones[state_.currentZoneIdx])
+    {
+        state_.initialDoorsOfCurrentZone.push_back(door);
+        // state_.initialDoorsOfCurrentZone.back().FreeGraphicResource();
+    }
+    for (const auto& shutter : state_.shuttersOfZones[state_.currentZoneIdx])
+    {
+        state_.initialShuttersOfCurrentZone.push_back(shutter);
+        // state_.initialShuttersOfCurrentZone.back().FreeGraphicResource();
+    }
+    for (const auto& button : state_.hoverButtonsOfZones[state_.currentZoneIdx])
+    {
+        state_.initialHoverButtonsOfCurrentZone.push_back(button);
+        // state_.initialHoverButtonsOfCurrentZone.back().FreeGraphicResource();
+    }
+    for (const auto& button : state_.pressureButtonsOfZones[state_.currentZoneIdx])
+    {
+        state_.initialPressureButtonsOfCurrentZone.push_back(button);
+        // state_.initialPressureButtonsOfCurrentZone.back().FreeGraphicResource();
+    }
+
     // Allocate all graphics within current zone
     state_.player.AllocateGraphicResource(constant::PLAYER_Z_ORDER);
     state_.player.SetCamera(state_.camera);
@@ -164,30 +212,37 @@ Game::~Game()
 bn::optional<Type> Game::Update()
 {
     // TODO
-    state_.keyPress.Update();
-    state_.triggerInteraction.Update();
-    state_.physicsMovement.Update();
-    state_.zoneSwitch.Update();
+    if (!state_.isPaused)
+    {
+        state_.keyPress.Update();
+        state_.triggerInteraction.Update();
+        state_.physicsMovement.Update();
+        state_.zoneSwitch.Update();
+    }
     state_.transition.Update();
+    state_.menu.Update();
 
-    // Update sprite graphics
-    state_.player.Update();
-    for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
-        symbol.Update();
-    for (auto& door : state_.doorsOfZones[state_.currentZoneIdx])
-        door.Update();
-    for (auto& shutter : state_.shuttersOfZones[state_.currentZoneIdx])
-        shutter.Update();
-    for (auto& hoverButton : state_.hoverButtonsOfZones[state_.currentZoneIdx])
-        hoverButton.Update();
-    for (auto& pressureButton : state_.pressureButtonsOfZones[state_.currentZoneIdx])
-        pressureButton.Update();
+    if (!state_.isPaused)
+    {
+        // Update sprite graphics
+        state_.player.Update();
+        for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
+            symbol.Update();
+        for (auto& door : state_.doorsOfZones[state_.currentZoneIdx])
+            door.Update();
+        for (auto& shutter : state_.shuttersOfZones[state_.currentZoneIdx])
+            shutter.Update();
+        for (auto& hoverButton : state_.hoverButtonsOfZones[state_.currentZoneIdx])
+            hoverButton.Update();
+        for (auto& pressureButton : state_.pressureButtonsOfZones[state_.currentZoneIdx])
+            pressureButton.Update();
 
-    // Move camera (follows player)
-    state_.camera.set_position(state_.player.GetPosition());
-    helper::tilemap::SnapCameraToZoneBoundary(state_.camera, state_.zoneBoundary);
+        // Move camera (follows player)
+        state_.camera.set_position(state_.player.GetPosition());
+        helper::tilemap::SnapCameraToZoneBoundary(state_.camera, state_.zoneBoundary);
+    }
 
-    return bn::nullopt;
+    return state_.nextScene;
 }
 
 void Game::SetCurrentZone_(int zoneIdx)

@@ -21,8 +21,8 @@ public:
     Door(Door&& other) = delete;
     Door& operator=(Door&& other) = delete;
 
-    Door(const Door& other) = delete;
-    Door& operator=(const Door& other) = delete;
+    Door(const Door& other) = default;
+    Door& operator=(const Door& other) = default;
 
     void AllocateGraphicResource(int z_order) final;
     void FreeGraphicResource() final;

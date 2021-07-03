@@ -24,15 +24,24 @@ public:
 
     void Update() final;
 
+    /**
+     * @brief Init transition
+     *
+     * @param `nextZone` the zone to switch
+     * @param `isRestartCurrentZone` indicate if it is restart current zone
+     *
+     * @return `true` if new transition started.
+     * @return `false` if there is another transition ongoing.
+     */
+    bool InitTransition(ExitInfo nextZone, bool isRestartCurrentZone = false);
+
 private:
     bn::optional<ExitInfo> nextZone_;
-
-    void InitTransition_();
 
     bn::optional<ExitInfo> GetNextZone_();
 
     // wait between phase event handler
-    void SwitchToNextZone_();
+    void SwitchToNextZone_(bool isRestartCurrentZone);
 };
 
 } // namespace sym::game::system

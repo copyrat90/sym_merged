@@ -63,19 +63,6 @@ int main()
                 resourceUsageSprites.clear();
             }
         }
-        if (bn::keypad::start_pressed())
-        {
-            using namespace sym::global::setting;
-            if (GetLang() == Lang::ENG)
-                SetLang(Lang::KOR);
-            else
-                SetLang(Lang::ENG);
-
-            // if (bn::music::paused())
-            //     bn::music::resume();
-            // else
-            //     bn::music::pause();
-        }
         if (isDebugViewOn && --resourceUsageUpdateCountDown <= 0)
         {
             resourceUsageSprites.clear();
@@ -126,14 +113,14 @@ int main()
                 scene.reset();
                 scene.reset(new scene::Title(sceneParam));
                 break;
+            case scene::Type::GAME:
+                scene.reset();
+                scene.reset(new scene::Game(sceneParam));
+                break;
             // TODO: Add other scenes
-            // case SceneType::GAME:
+            // case scene::Type::LICENSE:
             //     scene.reset();
-            //     scene.reset(new sym::scene::Game);
-            //     break;
-            // case SceneType::LICENSE:
-            //     scene.reset();
-            //     scene.reset(new sym::scene::License);
+            //     scene.reset(new scene::License(sceneParam));
             //     break;
             default:
                 BN_ERROR("Unknown SceneType: ", (int)*nextScene);

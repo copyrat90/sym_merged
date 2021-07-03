@@ -17,8 +17,8 @@ public:
     IOpenableEntity(IOpenableEntity&& other) = delete;
     IOpenableEntity& operator=(IOpenableEntity&& other) = delete;
 
-    IOpenableEntity(const IOpenableEntity& other) = delete;
-    IOpenableEntity& operator=(const IOpenableEntity& other) = delete;
+    IOpenableEntity(const IOpenableEntity& other) = default;
+    IOpenableEntity& operator=(const IOpenableEntity& other) = default;
 
     void AllocateGraphicResource(int z_order) override;
 

@@ -17,8 +17,8 @@ public:
     IPhysicsEntity(IPhysicsEntity&& other);
     IPhysicsEntity& operator=(IPhysicsEntity&& other);
 
-    IPhysicsEntity(const IPhysicsEntity& other) = delete;
-    IPhysicsEntity& operator=(const IPhysicsEntity& other) = delete;
+    IPhysicsEntity(const IPhysicsEntity& other) = default;
+    IPhysicsEntity& operator=(const IPhysicsEntity& other) = default;
 
     /**
      * @brief Get the physics collider.

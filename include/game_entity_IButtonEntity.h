@@ -17,8 +17,8 @@ public:
     IButtonEntity(IButtonEntity&& other);
     IButtonEntity& operator=(IButtonEntity&& other);
 
-    IButtonEntity(const IButtonEntity& other) = delete;
-    IButtonEntity& operator=(const IButtonEntity& other) = delete;
+    IButtonEntity(const IButtonEntity& other) = default;
+    IButtonEntity& operator=(const IButtonEntity& other) = default;
 
     [[nodiscard]] bool GetButtonOn() const;
     // void SetButtonOn(bool isButtonOn);

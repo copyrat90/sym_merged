@@ -16,8 +16,8 @@ public:
     INumberTextEntity(INumberTextEntity&& other);
     INumberTextEntity& operator=(INumberTextEntity&& other);
 
-    INumberTextEntity(const INumberTextEntity& other) = delete;
-    INumberTextEntity& operator=(const INumberTextEntity& other) = delete;
+    INumberTextEntity(const INumberTextEntity& other) = default;
+    INumberTextEntity& operator=(const INumberTextEntity& other) = default;
 
     void FreeGraphicResource() override;
     void AllocateGraphicResource(int z_order) override;

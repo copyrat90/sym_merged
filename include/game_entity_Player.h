@@ -17,8 +17,8 @@ public:
     Player(Player&& other) = delete;
     Player& operator=(Player&& other) = delete;
 
-    Player(const Player& other) = delete;
-    Player& operator=(const Player& other) = delete;
+    Player(const Player& other) = default;
+    Player& operator=(const Player& other) = default;
 
     void FreeGraphicResource() final;
     void AllocateGraphicResource(int z_order) final;

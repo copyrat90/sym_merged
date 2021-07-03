@@ -16,8 +16,8 @@ public:
     PressureButton(PressureButton&& other) = delete;
     PressureButton& operator=(PressureButton&& other) = delete;
 
-    PressureButton(const PressureButton& other) = delete;
-    PressureButton& operator=(const PressureButton& other) = delete;
+    PressureButton(const PressureButton& other) = default;
+    PressureButton& operator=(const PressureButton& other) = default;
 
     void AllocateGraphicResource(int z_order) final;
     void FreeGraphicResource() final;

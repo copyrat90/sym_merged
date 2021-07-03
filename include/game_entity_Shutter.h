@@ -21,8 +21,8 @@ public:
     Shutter(Shutter&& other) = delete;
     Shutter& operator=(Shutter&& other) = delete;
 
-    Shutter(const Shutter& other) = delete;
-    Shutter& operator=(const Shutter& other) = delete;
+    Shutter(const Shutter& other) = default;
+    Shutter& operator=(const Shutter& other) = default;
 
     void AllocateGraphicResource(int z_order) final;
     void FreeGraphicResource() final;

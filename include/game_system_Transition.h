@@ -36,7 +36,9 @@ public:
         PLAYER = 2,
         SYMBOLS_IN_HANDS = 4,
         SPRITES_OF_ZONES = 8,
-        ALL = MAP_BG | PLAYER | SYMBOLS_IN_HANDS | SPRITES_OF_ZONES
+        SIGN_MESSAGES = 16,
+        MENU_OPTIONS = 32, // fake one, no functionality
+        ALL = MAP_BG | PLAYER | SYMBOLS_IN_HANDS | SPRITES_OF_ZONES | SIGN_MESSAGES | MENU_OPTIONS
     };
 
     Transition(scene::GameState& state);
@@ -130,6 +132,12 @@ private:
 [[nodiscard]] constexpr bool operator!(Transition::AppliedItems item)
 {
     return item == Transition::AppliedItems::NONE;
+}
+
+[[nodiscard]] constexpr Transition::AppliedItems operator~(Transition::AppliedItems item)
+{
+    return static_cast<Transition::AppliedItems>((static_cast<int>(Transition::AppliedItems::ALL)) &
+                                                 (~static_cast<int>(item)));
 }
 
 } // namespace sym::game::system

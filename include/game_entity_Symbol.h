@@ -36,8 +36,8 @@ public:
     Symbol(Symbol&& other);
     Symbol& operator=(Symbol&& other);
 
-    Symbol(const Symbol& other) = delete;
-    Symbol& operator=(const Symbol& other) = delete;
+    Symbol(const Symbol& other) = default;
+    Symbol& operator=(const Symbol& other) = default;
 
     void AllocateGraphicResource(int z_order) final;
 

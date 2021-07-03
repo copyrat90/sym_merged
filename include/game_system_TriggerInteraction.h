@@ -30,6 +30,10 @@ public:
     void ResetLKeyPress();
     void ResetRKeyPress();
 
+    bn::vector<bn::sprite_ptr, 20>& GetSignMessageTextSprites();
+
+    void RedrawSignMessages();
+
 private:
     enum class EntityType
     {

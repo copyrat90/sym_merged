@@ -463,29 +463,41 @@ void PhysicsMovement::PlayerKeyboardHandle_()
     };
 
     // left symbol ability: Press
-    if (!mergeOngoing && state_.triggerInteraction.IsLKeyPressLasts() && state_.symbolsInHands[0] &&
-        state_.symbolsInHands[0]->IsComplexSymbol())
+    if (!mergeOngoing && state_.triggerInteraction.IsLKeyPressLasts() && state_.symbolsInHands[0])
 
     {
-        if (state_.symbolsInHands[0]->GetAbilityState() == entity::Symbol::AbilityState::READY_TO_USE)
+        if (state_.symbolsInHands[0]->IsComplexSymbol())
         {
-            symbolAbilityPress(*state_.symbolsInHands[0]);
+            if (state_.symbolsInHands[0]->GetAbilityState() == entity::Symbol::AbilityState::READY_TO_USE)
+            {
+                symbolAbilityPress(*state_.symbolsInHands[0]);
+            }
+            else if (state_.symbolsInHands[0]->GetAbilityState() == entity::Symbol::AbilityState::NOT_READY)
+            {
+                bn::sound_items::sfx_error.play(constant::volume::sfx_error);
+            }
         }
-        else if (state_.symbolsInHands[0]->GetAbilityState() == entity::Symbol::AbilityState::NOT_READY)
+        else
         {
             bn::sound_items::sfx_error.play(constant::volume::sfx_error);
         }
         state_.triggerInteraction.ResetLKeyPress();
     }
     // right symbol ability: Press
-    if (!mergeOngoing && state_.triggerInteraction.IsRKeyPressLasts() && state_.symbolsInHands[1] &&
-        state_.symbolsInHands[1]->IsComplexSymbol())
+    if (!mergeOngoing && state_.triggerInteraction.IsRKeyPressLasts() && state_.symbolsInHands[1])
     {
-        if (state_.symbolsInHands[1]->GetAbilityState() == entity::Symbol::AbilityState::READY_TO_USE)
+        if (state_.symbolsInHands[1]->IsComplexSymbol())
         {
-            symbolAbilityPress(*state_.symbolsInHands[1]);
+            if (state_.symbolsInHands[1]->GetAbilityState() == entity::Symbol::AbilityState::READY_TO_USE)
+            {
+                symbolAbilityPress(*state_.symbolsInHands[1]);
+            }
+            else if (state_.symbolsInHands[1]->GetAbilityState() == entity::Symbol::AbilityState::NOT_READY)
+            {
+                bn::sound_items::sfx_error.play(constant::volume::sfx_error);
+            }
         }
-        else if (state_.symbolsInHands[1]->GetAbilityState() == entity::Symbol::AbilityState::NOT_READY)
+        else
         {
             bn::sound_items::sfx_error.play(constant::volume::sfx_error);
         }
