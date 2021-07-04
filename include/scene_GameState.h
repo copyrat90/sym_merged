@@ -65,7 +65,7 @@ struct GameState
 
     // store initial state of current zone
     // to copy back when restarting current zone.
-    bn::optional<game::stage::ZoneInfo::ExitInfo> initialExitInfo;
+    game::stage::ZoneInfo::ExitInfo initialExitInfo;
     bn::list<game::entity::Symbol, STAGE_SYMBOL_MAX_COUNT> initialSymbolsOfCurrentZone;
     bn::array<bn::optional<game::entity::Symbol>, 2> initialSymbolsInHandsOnCurrentZone;
     bn::vector<game::entity::Door, ZONE_DOOR_MAX_COUNT> initialDoorsOfCurrentZone;

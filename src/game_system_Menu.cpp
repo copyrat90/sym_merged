@@ -67,10 +67,7 @@ void Menu::Update()
                 TogglePause_();
                 break;
             case MenuOption::RESTART_ZONE:
-                if (state_.initialExitInfo)
-                    RestartZone_();
-                else
-                    RestartStage_();
+                RestartZone_();
                 break;
             case MenuOption::RESTART_STAGE:
                 RestartStage_();
@@ -209,12 +206,11 @@ void Menu::AdvanceCursorPointingOption_(int amount)
 
 void Menu::RestartZone_()
 {
-    BN_ASSERT(state_.initialExitInfo, "Restart zone called without exiting zone even once");
     bn::sound_items::sfx_menu_select.play(constant::volume::sfx_menu_select);
     state_.transition.SetBlendingAppliedItems(Transition::AppliedItems::ALL);
     state_.transition.SetMosaicAppliedItems(Transition::AppliedItems::ALL);
     SetVisible_(false);
-    state_.zoneSwitch.InitTransition(*state_.initialExitInfo, true);
+    state_.zoneSwitch.InitTransition(state_.initialExitInfo, true);
     state_.isPaused = false;
 }
 

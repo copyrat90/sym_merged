@@ -56,7 +56,7 @@ Game::Game(scene::Param& sceneParam)
                               {},
                               {},
                               {},
-                              bn::nullopt,
+                              {{0, 0, 0, 0}, 0, 0},
                               {},
                               {},
                               {},
