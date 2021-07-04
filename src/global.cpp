@@ -6,7 +6,7 @@
 #include <bn_sram.h>
 #include <bn_sstream.h>
 #include <bn_string_view.h>
-#include <stdint.h>
+#include <cstdint>
 
 #include "constant.h"
 
@@ -21,10 +21,16 @@ namespace
 
 struct SramSave
 {
-    constexpr static char MAGIC_BYTES[8] = "SYM000";
+    constexpr static char MAGIC_BYTES[8] = "SYM001";
 
     char magicBytes[8];
     setting::Lang currentLang;
+
+    /**
+     * @brief Stores where you are now.
+     *
+     */
+    game::stage::Id currentStageId;
 
     /**
      * @brief Miscellaneous game flags.
@@ -34,7 +40,14 @@ struct SramSave
      *     1 : (reserved)
      *
      */
-    uint8_t flags;
+    uint32_t flags;
+
+    /**
+     * @brief Stores the cleared stage by flags.
+     * stored by `= (1 << game::stage::Id)`.
+     *
+     */
+    uint64_t clearedStages;
 
     /**
      * @brief Resets some save properties.
@@ -45,6 +58,10 @@ struct SramSave
     void Init()
     {
         CopyMagicBytes();
+        currentLang = setting::Lang::ENG;
+        currentStageId = game::stage::Id::W1_S0;
+        flags = 0;
+        clearedStages = 0;
     }
 
     /**
@@ -204,7 +221,7 @@ unsigned GetRandomNumber()
     return rng->get();
 }
 
-bool IsSeenOpening()
+bool GetSeenOpening()
 {
     return sramSave_.flags & (1 << 0);
 }
@@ -212,6 +229,28 @@ bool IsSeenOpening()
 void SetSeenOpening()
 {
     sramSave_.flags |= (1 << 0);
+    sramSave_.Write();
+}
+
+game::stage::Id GetCurrentStage()
+{
+    return sramSave_.currentStageId;
+}
+
+void SetCurrentStage(game::stage::Id stage)
+{
+    sramSave_.currentStageId = stage;
+    sramSave_.Write();
+}
+
+bool GetStageCleared(game::stage::Id stage)
+{
+    return (sramSave_.clearedStages & (1 << static_cast<int>(stage)));
+}
+
+void SetStageCleared(game::stage::Id stage)
+{
+    sramSave_.clearedStages |= (1 << static_cast<int>(stage));
     sramSave_.Write();
 }
 

@@ -25,6 +25,7 @@ inline constexpr int DOOR_Z_ORDER = 10;
 inline constexpr int BUTTON_Z_ORDER = 5;
 inline constexpr int SIGN_Z_ORDER = 7;
 inline constexpr int MENU_Z_ORDER = -100;
+inline constexpr int STAGE_NAME_SPLASH_Z_ORDER = -50;
 
 namespace volume
 {

@@ -236,6 +236,7 @@ void Menu::ChangeLanguage_()
     using namespace global::setting;
     SetLang(GetLang() == Lang::ENG ? Lang::KOR : Lang::ENG);
     state_.triggerInteraction.RedrawSignMessages();
+    state_.stageNameSplash.RedrawSprites();
     RedrawMenuTextSprites_();
     UpdateCursorSpritePosition_();
 }

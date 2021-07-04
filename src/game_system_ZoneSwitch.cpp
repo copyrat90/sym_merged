@@ -70,6 +70,8 @@ void ZoneSwitch::SwitchToNextZone_(bool isRestartCurrentZone)
     BN_ASSERT(nextZone_, "SwitchToNextZone_() called when there is no nextZone_");
     const int prevZoneIdx = state_.currentZoneIdx;
 
+    state_.stageNameSplash.Destroy();
+
     if ((prevZoneIdx != nextZone_->destinationZoneIndex) || isRestartCurrentZone)
     {
         // unload prev zone graphics

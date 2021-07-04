@@ -101,7 +101,7 @@ void Title::HandleStartAPress_()
         switch (cursorPointingOption_)
         {
         case MenuOption::START:
-            if (!global::IsSeenOpening())
+            if (!global::GetSeenOpening())
                 reservedNextScene_ = scene::Type::OPENING;
             else
                 reservedNextScene_ = scene::Type::SELECT_STAGE;

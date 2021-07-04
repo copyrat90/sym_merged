@@ -73,6 +73,7 @@ Game::Game(scene::Param& sceneParam)
                               {state_},
                               {state_},
                               {state_},
+                              {state_},
                           }
 {
     // Set bg
@@ -218,6 +219,7 @@ bn::optional<Type> Game::Update()
         state_.triggerInteraction.Update();
         state_.physicsMovement.Update();
         state_.zoneSwitch.Update();
+        state_.stageNameSplash.Update();
     }
     state_.transition.Update();
     state_.menu.Update();

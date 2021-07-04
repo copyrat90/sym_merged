@@ -30,7 +30,7 @@ public:
 private:
     MenuOption cursorPointingOption_ = MenuOption::CONTINUE;
     bn::array<bn::sprite_ptr, 2> cursorSprites_;
-    bn::array<bn::vector<bn::sprite_ptr, 7>, 2> stageNameSprites_;
+    bn::array<bn::vector<bn::sprite_ptr, 8>, 2> stageNameSprites_;
     bn::array<bn::vector<bn::sprite_ptr, 5>, MENU_OPTION_TOTAL_COUNT> menuOptionSprites_;
 
     void AdvanceCursorPointingOption_(int amount);

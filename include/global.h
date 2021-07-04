@@ -1,7 +1,10 @@
 #pragma once
 
+#include <cstdint>
+
 #include <bn_sprite_text_generator.h>
-#include <stdint.h>
+
+#include "game_stage_Id.h"
 
 namespace sym::global
 {
@@ -41,7 +44,13 @@ bn::sprite_text_generator* GetTextGen();
 
 unsigned GetRandomNumber();
 
-bool IsSeenOpening();
+bool GetSeenOpening();
 void SetSeenOpening();
+
+game::stage::Id GetCurrentStage();
+void SetCurrentStage(game::stage::Id stage);
+
+bool GetStageCleared(game::stage::Id stage);
+void SetStageCleared(game::stage::Id stage);
 
 } // namespace sym::global
