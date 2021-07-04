@@ -254,8 +254,9 @@ void TriggerInteraction::InteractPressureButtonsAndEntities_()
         // player & symbol collision check
         const bool prevButtonOn = button.GetButtonOn();
         bool currentButtonOn = false;
+        auto requiredSymbolType = button.GetRequiredSymbolType();
 
-        if (button.GetInteractRange().intersects(playerCollider))
+        if (button.GetInteractRange().intersects(playerCollider) && !requiredSymbolType)
         {
             currentButtonOn = true;
         }
@@ -263,6 +264,9 @@ void TriggerInteraction::InteractPressureButtonsAndEntities_()
         {
             for (const auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
             {
+                if (requiredSymbolType && (*requiredSymbolType != symbol.GetType()))
+                    continue;
+
                 if (button.GetInteractRange().intersects(symbol.GetPhysicsCollider()))
                 {
                     currentButtonOn = true;

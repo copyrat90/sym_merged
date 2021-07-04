@@ -35,7 +35,7 @@ int main()
 
     scene::Param sceneParam;
     // Test
-    sceneParam.SetCurrentStage(game::stage::Id::W1_S0);
+    sceneParam.SetCurrentStage(game::stage::Id::W0_S0);
     bn::unique_ptr<scene::IScene> scene(new scene::Game(sceneParam));
     // bn::unique_ptr<scene::IScene> scene(new scene::Splash(sceneParam));
     bn::optional<scene::Type> nextScene;

@@ -4,6 +4,7 @@
 #include <bn_assert.h>
 #include <bn_display.h>
 #include <bn_fixed_rect.h>
+#include <bn_optional.h>
 #include <bn_span.h>
 #include <bn_string_view.h>
 
@@ -49,6 +50,8 @@ struct ZoneInfo
         bn::fixed_point position;
         bool isOnByDefault;
         int textSpriteNumber;
+        bool isVerticallyReversed;
+        bn::optional<entity::Symbol::Type> requiredSymbolType;
     };
 
     struct SignInfo

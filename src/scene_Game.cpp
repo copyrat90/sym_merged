@@ -118,7 +118,8 @@ Game::Game(scene::Param& sceneParam)
                                                        hoverButtonInfo.isOnByDefault);
         for (const auto& pressureButtonInfo : zoneInfo.pressureButtons)
             state_.pressureButtonsOfZones[i].emplace_back(
-                pressureButtonInfo.position, pressureButtonInfo.textSpriteNumber, pressureButtonInfo.isOnByDefault);
+                pressureButtonInfo.position, pressureButtonInfo.textSpriteNumber, pressureButtonInfo.isOnByDefault,
+                pressureButtonInfo.isVerticallyReversed, pressureButtonInfo.requiredSymbolType);
         for (const auto& signInfo : zoneInfo.signs)
             state_.signsOfZones[i].emplace_back(signInfo.position);
     }

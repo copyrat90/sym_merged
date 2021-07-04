@@ -36,13 +36,17 @@ constexpr ZoneInfo::ShutterInfo Z0_shutterInfos_[] = {
 };
 
 constexpr ZoneInfo::ButtonInfo Z0_hoverButtonInfos_[] = {
-    {{180 - MAP_DIMENSIONS[0].width() / 2, 974 - MAP_DIMENSIONS[0].height() / 2}, false, 0},
-    {{205 - MAP_DIMENSIONS[0].width() / 2, 870 - MAP_DIMENSIONS[0].height() / 2}, false, 2},
+    {{180 - MAP_DIMENSIONS[0].width() / 2, 974 - MAP_DIMENSIONS[0].height() / 2}, false, 0, false, bn::nullopt},
+    {{205 - MAP_DIMENSIONS[0].width() / 2, 870 - MAP_DIMENSIONS[0].height() / 2}, false, 2, false, bn::nullopt},
 };
 
 constexpr ZoneInfo::ButtonInfo Z0_pressureButtonInfos_[] = {
-    {{257 - MAP_DIMENSIONS[0].width() / 2, 856 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
-    {{210 - MAP_DIMENSIONS[0].width() / 2, 936 - MAP_DIMENSIONS[0].height() / 2}, false, 3},
+    {{257 - MAP_DIMENSIONS[0].width() / 2, 856 - MAP_DIMENSIONS[0].height() / 2}, false, 1, false, bn::nullopt},
+    {{210 - MAP_DIMENSIONS[0].width() / 2, 920 - MAP_DIMENSIONS[0].height() / 2},
+     false,
+     3,
+     true,                       // test
+     entity::Symbol::Type::XOR}, // test
 };
 
 constexpr bn::span<ZoneInfo::SignInfo> Z0_signInfos_ = {
@@ -78,7 +82,7 @@ constexpr bn::span<ZoneInfo::ButtonInfo> Z1_hoverButtonInfos_ = {
 };
 
 constexpr ZoneInfo::ButtonInfo Z1_pressureButtonInfos_[] = {
-    {{136 - MAP_DIMENSIONS[0].width() / 2, 984 - MAP_DIMENSIONS[0].height() / 2}, false, 3},
+    {{136 - MAP_DIMENSIONS[0].width() / 2, 984 - MAP_DIMENSIONS[0].height() / 2}, false, 3, false, bn::nullopt},
 };
 
 constexpr bn::array<const bn::string_view, 1> Z1_signTexts_English[] = {

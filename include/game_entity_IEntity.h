@@ -50,7 +50,7 @@ public:
      * Absolute coordinate.
      *
      */
-    bn::fixed_rect GetInteractRange() const;
+    virtual bn::fixed_rect GetInteractRange() const;
 
     virtual void FreeGraphicResource();
     virtual void AllocateGraphicResource(int z_order);
