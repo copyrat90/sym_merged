@@ -138,6 +138,9 @@ void StageNameSplash::Destroy()
 
 void StageNameSplash::RedrawSprites()
 {
+    if (subNameState_ == State::DONE)
+        return;
+
     using namespace global;
     const bool isEnglish = setting::GetLang() == setting::Lang::ENG;
     const bn::string_view& stageName = isEnglish ? state_.stageInfo.stageNameEng : state_.stageInfo.stageNameKor;
