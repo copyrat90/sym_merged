@@ -8,6 +8,8 @@
 #include "helper_sprite.h"
 #include "scene_GameState.h"
 
+#include "bn_sprite_palette_items_pal_menu_header.h"
+
 namespace sym::game::system
 {
 
@@ -150,7 +152,10 @@ void StageNameSplash::RedrawSprites()
     nameSprites_.clear();
     subNameSprites_.clear();
     auto* const textGen = GetTextGen();
+    auto prevPal = textGen->palette_item();
+    textGen->set_palette_item(bn::sprite_palette_items::pal_menu_header);
     textGen->generate(namePosX_, NAME_POS_Y, stageName, nameSprites_);
+    textGen->set_palette_item(prevPal);
     textGen->generate(subNamePosX_, SUB_NAME_POS_Y, stageSubName, subNameSprites_);
     for (auto& sprite : nameSprites_)
     {
