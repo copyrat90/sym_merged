@@ -12,12 +12,12 @@ namespace sym::font
 namespace
 {
 
-inline constexpr bn::string_view variable_8x16_m6x11_utf8_chars[] = {"언", "어"};
+inline constexpr bn::string_view variable_8x16_m6x11_utf8_chars[] = {"★", "언", "어"};
 
 inline constexpr int8_t variable_8x16_m6x11_widths[] = {
     6, 3, 7, 8, 8, 8, 8, 3, 6, 6, 7, 8, 3, 8, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 3, 3, 7, 8, 7, 8, 8,
     8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 6, 8, 6, 8, 8, 3, 8,
-    8, 8, 8, 8, 8, 8, 8, 3, 6, 8, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 3, 7, 8, 8, 8};
+    8, 8, 8, 8, 8, 8, 8, 3, 6, 8, 3, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 7, 3, 7, 8, 8, 8, 8};
 
 } // anonymous namespace
 

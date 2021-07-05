@@ -39,6 +39,7 @@ inline constexpr bn::fixed music_autang = 0.125;
 inline constexpr bn::fixed music_fruity_radioactivity = 0.15;
 inline constexpr bn::fixed music_rene = 0.2;
 
+inline constexpr bn::fixed sfx_splash_intro = SFX_DEFAULT;
 inline constexpr bn::fixed sfx_menu_open = SFX_DEFAULT;
 inline constexpr bn::fixed sfx_menu_cursor = SFX_DEFAULT;
 inline constexpr bn::fixed sfx_menu_select = SFX_DEFAULT;

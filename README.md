@@ -1,4 +1,4 @@
-# sym_merged
+# Symbol★Merged
 
 A puzzle platformer game for the [GBA](https://en.wikipedia.org/wiki/Game_Boy_Advance) where you can merge items(symbols) in hands.
 
