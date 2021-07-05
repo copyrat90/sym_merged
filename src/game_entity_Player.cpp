@@ -68,6 +68,25 @@ constexpr bn::fixed_point RIGHT_SYMBOL_MERGE_POS_DELTA = {
     (RIGHT_SYMBOL_MERGE_END_POS.x() - RIGHT_SYMBOL_MERGE_START_POS.x()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT,
     (RIGHT_SYMBOL_MERGE_END_POS.y() - RIGHT_SYMBOL_MERGE_START_POS.y()) / MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT};
 
+constexpr bn::fixed_point LEFT_SYMBOL_MERGE_END_POS_REVERSED = {LEFT_SYMBOL_MERGE_END_POS.x(),
+                                                                -LEFT_SYMBOL_MERGE_END_POS.y()};
+constexpr bn::fixed_point RIGHT_SYMBOL_MERGE_END_POS_REVERSED = {RIGHT_SYMBOL_MERGE_END_POS.x(),
+                                                                 -RIGHT_SYMBOL_MERGE_END_POS.y()};
+constexpr bn::fixed_point LEFT_SYMBOL_MERGE_START_POS_REVERSED = {LEFT_SYMBOL_MERGE_START_POS.x(),
+                                                                  -LEFT_SYMBOL_MERGE_START_POS.y()};
+constexpr bn::fixed_point RIGHT_SYMBOL_MERGE_START_POS_REVERSED = {RIGHT_SYMBOL_MERGE_START_POS.x(),
+                                                                   -RIGHT_SYMBOL_MERGE_START_POS.y()};
+constexpr bn::fixed_point LEFT_SYMBOL_MERGE_POS_DELTA_REVERSED = {
+    (LEFT_SYMBOL_MERGE_END_POS_REVERSED.x() - LEFT_SYMBOL_MERGE_START_POS_REVERSED.x()) /
+        MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT,
+    (LEFT_SYMBOL_MERGE_END_POS_REVERSED.y() - LEFT_SYMBOL_MERGE_START_POS_REVERSED.y()) /
+        MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT};
+constexpr bn::fixed_point RIGHT_SYMBOL_MERGE_POS_DELTA_REVERSED = {
+    (RIGHT_SYMBOL_MERGE_END_POS_REVERSED.x() - RIGHT_SYMBOL_MERGE_START_POS_REVERSED.x()) /
+        MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT,
+    (RIGHT_SYMBOL_MERGE_END_POS_REVERSED.y() - RIGHT_SYMBOL_MERGE_START_POS_REVERSED.y()) /
+        MERGE_SYMBOL_POS_MOVE_UPDATE_COUNT};
+
 constexpr int DIVERGE_RESET_UPDATE_COUNT = 2;
 
 } // namespace
@@ -257,7 +276,12 @@ bn::fixed_point Player::GetLeftSymbolPosition() const
     if (animationState_ == AnimationState::MERGE_START || animationState_ == AnimationState::MERGE_END)
     {
         using helper::math::operator*;
-        return resultPos + LEFT_SYMBOL_MERGE_START_POS + mergePosDeltaCounter_ * LEFT_SYMBOL_MERGE_POS_DELTA + diverge_;
+        if (isGravityReversed_)
+            return resultPos + LEFT_SYMBOL_MERGE_START_POS_REVERSED +
+                   mergePosDeltaCounter_ * LEFT_SYMBOL_MERGE_POS_DELTA_REVERSED + diverge_;
+        else
+            return resultPos + LEFT_SYMBOL_MERGE_START_POS + mergePosDeltaCounter_ * LEFT_SYMBOL_MERGE_POS_DELTA +
+                   diverge_;
     }
     resultPos.set_x(resultPos.x() + RELATIVE_LEFT_SYMBOL_X_POS);
     const bool leftIsFront = GetHorizontalFlip();
@@ -272,8 +296,12 @@ bn::fixed_point Player::GetRightSymbolPosition() const
     {
         using helper::math::operator*;
 
-        return resultPos + RIGHT_SYMBOL_MERGE_START_POS + mergePosDeltaCounter_ * RIGHT_SYMBOL_MERGE_POS_DELTA +
-               diverge_;
+        if (isGravityReversed_)
+            return resultPos + RIGHT_SYMBOL_MERGE_START_POS_REVERSED +
+                   mergePosDeltaCounter_ * RIGHT_SYMBOL_MERGE_POS_DELTA_REVERSED + diverge_;
+        else
+            return resultPos + RIGHT_SYMBOL_MERGE_START_POS + mergePosDeltaCounter_ * RIGHT_SYMBOL_MERGE_POS_DELTA +
+                   diverge_;
     }
     resultPos.set_x(resultPos.x() + RELATIVE_RIGHT_SYMBOL_X_POS);
     const bool rightIsFront = !GetHorizontalFlip();
