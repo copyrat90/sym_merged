@@ -40,7 +40,7 @@ struct SramSave
      *     1 : (reserved)
      *
      */
-    uint32_t flags;
+    uint64_t flags;
 
     /**
      * @brief Stores the cleared stage by flags.
@@ -48,6 +48,27 @@ struct SramSave
      *
      */
     uint64_t clearedStages;
+
+    /**
+     * @brief Stores whether or not the collectible item 1 is collected on each stage.
+     * stored by `= (1 << game::stage::Id)`.
+     *
+     */
+    uint64_t collectibleItem1OnStage;
+
+    /**
+     * @brief Stores whether or not the collectible item 2 is collected on each stage.
+     * stored by `= (1 << game::stage::Id)`.
+     *
+     */
+    uint64_t collectibleItem2OnStage;
+
+    /**
+     * @brief Stores whether or not the collectible item 3 is collected on each stage.
+     * stored by `= (1 << game::stage::Id)`.
+     *
+     */
+    uint64_t collectibleItem3OnStage;
 
     /**
      * @brief Resets some save properties.
@@ -62,6 +83,9 @@ struct SramSave
         currentStageId = game::stage::Id::W1_S0;
         flags = 0;
         clearedStages = 0;
+        collectibleItem1OnStage = 0;
+        collectibleItem2OnStage = 0;
+        collectibleItem3OnStage = 0;
     }
 
     /**
