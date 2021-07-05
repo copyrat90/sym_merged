@@ -47,7 +47,7 @@ private:
         RIGHT
     };
 
-    entity::Sign* collidedSign_ = nullptr;
+    bn::optional<int> collidedSignIdx_ = bn::nullopt;
     bn::vector<bn::sprite_ptr, 20> tooltipTextSprites_;
 
     [[nodiscard]] bn::pair<EntityType, Hand> GetNearestInteractableFromPlayer_(
@@ -63,6 +63,8 @@ private:
     void UpdateKeyLastingCount_();
     void ToggleOpenedHoverButtonAssociatedOpenables_(int hoverButtonIdx);
     void ToggleOpenedPressureButtonAssociatedOpenables_(int pressureButtonIdx);
+
+    void DrawSignMessages_(int signIdx);
 };
 
 } // namespace sym::game::system
