@@ -59,10 +59,10 @@ private:
     void HandleUpDownPress_();
 
     /**
-     * @brief Handle Start or A press by setting reservedNextScene_
+     * @brief Handle A press by setting reservedNextScene_
      *
      */
-    void HandleStartAPress_();
+    void HandleAPress_();
 
     /**
      * @brief Advance cursorPointingOption_

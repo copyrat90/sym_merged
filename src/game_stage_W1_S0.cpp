@@ -42,18 +42,18 @@ constexpr bn::span<ZoneInfo::ButtonInfo> Z0_pressureButtonInfos_ = {
 
 };
 
-constexpr bn::array<bn::string_view, 2> Z0_signTexts_English[] = {
+constexpr bn::array<bn::string_view, 3> Z0_signTexts_English[] = {
     {"Arrow: Move"},
     {"A: Jump"},
-    {"L/R: Use Left/Right hand"},
-    {"L/R: Toggle a switch"},
+    {"L/R: Use Left/Right hand", "Doesn't do anything right now."},
+    {"L/R: Toggle a switch", "Try toggling a switch", "with the hand near to it."},
 };
 
-constexpr bn::array<bn::string_view, 2> Z0_signTexts_Korean[] = {
+constexpr bn::array<bn::string_view, 3> Z0_signTexts_Korean[] = {
     {"방향키:이동"},
     {"A:점프"},
-    {"L/R:왼/오른손 사용"},
-    {"L/R:스위치 누르기"},
+    {"L/R:왼/오른손 사용", "당장은 아무 효과도 없다."},
+    {"L/R:스위치 누르기", "스위치에 가까운 손으로", "작동시켜보자."},
 };
 
 constexpr ZoneInfo::SignInfo Z0_signInfos_[] = {
@@ -104,15 +104,15 @@ constexpr ZoneInfo::ButtonInfo Z1_pressureButtonInfos_[] = {
 constexpr bn::array<bn::string_view, 3> Z1_signTexts_English[] = {
     {"L/R: Pick up a symbol"},
     {"Switches open the doors", "with the same number."},
-    {"You can't use the hand", "holding a symbol.", "Try using the other hand."},
-    {"Down+L/R: Put the symbol down"},
+    {"You can't press a switch with", "the hand holding a symbol.", "Try using the other hand."},
+    {"Down+L/R: Put the symbol down", "Try putting a symbol on a button."},
 };
 
 constexpr bn::array<bn::string_view, 3> Z1_signTexts_Korean[] = {
     {"L/R:문양 집기"},
     {"스위치의 번호와 같은", "번호의 문이 열린다."},
     {"문양을 든 손으론", "스위치를 누르지 못한다.", "반대쪽 손을 사용하자."},
-    {"아래+L/R:내려놓기"},
+    {"아래+L/R:내려놓기", "버튼 위에 문양을 올려놓자."},
 };
 
 constexpr ZoneInfo::SignInfo Z1_signInfos_[] = {
@@ -167,14 +167,14 @@ constexpr ZoneInfo::ButtonInfo Z2_pressureButtonInfos_[] = {
 
 constexpr bn::array<bn::string_view, 3> Z2_signTexts_English[] = {
     {"Hold L/R: Use merged symbol's", "ability (Fall down slowly)"},
-    {"Hold B: Merge 2 symbols in hands"},
+    {"Hold B: Merge 2 symbols in hands", "Pick up 1 symbol in each hand", "and try merging them."},
     {"Hold B: Split the symbol"},
     {"Start: Open the menu", "If you mess up, you can always", "open the menu and restart."},
 };
 
 constexpr bn::array<bn::string_view, 3> Z2_signTexts_Korean[] = {
     {"L/R꾹눌러 합친 문양의", "능력 사용(낙하 속력 감소)"},
-    {"B꾹눌러 양손 문양 합치기"},
+    {"B꾹눌러 양손 문양 합치기", "양손에 문양을 하나씩 들고", "하나로 합쳐보자."},
     {"B꾹눌러 문양 분리하기"},
     {"스타트:메뉴 열기", "망친 경우,메뉴를 열어", "재시작 할 수 있다."},
 };
@@ -251,7 +251,7 @@ constexpr ZoneInfo zoneInfos_[] = {
              Z2_exitInfos_, Z2_entranceInfos_),
 };
 
-constexpr StageInfo w1_s0_("Tutorial", "Welcome to sym_merged!", "튜토리얼", "환영하오,낯선이여.", false,
+constexpr StageInfo w1_s0_("Tutorial", "Welcome to Symbol★Merged!", "튜토리얼", "환영하오,낯선이여.", false,
                            bn::music_items::music_detour, zoneInfos_);
 
 } // namespace

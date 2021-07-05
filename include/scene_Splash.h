@@ -33,6 +33,7 @@ private:
     int bgSwapUpdateCounter_ = BG_SWAP_UPDATE_COUNT;
     bool isShowingFirstBg_ = false;
     bool isPressedKey_ = false;
+    int waitBeforePlayingSignature_ = 10;
 
     void SwapBgWhenNeeded_();
     void SwapBg_();

@@ -7,6 +7,8 @@
 
 #include "bn_regular_bg_items_bg_splash1.h"
 #include "bn_regular_bg_items_bg_splash2.h"
+#include "bn_sound_items.h"
+#include "constant.h"
 #include "helper_keypad.h"
 
 namespace sym::scene
@@ -36,6 +38,12 @@ bn::optional<Type> Splash::Update()
 {
     SwapBgWhenNeeded_();
 
+    if (waitBeforePlayingSignature_ > 0)
+    {
+        --waitBeforePlayingSignature_;
+        if (waitBeforePlayingSignature_ == 0)
+            bn::sound_items::sfx_splash_intro.play(constant::volume::sfx_splash_intro);
+    }
     using kt = bn::keypad::key_type;
     using sym::helper::keypad::operator|;
     FetchPressAnyOfTheseKeys_(kt::A | kt::B | kt::START);

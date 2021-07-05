@@ -282,14 +282,14 @@
    </object>
    <object id="43" name="sign" x="165" y="113">
     <properties>
-     <property name="eng" value="L/R: Use Left/Right hand"/>
-     <property name="kor" value="L/R:왼/오른손 사용"/>
+     <property name="eng" value="&quot;L/R: Use Left/Right hand&quot;,&quot;Doesn't do anything right now.&quot;"/>
+     <property name="kor" value="&quot;L/R:왼/오른손 사용&quot;,&quot;당장은 아무 효과도 없다.&quot;"/>
     </properties>
    </object>
    <object id="44" name="sign" x="218" y="113">
     <properties>
-     <property name="eng" value="L/R: Toggle a switch"/>
-     <property name="kor" value="L/R:스위치 누르기"/>
+     <property name="eng" value="&quot;L/R: Toggle a switch&quot;,&quot;Try toggling a switch&quot;,&quot;with the hand near to it.&quot;"/>
+     <property name="kor" value="&quot;L/R:스위치 누르기&quot;,&quot;스위치에 가까운 손으로&quot;,&quot;작동시켜보자.&quot;"/>
     </properties>
    </object>
    <object id="45" name="Z0_Exit0 &amp; Z1_Exit0" x="303" y="112" width="2" height="32">
@@ -309,14 +309,14 @@
    </object>
    <object id="52" name="sign" x="470" y="56">
     <properties>
-     <property name="eng" value="Down+L/R: Put the symbol down"/>
-     <property name="kor" value="아래+L/R:내려놓기"/>
+     <property name="eng" value="&quot;Down+L/R: Put the symbol down&quot;,&quot;Try putting a symbol&quot;, &quot;on a button.&quot;"/>
+     <property name="kor" value="&quot;아래+L/R:내려놓기&quot;,&quot;버튼 위에 문양을 올려놓자.&quot;"/>
     </properties>
    </object>
    <object id="53" name="pressBtn1" x="490" y="64"/>
    <object id="54" name="sign" x="379" y="56">
     <properties>
-     <property name="eng" value="&quot;You can't use the hand&quot;,&quot;holding a symbol.&quot;, &quot;Try using the other hand.&quot;"/>
+     <property name="eng" value="&quot;You can't press a switch with&quot;,&quot;the hand holding a symbol.&quot;, &quot;Try using the other hand.&quot;"/>
      <property name="kor" value="&quot;문양을 든 손으론&quot;,&quot;스위치를 누르지 못한다.&quot;,&quot;반대쪽 손을 사용하자.&quot;"/>
     </properties>
    </object>
@@ -351,8 +351,8 @@
    <object id="72" name="bar" x="186" y="356"/>
    <object id="75" name="sign" x="146" y="352">
     <properties>
-     <property name="eng" value="Hold B: Merge 2 symbols in hands"/>
-     <property name="kor" value="B꾹눌러 양손 문양 합치기"/>
+     <property name="eng" value="&quot;Hold B: Merge 2 symbols in hands&quot;,&quot;Pick up 1 symbol in each hand&quot;,&quot;and try merging them.&quot;"/>
+     <property name="kor" value="&quot;B꾹눌러 양손 문양 합치기&quot;, &quot;양손에 문양을 하나씩 들고&quot;, &quot;하나로 합쳐보자.&quot;"/>
     </properties>
    </object>
    <object id="76" name="sign" x="99" y="311">

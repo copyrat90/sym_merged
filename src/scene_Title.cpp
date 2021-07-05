@@ -9,8 +9,9 @@
 
 #include "bn_optional.h"
 #include "bn_regular_bg_items_bg_title.h"
+#include "bn_sound_items.h"
 #include "bn_sprite_items_spr_cursor_star.h"
-#include "helper_keypad.h"
+#include "bn_sprite_palette_items_pal_menu_header.h"
 #include "helper_sprite.h"
 
 namespace sym::scene
@@ -23,7 +24,9 @@ Title::Title(scene::Param& sceneParam)
       fadeIn_(effect::Transition::Types::FADE | effect::Transition::Types::SPRITE_MOSAIC |
                   effect::Transition::Types::BG_MOSAIC,
               effect::Transition::Direction::IN, FADE_IN_UPDATE_COUNT),
-      fadeOut_(effect::Transition::Types::FADE, effect::Transition::Direction::OUT, FADE_OUT_UPDATE_COUNT)
+      fadeOut_(effect::Transition::Types::FADE | effect::Transition::Types::SPRITE_MOSAIC |
+                   effect::Transition::Types::BG_MOSAIC,
+               effect::Transition::Direction::OUT, FADE_OUT_UPDATE_COUNT)
 {
     bg_.set_blending_enabled(true);
     bg_.set_mosaic_enabled(true);
@@ -60,11 +63,13 @@ bn::optional<Type> Title::Update()
         {
         case Transition::State::NOT_READY:
             HandleUpDownPress_();
-            HandleStartAPress_();
+            HandleAPress_();
             break;
         case Transition::State::ONGOING:
+            fadeOut_.Update();
             break;
         case Transition::State::DONE:
+            return reservedNextScene_;
             break;
         default:
             BN_ERROR("Unknown fadeOut_::State : ", static_cast<int>(fadeOut_.GetState()));
@@ -83,30 +88,37 @@ void Title::HandleUpDownPress_()
 {
     int cursorMoveDirection = 0;
     if (bn::keypad::up_pressed())
+    {
+        bn::sound_items::sfx_menu_cursor.play();
         cursorMoveDirection = -1;
+    }
     else if (bn::keypad::down_pressed())
+    {
+        bn::sound_items::sfx_menu_cursor.play();
         cursorMoveDirection = 1;
+    }
 
     AdvanceCursorPointingOption_(cursorMoveDirection);
     UpdateCursorSpritePosition_();
 }
 
-void Title::HandleStartAPress_()
+void Title::HandleAPress_()
 {
-    using kt = bn::keypad::key_type;
-    using helper::keypad::operator|;
-
-    if (bn::keypad::pressed(kt::START | kt::A))
+    if (bn::keypad::a_pressed())
     {
         switch (cursorPointingOption_)
         {
         case MenuOption::START:
-            if (!global::GetSeenOpening())
-                reservedNextScene_ = scene::Type::OPENING;
-            else
-                reservedNextScene_ = scene::Type::SELECT_STAGE;
+            // if (!global::GetSeenOpening())
+            //     reservedNextScene_ = scene::Type::OPENING;
+            // else
+            //     reservedNextScene_ = scene::Type::SELECT_STAGE;
+            bn::sound_items::sfx_menu_select.play();
+            reservedNextScene_ = scene::Type::GAME;
+            fadeOut_.Init();
             break;
         case MenuOption::LANGUAGE:
+            bn::sound_items::sfx_menu_select.play();
             using namespace global::setting;
             switch (GetLang())
             {
@@ -124,7 +136,8 @@ void Title::HandleStartAPress_()
             UpdateCursorSpritePosition_();
             break;
         case MenuOption::CREDIT:
-            reservedNextScene_ = scene::Type::CREDIT;
+            bn::sound_items::sfx_error.play();
+            // reservedNextScene_ = scene::Type::CREDIT;
             break;
         case MenuOption::MENU_OPTION_TOTAL_COUNT:
         default:
@@ -168,8 +181,14 @@ void Title::RedrawMenuTextSprites_()
     for (auto& menuText : menuTextSprites_)
         menuText.clear();
 
+    auto prevPal = textGen->palette_item();
     for (int i = 0; i < MENU_OPTION_TOTAL_COUNT; ++i)
+    {
+        if (i == 2)
+            textGen->set_palette_item(bn::sprite_palette_items::pal_menu_header);
         textGen->generate(MENU_STRING_POS[langIdx][i], MENU_STRINGS[langIdx][i], menuTextSprites_[i]);
+    }
+    textGen->set_palette_item(prevPal);
 
     for (auto& menuText : menuTextSprites_)
     {
