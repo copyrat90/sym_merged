@@ -365,8 +365,19 @@ void PhysicsMovement::UpdatePlayer_()
         PlayerKeyboardHandle_();
 
         ClampVelocity_(state_.player);
-        if (umbrellaApplied_ && state_.player.GetVelocity().y() > PLAYER_UMBRELLA_VEL)
-            state_.player.SetYVelocity(PLAYER_UMBRELLA_VEL);
+        if (umbrellaApplied_)
+        {
+            if (state_.player.GetGravityReversed())
+            {
+                if (state_.player.GetVelocity().y() < -PLAYER_UMBRELLA_VEL)
+                    state_.player.SetYVelocity(-PLAYER_UMBRELLA_VEL);
+            }
+            else
+            {
+                if (state_.player.GetVelocity().y() > PLAYER_UMBRELLA_VEL)
+                    state_.player.SetYVelocity(PLAYER_UMBRELLA_VEL);
+            }
+        }
         state_.player.SetPosition(state_.player.GetPosition() + state_.player.GetVelocity());
 
         PlayerCollision_();
