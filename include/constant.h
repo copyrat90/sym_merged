@@ -36,13 +36,12 @@ namespace volume
 inline constexpr bn::fixed MUSIC_DEFAULT = 0.5;
 inline constexpr bn::fixed SFX_DEFAULT = 1;
 
-inline constexpr bn::fixed music_oh_well = 0.45;
-inline constexpr bn::fixed music_bounce = 0.45;
+inline constexpr bn::fixed music_oh_well = 0.25;
 inline constexpr bn::fixed music_detour = MUSIC_DEFAULT;
 inline constexpr bn::fixed music_autang = 0.125;
 inline constexpr bn::fixed music_fruity_radioactivity = 0.15;
 inline constexpr bn::fixed music_rene = 0.2;
-inline constexpr bn::fixed music_past = 0.4;
+inline constexpr bn::fixed music_past = 0.2;
 
 inline constexpr bn::fixed sfx_splash_intro = SFX_DEFAULT;
 inline constexpr bn::fixed sfx_menu_open = SFX_DEFAULT;
@@ -74,8 +73,6 @@ inline constexpr bn::fixed sfx_stage_clear = SFX_DEFAULT;
 {
     if (music == bn::music_items::music_oh_well)
         return volume::music_oh_well;
-    if (music == bn::music_items::music_bounce)
-        return volume::music_bounce;
     if (music == bn::music_items::music_detour)
         return volume::music_detour;
     if (music == bn::music_items::music_autang)

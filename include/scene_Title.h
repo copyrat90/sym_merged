@@ -6,6 +6,7 @@
 
 #include <bn_array.h>
 #include <bn_fixed_point.h>
+#include <bn_music_actions.h>
 #include <bn_optional.h>
 #include <bn_regular_bg_ptr.h>
 #include <bn_sprite_ptr.h>
@@ -40,6 +41,7 @@ private:
     bn::array<bn::vector<bn::sprite_ptr, 4>, MENU_OPTION_TOTAL_COUNT> menuTextSprites_;
     effect::Transition fadeIn_;
     effect::Transition fadeOut_;
+    bn::optional<bn::music_volume_to_action> volumeAction_;
 
     static constexpr bn::string_view MENU_STRINGS[LANG_TOTAL_COUNT][MENU_OPTION_TOTAL_COUNT] = {
         {"Start", "언 어 : English", "Credit"}, {"시작", "뷁웱:한국어", "크레딧"}};

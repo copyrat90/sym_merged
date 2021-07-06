@@ -1,17 +1,18 @@
 #include "scene_Title.h"
 
 #include <bn_assert.h>
+#include <bn_blending.h>
 #include <bn_fixed.h>
 #include <bn_keypad.h>
+#include <bn_music_actions.h>
 
-#include "bn_blending.h"
-#include "global.h"
-
-#include "bn_optional.h"
+#include "bn_music_items.h"
 #include "bn_regular_bg_items_bg_title.h"
 #include "bn_sound_items.h"
 #include "bn_sprite_items_spr_cursor_star.h"
 #include "bn_sprite_palette_items_pal_menu_header.h"
+#include "constant.h"
+#include "global.h"
 #include "helper_sprite.h"
 
 namespace sym::scene
@@ -38,6 +39,9 @@ Title::Title(scene::Param& sceneParam)
 
     RedrawMenuTextSprites_();
     UpdateCursorSpritePosition_();
+
+    bn::music_items::music_detour.play(constant::volume::music_detour);
+    volumeAction_.emplace(FADE_OUT_UPDATE_COUNT, 0);
     fadeIn_.Init();
 }
 
@@ -67,6 +71,8 @@ bn::optional<Type> Title::Update()
             break;
         case Transition::State::ONGOING:
             fadeOut_.Update();
+            if (!volumeAction_->done())
+                volumeAction_->update();
             break;
         case Transition::State::DONE:
             return reservedNextScene_;
