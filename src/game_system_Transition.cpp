@@ -230,6 +230,7 @@ void Transition::SetMosaicAppliedItems(AppliedItems appliedItems)
         SetMosaicEnabledToEntites_(state_.pressureButtonsOfZones.begin(), state_.pressureButtonsOfZones.end(),
                                    isEnable);
         SetMosaicEnabledToEntites_(state_.symbolsOfZones.begin(), state_.symbolsOfZones.end(), isEnable);
+        SetMosaicEnabledToEntites_(state_.signsOfZones.begin(), state_.signsOfZones.end(), isEnable);
     }
 
     mosaicAppliedItems_ = appliedItems;

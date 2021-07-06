@@ -38,7 +38,7 @@ public:
         SPRITES_OF_ZONES = 8,
         SIGN_MESSAGES = 16,
         MENU_OPTIONS = 32, // fake one, no functionality
-        BLACK_HOLE,
+        BLACK_HOLE = 64,
         ALL = MAP_BG | PLAYER | SYMBOLS_IN_HANDS | SPRITES_OF_ZONES | SIGN_MESSAGES | MENU_OPTIONS | BLACK_HOLE
     };
 
