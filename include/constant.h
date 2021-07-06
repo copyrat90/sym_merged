@@ -2,6 +2,7 @@
 
 #include <bn_algorithm.h>
 #include <bn_array.h>
+#include <bn_assert.h>
 #include <bn_color.h>
 #include <bn_fixed.h>
 #include <bn_sprite_text_generator.h>
@@ -35,10 +36,13 @@ namespace volume
 inline constexpr bn::fixed MUSIC_DEFAULT = 0.5;
 inline constexpr bn::fixed SFX_DEFAULT = 1;
 
+inline constexpr bn::fixed music_oh_well = 0.45;
+inline constexpr bn::fixed music_bounce = 0.45;
 inline constexpr bn::fixed music_detour = MUSIC_DEFAULT;
 inline constexpr bn::fixed music_autang = 0.125;
 inline constexpr bn::fixed music_fruity_radioactivity = 0.15;
 inline constexpr bn::fixed music_rene = 0.2;
+inline constexpr bn::fixed music_past = 0.4;
 
 inline constexpr bn::fixed sfx_splash_intro = SFX_DEFAULT;
 inline constexpr bn::fixed sfx_menu_open = SFX_DEFAULT;
@@ -61,15 +65,17 @@ inline constexpr bn::fixed sfx_gravity_reverse = SFX_DEFAULT;
 inline constexpr bn::fixed sfx_enter_black_hole = SFX_DEFAULT;
 inline constexpr bn::fixed sfx_stage_clear = SFX_DEFAULT;
 
-inline constexpr bn::fixed ClampVolume(bn::fixed volume)
+[[nodiscard]] inline constexpr bn::fixed ClampVolume(bn::fixed volume)
 {
     return bn::max(bn::min(volume, bn::fixed(1)), bn::fixed(0));
 }
 
-inline constexpr bn::fixed GetVolume(const bn::music_item& music)
+[[nodiscard]] inline constexpr bn::fixed GetVolume(const bn::music_item& music)
 {
-    constexpr bn::fixed NON_INIT_VAL = -999;
-    bn::fixed volume = NON_INIT_VAL;
+    if (music == bn::music_items::music_oh_well)
+        return volume::music_oh_well;
+    if (music == bn::music_items::music_bounce)
+        return volume::music_bounce;
     if (music == bn::music_items::music_detour)
         return volume::music_detour;
     if (music == bn::music_items::music_autang)
@@ -78,10 +84,11 @@ inline constexpr bn::fixed GetVolume(const bn::music_item& music)
         return volume::music_fruity_radioactivity;
     if (music == bn::music_items::music_rene)
         return volume::music_rene;
+    if (music == bn::music_items::music_past)
+        return volume::music_past;
 
-    BN_ASSERT(volume == NON_INIT_VAL, "Unknown music item: ", music.id());
-    ClampVolume(volume);
-    return volume;
+    BN_ERROR("Unknown music item: ", music.id());
+    return MUSIC_DEFAULT;
 }
 
 } // namespace volume
