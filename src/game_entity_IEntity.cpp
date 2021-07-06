@@ -59,6 +59,7 @@ void IEntity::AllocateGraphicResource(int z_order)
         sprite_->set_blending_enabled(isBlendingEnabled_);
         sprite_->set_mosaic_enabled(isMosaicEnabled_);
         sprite_->set_visible(isVisible_);
+        sprite_->set_scale(scale_);
         if (paletteItem_)
             SetPalette(*paletteItem_);
     }
@@ -98,6 +99,18 @@ void IEntity::SetVisible(bool isVisible)
 bool IEntity::GetVisible() const
 {
     return isVisible_;
+}
+
+void IEntity::SetScale(bn::fixed scale)
+{
+    scale_ = scale;
+    if (sprite_)
+        sprite_->set_scale(scale);
+}
+
+bn::fixed IEntity::GetScale() const
+{
+    return scale_;
 }
 
 void IEntity::SetPalette(const bn::sprite_palette_item& paletteItem)
@@ -144,6 +157,11 @@ void IEntity::SetY(bn::fixed y)
 {
     position_.set_y(y);
     SyncSpritePositionToPosition_();
+}
+
+bn::optional<bn::sprite_ptr> IEntity::GetSprite()
+{
+    return sprite_;
 }
 
 void IEntity::SetHorizontalFlip(bool flip)

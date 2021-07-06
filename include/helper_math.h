@@ -16,12 +16,17 @@ constexpr bn::fixed EPSILON = 0.01;
     return result;
 }
 
-[[nodiscard]] constexpr bn::fixed DistanceSquared(bn::fixed_point p1, bn::fixed_point p2)
+[[nodiscard]] inline constexpr bn::fixed DistanceSquared(bn::fixed_point p1, bn::fixed_point p2)
 {
     return (p2.x() - p1.x()) * (p2.x() - p1.x()) + (p2.y() - p1.y()) * (p2.y() - p1.y());
 }
 
-[[nodiscard]] constexpr bn::fixed_point operator*(int num, bn::fixed_point vector)
+[[nodiscard]] inline constexpr bn::fixed_point operator*(int num, bn::fixed_point vector)
+{
+    return {num * vector.x(), num * vector.y()};
+}
+
+[[nodiscard]] inline constexpr bn::fixed_point operator*(bn::fixed num, bn::fixed_point vector)
 {
     return {num * vector.x(), num * vector.y()};
 }

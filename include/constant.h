@@ -58,6 +58,8 @@ inline constexpr bn::fixed sfx_error = SFX_DEFAULT;
 inline constexpr bn::fixed sfx_umbrella_open = SFX_DEFAULT;
 inline constexpr bn::fixed sfx_symbol_jump = SFX_DEFAULT;
 inline constexpr bn::fixed sfx_gravity_reverse = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_enter_black_hole = SFX_DEFAULT;
+inline constexpr bn::fixed sfx_stage_clear = SFX_DEFAULT;
 
 inline constexpr bn::fixed ClampVolume(bn::fixed volume)
 {

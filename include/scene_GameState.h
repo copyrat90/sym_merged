@@ -16,6 +16,7 @@
 #include "game_system_KeyPress.h"
 #include "game_system_Menu.h"
 #include "game_system_PhysicsMovement.h"
+#include "game_system_StageClear.h"
 #include "game_system_StageNameSplash.h"
 #include "game_system_Transition.h"
 #include "game_system_TriggerInteraction.h"
@@ -95,6 +96,7 @@ struct GameState
     game::system::Transition transition;
     game::system::Menu menu;
     game::system::StageNameSplash stageNameSplash;
+    game::system::StageClear stageClear;
 
     bool isMergeOrSplitTriggered = false;
     bn::optional<scene::Type> nextScene = bn::nullopt;

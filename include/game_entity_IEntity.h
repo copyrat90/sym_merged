@@ -61,6 +61,8 @@ public:
     [[nodiscard]] bool GetMosaicEnabled() const;
     virtual void SetVisible(bool isVisible);
     [[nodiscard]] bool GetVisible() const;
+    virtual void SetScale(bn::fixed scale);
+    [[nodiscard]] bn::fixed GetScale() const;
     virtual void SetPalette(const bn::sprite_palette_item& paletteItem);
     virtual void SetCamera(const bn::camera_ptr& camera);
 
@@ -71,6 +73,7 @@ public:
     void SetX(bn::fixed x);
     void SetY(bn::fixed y);
 
+    [[nodiscard]] bn::optional<bn::sprite_ptr> GetSprite();
     void SetHorizontalFlip(bool flip);
     [[nodiscard]] bool GetHorizontalFlip() const;
     void SetVerticalFlip(bool flip);
@@ -85,6 +88,7 @@ protected:
     bool isBlendingEnabled_ = true;
     bool isMosaicEnabled_ = true;
     bool isVisible_ = true;
+    bn::fixed scale_ = 1;
 
     void SyncSpritePositionToPosition_();
 };

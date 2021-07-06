@@ -24,9 +24,9 @@ constexpr int FADE_IN_UPDATE_COUNT = 30;
     // TODO
     switch (stageId)
     {
-    case stage::Id::W0_S0:
+    case stage::Id::W0_S0: // test stage
         return game::stage::Get_W0_S0();
-    case stage::Id::W1_S0:
+    case stage::Id::W1_S0: // tutorial
         return game::stage::Get_W1_S0();
     default:
         BN_ERROR("Invalid stage::Id : ", static_cast<int>(stageId));
@@ -71,6 +71,7 @@ Game::Game(scene::Param& sceneParam)
                               helper::tilemap::TileInfo(state_.currentMapBg),
                               -1,
                               -1,
+                              {state_},
                               {state_},
                               {state_},
                               {state_},
@@ -237,6 +238,7 @@ bn::optional<Type> Game::Update()
         state_.physicsMovement.Update();
         state_.zoneSwitch.Update();
         state_.stageNameSplash.Update();
+        state_.stageClear.Update();
     }
     state_.transition.Update();
     state_.menu.Update();

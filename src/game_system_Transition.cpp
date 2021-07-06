@@ -183,7 +183,9 @@ void Transition::SetBlendingAppliedItems(AppliedItems appliedItems)
         state_.symbolsInHands[1]->SetBlendingEnabled(!!(appliedItems & AppliedItems::SYMBOLS_IN_HANDS));
     for (auto& textMsg : state_.triggerInteraction.GetSignMessageTextSprites())
         textMsg.set_blending_enabled(!!(appliedItems & AppliedItems::SIGN_MESSAGES));
-    // TODO: Add menu option blending
+    if (state_.blackHole)
+        state_.blackHole->SetBlendingEnabled(!!(appliedItems & AppliedItems::BLACK_HOLE));
+    // WARN: Menu option is not modified here.
 
     if (!!(appliedItems & AppliedItems::SPRITES_OF_ZONES) != !!(blendingAppliedItems_ & AppliedItems::SPRITES_OF_ZONES))
     {
@@ -215,7 +217,9 @@ void Transition::SetMosaicAppliedItems(AppliedItems appliedItems)
         state_.symbolsInHands[1]->SetMosaicEnabled(!!(appliedItems & AppliedItems::SYMBOLS_IN_HANDS));
     for (auto& textMsg : state_.triggerInteraction.GetSignMessageTextSprites())
         textMsg.set_mosaic_enabled(!!(appliedItems & AppliedItems::SIGN_MESSAGES));
-    // TODO: Add menu option mosaic
+    if (state_.blackHole)
+        state_.blackHole->SetMosaicEnabled(!!(appliedItems & AppliedItems::BLACK_HOLE));
+    // WARN: Menu option is not modified here.
 
     if (!!(appliedItems & AppliedItems::SPRITES_OF_ZONES) != !!(mosaicAppliedItems_ & AppliedItems::SPRITES_OF_ZONES))
     {
