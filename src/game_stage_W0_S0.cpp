@@ -109,16 +109,32 @@ constexpr ZoneInfo::EntranceInfo Z1_entranceInfos_[] = {
     {{332 - MAP_DIMENSIONS[0].width() / 2, 791 - MAP_DIMENSIONS[0].height() / 2}},
 };
 
+constexpr ZoneInfo::BlackHoleInfo blackHole = {
+    {64 - MAP_DIMENSIONS[0].width() / 2, 856 - MAP_DIMENSIONS[0].height() / 2},
+};
+
 constexpr ZoneInfo zoneInfos_[] = {
     ZoneInfo(bn::affine_bg_items::bg_w0_s0_0, Z0_symbolInfos_, Z0_doorInfos_, Z0_shutterInfos_, Z0_hoverButtonInfos_,
              Z0_pressureButtonInfos_,
              helper::tilemap::IndexRect({0, 93}, bn::size{39, 35}, bg_w0_s0_0.map_item().dimensions()), Z0_signInfos_,
-             Z0_exitInfos_, Z0_entranceInfos_),
+             Z0_exitInfos_, Z0_entranceInfos_, blackHole),
     ZoneInfo(bn::affine_bg_items::bg_w0_s0_0, Z1_symbolInfos_, Z1_doorInfos_, Z1_shutterInfos_, Z1_hoverButtonInfos_,
              Z1_pressureButtonInfos_,
              helper::tilemap::IndexRect({39, 93}, bn::size{30, 29}, bg_w0_s0_0.map_item().dimensions()), Z1_signInfos_,
              Z1_exitInfos_, Z1_entranceInfos_),
 };
+
+constexpr int blackHoleCount_ = [] {
+    int count = 0;
+    for (ZoneInfo zone : zoneInfos_)
+    {
+        if (zone.blackHole)
+            ++count;
+    }
+    return count;
+}();
+
+static_assert(blackHoleCount_ <= 1, "There are more than one blackHole!");
 
 constexpr StageInfo w0_s0_("W0-0", "Test stage", "W0-0", "테스트 스테이지", false, bn::music_items::music_detour,
                            zoneInfos_);

@@ -75,6 +75,8 @@ void ZoneSwitch::SwitchToNextZone_(bool isRestartCurrentZone)
     if ((prevZoneIdx != nextZone_->destinationZoneIndex) || isRestartCurrentZone)
     {
         // unload prev zone graphics
+        if (state_.blackHole && state_.blackHoleZoneIdx == prevZoneIdx)
+            state_.blackHole->FreeGraphicResource();
         for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
             symbol.FreeGraphicResource();
         for (auto& door : state_.doorsOfZones[state_.currentZoneIdx])
@@ -179,6 +181,11 @@ void ZoneSwitch::SwitchToNextZone_(bool isRestartCurrentZone)
     state_.player.SetPosition(currentZoneInfo.entrances[nextZone_->entranceOfZoneIndex].position);
 
     // load current zone graphics
+    if (state_.blackHole && state_.blackHoleZoneIdx == state_.currentZoneIdx)
+    {
+        state_.blackHole->AllocateGraphicResource(constant::BLACK_HOLE_Z_ORDER);
+        state_.blackHole->SetCamera(state_.camera);
+    }
     for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
     {
         symbol.AllocateGraphicResource(constant::SYMBOL_Z_ORDER);

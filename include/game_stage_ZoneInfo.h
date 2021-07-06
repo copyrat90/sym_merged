@@ -73,6 +73,11 @@ struct ZoneInfo
         bn::fixed_point position;
     };
 
+    struct BlackHoleInfo
+    {
+        bn::fixed_point position;
+    };
+
     /**
      * @brief Constructor.
      *
@@ -82,10 +87,11 @@ struct ZoneInfo
                        bn::span<const DoorInfo> doors_a, bn::span<const ShutterInfo> shutters_a,
                        bn::span<const ButtonInfo> hoverButtons_a, bn::span<const ButtonInfo> pressureButtons_a,
                        const helper::tilemap::IndexRect zoneBoundary_a, const bn::span<const SignInfo> signs_a,
-                       bn::span<const ExitInfo> exits_a, bn::span<const EntranceInfo> entrances_a)
+                       bn::span<const ExitInfo> exits_a, bn::span<const EntranceInfo> entrances_a,
+                       const bn::optional<const BlackHoleInfo> blackHole_a = bn::nullopt)
         : mapBg(mapBg_a), symbols(symbols_a), doors(doors_a), shutters(shutters_a), hoverButtons(hoverButtons_a),
-          pressureButtons(pressureButtons_a), zoneBoundary(zoneBoundary_a), signs(signs_a), exits(exits_a),
-          entrances(entrances_a)
+          pressureButtons(pressureButtons_a), blackHole(blackHole_a), zoneBoundary(zoneBoundary_a), signs(signs_a),
+          exits(exits_a), entrances(entrances_a)
     {
     }
 
@@ -97,6 +103,7 @@ struct ZoneInfo
     const bn::span<const ShutterInfo> shutters;
     const bn::span<const ButtonInfo> hoverButtons;
     const bn::span<const ButtonInfo> pressureButtons;
+    const bn::optional<const BlackHoleInfo> blackHole;
 
     // Constant things. Constantly referenced.
     const helper::tilemap::IndexRect zoneBoundary;

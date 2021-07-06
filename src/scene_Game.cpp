@@ -3,6 +3,7 @@
 #include <bn_assert.h>
 #include <bn_blending.h>
 #include <bn_keypad.h>
+#include <bn_log.h>
 
 #include "bn_optional.h"
 #include "constant.h"
@@ -56,6 +57,8 @@ Game::Game(scene::Param& sceneParam)
                               {},
                               {},
                               {},
+                              -1,
+                              bn::nullopt,
                               {{0, 0, 0, 0}, 0, 0},
                               {},
                               {},
@@ -63,6 +66,7 @@ Game::Game(scene::Param& sceneParam)
                               {},
                               {},
                               {},
+                              false,
                               false,
                               helper::tilemap::TileInfo(state_.currentMapBg),
                               -1,
@@ -104,6 +108,11 @@ Game::Game(scene::Param& sceneParam)
     {
         const auto& zoneInfo = state_.stageInfo.zoneInfos[i];
 
+        if (zoneInfo.blackHole)
+        {
+            state_.blackHoleZoneIdx = i;
+            state_.blackHole.emplace(zoneInfo.blackHole->position);
+        }
         for (const auto& symbolInfo : zoneInfo.symbols)
             state_.symbolsOfZones[i].emplace_front(symbolInfo.position, symbolInfo.symbolType,
                                                    symbolInfo.isGravityReversedByDefault);
@@ -123,6 +132,8 @@ Game::Game(scene::Param& sceneParam)
         for (const auto& signInfo : zoneInfo.signs)
             state_.signsOfZones[i].emplace_back(signInfo.position);
     }
+    if (!state_.blackHole)
+        BN_LOG("[WARN] No BlackHole available in this stage!");
 
     // Copy initial state of current zone
     // to copy back when restarting current zone.
@@ -167,6 +178,11 @@ Game::Game(scene::Param& sceneParam)
     // Allocate all graphics within current zone
     state_.player.AllocateGraphicResource(constant::PLAYER_Z_ORDER);
     state_.player.SetCamera(state_.camera);
+    if (state_.blackHole && state_.blackHoleZoneIdx == state_.currentZoneIdx)
+    {
+        state_.blackHole->AllocateGraphicResource(constant::BLACK_HOLE_Z_ORDER);
+        state_.blackHole->SetCamera(state_.camera);
+    }
     for (auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
     {
         symbol.AllocateGraphicResource(constant::SYMBOL_Z_ORDER);

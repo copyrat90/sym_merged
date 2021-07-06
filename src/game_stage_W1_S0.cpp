@@ -236,6 +236,10 @@ constexpr ZoneInfo::EntranceInfo Z2_entranceInfos_[] = {
 
 // };
 
+constexpr ZoneInfo::BlackHoleInfo blackHole = {
+    {0 - MAP_DIMENSIONS[0].width() / 2, 0 - MAP_DIMENSIONS[0].height() / 2},
+};
+
 constexpr ZoneInfo zoneInfos_[] = {
     ZoneInfo(bn::affine_bg_items::bg_w1_s0_0, Z0_symbolInfos_, Z0_doorInfos_, Z0_shutterInfos_, Z0_hoverButtonInfos_,
              Z0_pressureButtonInfos_,
@@ -250,6 +254,18 @@ constexpr ZoneInfo zoneInfos_[] = {
              helper::tilemap::IndexRect({0, 23}, bn::size{43, 25}, bg_w1_s0_0.map_item().dimensions()), Z2_signInfos_,
              Z2_exitInfos_, Z2_entranceInfos_),
 };
+
+constexpr int blackHoleCount_ = [] {
+    int count = 0;
+    for (ZoneInfo zone : zoneInfos_)
+    {
+        if (zone.blackHole)
+            ++count;
+    }
+    return count;
+}();
+
+static_assert(blackHoleCount_ <= 1, "There are more than one blackHole!");
 
 constexpr StageInfo w1_s0_("Tutorial", "Welcome to Symbol★Merged!", "튜토리얼", "환영하오,낯선이여.", false,
                            bn::music_items::music_detour, zoneInfos_);

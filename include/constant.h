@@ -20,6 +20,7 @@ inline constexpr auto DEFAULT_TEXT_GEN_ALIGN = bn::sprite_text_generator::alignm
 // Sprites with higher z orders are drawn first
 // (and therefore can be covered by later sprites)
 inline constexpr int PLAYER_Z_ORDER = 0;
+inline constexpr int BLACK_HOLE_Z_ORDER = 50;
 inline constexpr int SYMBOL_Z_ORDER = -10;
 inline constexpr int DOOR_Z_ORDER = 10;
 inline constexpr int BUTTON_Z_ORDER = 5;

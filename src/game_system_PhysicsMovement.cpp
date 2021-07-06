@@ -353,6 +353,9 @@ PhysicsMovement::PhysicsMovement(scene::GameState& state)
 
 void PhysicsMovement::Update()
 {
+    if (state_.isClearOngoing)
+        return;
+
     UpdatePlayer_();
     UpdateSymbols_();
 }

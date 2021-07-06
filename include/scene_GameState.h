@@ -5,6 +5,7 @@
 #include <bn_vector.h>
 
 #include "effect_Transition.h"
+#include "game_entity_BlackHole.h"
 #include "game_entity_Door.h"
 #include "game_entity_HoverButton.h"
 #include "game_entity_Player.h"
@@ -62,6 +63,8 @@ struct GameState
     bn::vector<bn::vector<game::entity::PressureButton, ZONE_PRESSURE_BUTTON_MAX_COUNT>, ZONE_MAX_COUNT>
         pressureButtonsOfZones;
     bn::vector<bn::vector<game::entity::Sign, ZONE_SIGN_MAX_COUNT>, ZONE_MAX_COUNT> signsOfZones;
+    int blackHoleZoneIdx;
+    bn::optional<game::entity::BlackHole> blackHole;
 
     // store initial state of current zone
     // to copy back when restarting current zone.
@@ -74,6 +77,7 @@ struct GameState
     bn::vector<game::entity::PressureButton, ZONE_PRESSURE_BUTTON_MAX_COUNT> initialPressureButtonsOfCurrentZone;
 
     bool isPaused;
+    bool isClearOngoing;
 
     helper::tilemap::TileInfo currentMapTileInfo;
 

@@ -52,7 +52,7 @@ Menu::Menu(scene::GameState& state)
 
 void Menu::Update()
 {
-    if (state_.transition.IsOngoing())
+    if (state_.transition.IsOngoing() || state_.isClearOngoing)
         return;
 
     if (bn::keypad::start_pressed() || (state_.isPaused && bn::keypad::b_pressed()))
