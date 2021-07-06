@@ -1,7 +1,5 @@
 #pragma once
 
-#include <bn_span.h>
-
 #include "game_stage_StageInfo.h"
 
 // 'W' stands for "World", 'S' stands for "Stage"

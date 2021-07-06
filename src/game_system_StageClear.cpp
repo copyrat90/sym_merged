@@ -64,6 +64,11 @@ void StageClear::Update()
     case ActionState::NOT_STARTED:
         if (CheckCollideWithBlackHole_())
         {
+            global::SetStageCleared(state_.stageInfo.stageId);
+            auto nextStage = GetNextStage_(state_.stageInfo.stageId);
+            if (nextStage)
+                global::SetCurrentStage(*nextStage);
+
             state_.isClearOngoing = true;
             state_.player.SetControllable(false);
             state_.player.SetGravityEnabled(false);
@@ -175,7 +180,7 @@ void StageClear::Update()
                                               Transition::Types::SPRITE_MOSAIC,
                                           FADE_OUT_UPDATE_COUNT, WAIT_ON_BLACK_SCREEN_COUNT);
                 state_.transition.SetDoneEventHandler([this] {
-                    auto nextStage = GetNextStage_(state_.sceneParam_.GetCurrentStage());
+                    auto nextStage = GetNextStage_(state_.stageInfo.stageId);
                     if (nextStage)
                     {
                         state_.sceneParam_.SetCurrentStage(*nextStage);
@@ -184,7 +189,6 @@ void StageClear::Update()
                     else
                     {
                         // only for jam release
-                        state_.sceneParam_.SetCurrentStage(game::stage::Id::W1_S0);
                         state_.nextScene = scene::Type::ENDING;
                     }
                 });
