@@ -69,6 +69,7 @@ void StageClear::Update()
             if (nextStage)
                 global::SetCurrentStage(*nextStage);
 
+            state_.triggerInteraction.GetSignMessageTextSprites().clear();
             state_.isClearOngoing = true;
             state_.player.SetControllable(false);
             state_.player.SetGravityEnabled(false);
