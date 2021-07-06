@@ -18,6 +18,17 @@
 namespace sym::scene
 {
 
+namespace
+{
+
+bool CheckDemoCleared_()
+{
+    int lastStageIdx = static_cast<uint8_t>(game::stage::Id::STAGE_ID_TOTAL_COUNT) - 1;
+    return global::GetStageCleared(static_cast<game::stage::Id>(lastStageIdx));
+}
+
+} // namespace
+
 Title::Title(scene::Param& sceneParam)
     : IScene(sceneParam), cursor_{bn::sprite_items::spr_cursor_star.create_sprite(0, 0),
                                   bn::sprite_items::spr_cursor_star.create_sprite(0, 0)},
@@ -142,8 +153,15 @@ void Title::HandleAPress_()
             UpdateCursorSpritePosition_();
             break;
         case MenuOption::CREDIT:
-            bn::sound_items::sfx_error.play();
-            // reservedNextScene_ = scene::Type::CREDIT;
+            // only for Jam release
+            if (CheckDemoCleared_())
+            {
+                bn::sound_items::sfx_menu_select.play();
+                reservedNextScene_ = scene::Type::CREDIT;
+                fadeOut_.Init();
+            }
+            else
+                bn::sound_items::sfx_error.play();
             break;
         case MenuOption::MENU_OPTION_TOTAL_COUNT:
         default:
@@ -190,9 +208,23 @@ void Title::RedrawMenuTextSprites_()
     auto prevPal = textGen->palette_item();
     for (int i = 0; i < MENU_OPTION_TOTAL_COUNT; ++i)
     {
+        // only for Jam release
         if (i == 2)
-            textGen->set_palette_item(bn::sprite_palette_items::pal_menu_header);
-        textGen->generate(MENU_STRING_POS[langIdx][i], MENU_STRINGS[langIdx][i], menuTextSprites_[i]);
+        {
+            if (CheckDemoCleared_())
+            {
+                textGen->generate(MENU_STRING_POS[langIdx][i], MENU_STRINGS[langIdx][i], menuTextSprites_[i]);
+            }
+            else
+            {
+                textGen->set_palette_item(bn::sprite_palette_items::pal_menu_header);
+                textGen->generate(MENU_STRING_POS[langIdx][i], langIdx == 0 ? "? ? ?" : "???", menuTextSprites_[i]);
+            }
+        }
+        else
+        {
+            textGen->generate(MENU_STRING_POS[langIdx][i], MENU_STRINGS[langIdx][i], menuTextSprites_[i]);
+        }
     }
     textGen->set_palette_item(prevPal);
 

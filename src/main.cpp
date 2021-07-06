@@ -20,6 +20,7 @@
 #include "constant.h"
 #include "global.h"
 
+#include "scene_DemoEnd.h"
 #include "scene_Game.h"
 #include "scene_Param.h"
 #include "scene_Splash.h"
@@ -34,9 +35,9 @@ int main()
     bn::bg_palettes::set_transparent_color(constant::TRANSPARENT_BG_COLOR);
 
     scene::Param sceneParam;
+    sceneParam.SetCurrentStage(sym::global::GetCurrentStage());
     // Test
-    // sceneParam.SetCurrentStage(sym::global::GetCurrentStage());
-    sceneParam.SetCurrentStage(game::stage::Id::W0_S0);
+    // sceneParam.SetCurrentStage(game::stage::Id::W0_S0);
     // bn::unique_ptr<scene::IScene> scene(new scene::Game(sceneParam));
     bn::unique_ptr<scene::IScene> scene(new scene::Splash(sceneParam));
     bn::optional<scene::Type> nextScene;
@@ -118,11 +119,10 @@ int main()
                 scene.reset();
                 scene.reset(new scene::Game(sceneParam));
                 break;
-            // TODO: Add other scenes
-            // case scene::Type::LICENSE:
-            //     scene.reset();
-            //     scene.reset(new scene::License(sceneParam));
-            //     break;
+            case scene::Type::CREDIT:
+                scene.reset();
+                scene.reset(new scene::DemoEnd(sceneParam));
+                break;
             default:
                 BN_ERROR("Unknown SceneType: ", (int)*nextScene);
             }

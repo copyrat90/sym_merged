@@ -44,7 +44,7 @@ private:
     bn::optional<bn::music_volume_to_action> volumeAction_;
 
     static constexpr bn::string_view MENU_STRINGS[LANG_TOTAL_COUNT][MENU_OPTION_TOTAL_COUNT] = {
-        {"Start", "언 어 : English", "Credit"}, {"시작", "뷁웱:한국어", "크레딧"}};
+        {"Start", "언 어 : English", "Thanks"}, {"시작", "뷁웱:한국어", "감사인사"}};
     static constexpr bn::fixed_point MENU_STRING_POS[LANG_TOTAL_COUNT][MENU_OPTION_TOTAL_COUNT] = {
         {{0, 0}, {0, 20}, {0, 40}}, {{0, 0}, {0, 20}, {0, 40}}};
     static constexpr bn::fixed_point CURSOR_OFFSET[LANG_TOTAL_COUNT] = {{-13, -2}, {-13, -1}};

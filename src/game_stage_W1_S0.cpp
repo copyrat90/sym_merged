@@ -237,7 +237,8 @@ constexpr ZoneInfo::EntranceInfo Z2_entranceInfos_[] = {
 // };
 
 constexpr ZoneInfo::BlackHoleInfo blackHole = {
-    {0 - MAP_DIMENSIONS[0].width() / 2, 0 - MAP_DIMENSIONS[0].height() / 2},
+    // test
+    {313 - MAP_DIMENSIONS[0].width() / 2, 264 - MAP_DIMENSIONS[0].height() / 2},
 };
 
 constexpr ZoneInfo zoneInfos_[] = {
@@ -252,7 +253,7 @@ constexpr ZoneInfo zoneInfos_[] = {
     ZoneInfo(bn::affine_bg_items::bg_w1_s0_0, Z2_symbolInfos_, Z2_doorInfos_, Z2_shutterInfos_, Z2_hoverButtonInfos_,
              Z2_pressureButtonInfos_,
              helper::tilemap::IndexRect({0, 23}, bn::size{43, 25}, bg_w1_s0_0.map_item().dimensions()), Z2_signInfos_,
-             Z2_exitInfos_, Z2_entranceInfos_),
+             Z2_exitInfos_, Z2_entranceInfos_, blackHole), // test
 };
 
 constexpr int blackHoleCount_ = [] {

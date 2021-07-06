@@ -188,8 +188,8 @@ void StageClear::Update()
                     }
                     else
                     {
-                        // only for jam release
-                        state_.nextScene = scene::Type::ENDING;
+                        // only for Jam release
+                        state_.nextScene = scene::Type::CREDIT;
                     }
                 });
             });
