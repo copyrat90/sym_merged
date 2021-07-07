@@ -166,7 +166,7 @@ constexpr ZoneInfo::ButtonInfo Z2_pressureButtonInfos_[] = {
 };
 
 constexpr bn::array<bn::string_view, 3> Z2_signTexts_English[] = {
-    {"Hold L/R: Use merged symbol's", "ability (Fall down slowly)"},
+    {"Hold L/R: Use merged symbol's", "power (Fall down slowly)"},
     {"Hold B: Merge 2 symbols in hands", "Pick up 1 symbol in each hand", "and try merging them."},
     {"Hold B: Split the symbol"},
     {"Start: Open the menu", "If you mess up, you can always", "open the menu and restart."},
@@ -204,41 +204,152 @@ constexpr ZoneInfo::EntranceInfo Z2_entranceInfos_[] = {
     {{292 - MAP_DIMENSIONS[0].width() / 2, 264 - MAP_DIMENSIONS[0].height() / 2}},
 };
 
-// constexpr ZoneInfo::SymbolInfo Z3_symbolInfos_[] = {
+constexpr ZoneInfo::SymbolInfo Z3_symbolInfos_[] = {
+    {{698 - MAP_DIMENSIONS[0].width() / 2, 361 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::BAR, false},
+    {{734 - MAP_DIMENSIONS[0].width() / 2, 361 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::BAR, false},
+    {{909 - MAP_DIMENSIONS[0].width() / 2, 198 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::XOR, false},
+};
+
+constexpr bn::span<ZoneInfo::DoorInfo> Z3_doorInfos_ = {
+
+};
+
+constexpr ZoneInfo::ShutterInfo Z3_shutterInfos_[] = {
+    {{589 - MAP_DIMENSIONS[0].width() / 2, 96 - MAP_DIMENSIONS[0].height() / 2}, false, 0},
+};
+
+constexpr bn::span<ZoneInfo::ButtonInfo> Z3_hoverButtonInfos_ = {
+
+};
+
+constexpr ZoneInfo::ButtonInfo Z3_pressureButtonInfos_[] = {
+    {{650 - MAP_DIMENSIONS[0].width() / 2, 104 - MAP_DIMENSIONS[0].height() / 2},
+     false,
+     0,
+     false,
+     entity::Symbol::Type::BAR},
+};
+
+constexpr bn::array<bn::string_view, 3> Z3_signTexts_English[] = {
+    {"For some merged symbols,", "tapping L/R once is enough", "to use its power."},
+    {"Some buttons work only with", "certain type of symbol."},
+};
+
+constexpr bn::array<bn::string_view, 3> Z3_signTexts_Korean[] = {
+    {"일부 합친 문양의 경우,", "L/R을 한번만 짧게 눌러도", "능력을 사용할 수 있다."},
+    {"일부 버튼은 특정 문양으로", "눌러야만 작동한다."},
+};
+
+constexpr ZoneInfo::SignInfo Z3_signInfos_[] = {
+    {{716 - MAP_DIMENSIONS[0].width() / 2, 358 - MAP_DIMENSIONS[0].height() / 2},
+     Z3_signTexts_English[0],
+     Z3_signTexts_Korean[0]},
+    {{682 - MAP_DIMENSIONS[0].width() / 2, 93 - MAP_DIMENSIONS[0].height() / 2},
+     Z3_signTexts_English[1],
+     Z3_signTexts_Korean[1]},
+};
+
+constexpr ZoneInfo::ExitInfo Z3_exitInfos_[] = {
+    {{567 - MAP_DIMENSIONS[0].width() / 2, 360 - MAP_DIMENSIONS[0].height() / 2, 2, 32}, 2, 1},
+    {{567 - MAP_DIMENSIONS[0].width() / 2, 96 - MAP_DIMENSIONS[0].height() / 2, 2, 32}, 4, 0},
+};
+
+constexpr ZoneInfo::EntranceInfo Z3_entranceInfos_[] = {
+    {{607 - MAP_DIMENSIONS[0].width() / 2, 360 - MAP_DIMENSIONS[0].height() / 2}},
+    {{620 - MAP_DIMENSIONS[0].width() / 2, 96 - MAP_DIMENSIONS[0].height() / 2}},
+};
+
+constexpr bn::span<ZoneInfo::SymbolInfo> Z4_symbolInfos_ = {
+
+};
+
+constexpr bn::span<ZoneInfo::DoorInfo> Z4_doorInfos_ = {
+
+};
+
+constexpr ZoneInfo::ShutterInfo Z4_shutterInfos_[] = {
+    {{485 - MAP_DIMENSIONS[0].width() / 2, 528 - MAP_DIMENSIONS[0].height() / 2}, false, 0},
+    {{475 - MAP_DIMENSIONS[0].width() / 2, 528 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
+};
+
+constexpr ZoneInfo::ButtonInfo Z4_hoverButtonInfos_[] = {
+    {{807 - MAP_DIMENSIONS[0].width() / 2, 496 - MAP_DIMENSIONS[0].height() / 2}, false, 0, false, bn::nullopt},
+    {{644 - MAP_DIMENSIONS[0].width() / 2, 496 - MAP_DIMENSIONS[0].height() / 2}, false, 1, false, bn::nullopt},
+};
+
+constexpr bn::span<ZoneInfo::ButtonInfo> Z4_pressureButtonInfos_ = {
+
+};
+
+constexpr bn::array<bn::string_view, 3> Z4_signTexts_English[] = {
+    {"Watch out for spikes!", "If you touch them, you will be", "respawned to the last safe place."},
+    {"Entering to the gate on the left,", "This stage will be cleared."},
+};
+
+constexpr bn::array<bn::string_view, 3> Z4_signTexts_Korean[] = {
+    {"가시를 주의하자!", "닿으면 마지막으로 서있던", "안전한 곳으로 되돌아간다."},
+    {"왼편의 게이트로 들어가면", "스테이지 클리어이다."},
+};
+
+constexpr ZoneInfo::SignInfo Z4_signInfos_[] = {
+    {{937 - MAP_DIMENSIONS[0].width() / 2, 528 - MAP_DIMENSIONS[0].height() / 2},
+     Z4_signTexts_English[0],
+     Z4_signTexts_Korean[0]},
+    {{522 - MAP_DIMENSIONS[0].width() / 2, 528 - MAP_DIMENSIONS[0].height() / 2},
+     Z4_signTexts_English[1],
+     Z4_signTexts_Korean[1]},
+};
+
+constexpr ZoneInfo::ExitInfo Z4_exitInfos_[] = {
+    {{1023 - MAP_DIMENSIONS[0].width() / 2, 528 - MAP_DIMENSIONS[0].height() / 2, 2, 32}, 3, 1},
+};
+
+constexpr ZoneInfo::EntranceInfo Z4_entranceInfos_[] = {
+    {{988 - MAP_DIMENSIONS[0].width() / 2, 528 - MAP_DIMENSIONS[0].height() / 2}},
+};
+
+// constexpr ZoneInfo::SymbolInfo Z5_symbolInfos_[] = {
 
 // };
 
-// constexpr bn::span<ZoneInfo::DoorInfo> Z3_doorInfos_ = {
+// constexpr bn::span<ZoneInfo::DoorInfo> Z5_doorInfos_ = {
 
 // };
 
-// constexpr ZoneInfo::ShutterInfo Z3_shutterInfos_[] = {
+// constexpr ZoneInfo::ShutterInfo Z5_shutterInfos_[] = {
 
 // };
 
-// constexpr ZoneInfo::ButtonInfo Z3_hoverButtonInfos_[] = {
+// constexpr ZoneInfo::ButtonInfo Z5_hoverButtonInfos_[] = {
 
 // };
 
-// constexpr ZoneInfo::ButtonInfo Z3_pressureButtonInfos_[] = {
+// constexpr ZoneInfo::ButtonInfo Z5_pressureButtonInfos_[] = {
 
 // };
 
-// constexpr ZoneInfo::SignInfo Z3_signInfos_[] = {
+// constexpr bn::array<bn::string_view, 3> Z5_signTexts_English[] = {
 
 // };
 
-// constexpr ZoneInfo::ExitInfo Z3_exitInfos_[] = {
+// constexpr bn::array<bn::string_view, 3> Z5_signTexts_Korean[] = {
 
 // };
 
-// constexpr ZoneInfo::EntranceInfo Z3_entranceInfos_[] = {
+// constexpr ZoneInfo::SignInfo Z5_signInfos_[] = {
+
+// };
+
+// constexpr ZoneInfo::ExitInfo Z5_exitInfos_[] = {
+
+// };
+
+// constexpr ZoneInfo::EntranceInfo Z5_entranceInfos_[] = {
 
 // };
 
 constexpr ZoneInfo::BlackHoleInfo blackHole = {
-    // test
-    {313 - MAP_DIMENSIONS[0].width() / 2, 264 - MAP_DIMENSIONS[0].height() / 2},
+    {424 - MAP_DIMENSIONS[0].width() / 2, 512 - MAP_DIMENSIONS[0].height() / 2},
 };
 
 constexpr ZoneInfo zoneInfos_[] = {
@@ -253,7 +364,15 @@ constexpr ZoneInfo zoneInfos_[] = {
     ZoneInfo(bn::affine_bg_items::bg_w1_s0_0, Z2_symbolInfos_, Z2_doorInfos_, Z2_shutterInfos_, Z2_hoverButtonInfos_,
              Z2_pressureButtonInfos_,
              helper::tilemap::IndexRect({0, 23}, bn::size{43, 25}, bg_w1_s0_0.map_item().dimensions()), Z2_signInfos_,
-             Z2_exitInfos_, Z2_entranceInfos_, blackHole), // test
+             Z2_exitInfos_, Z2_entranceInfos_),
+    ZoneInfo(bn::affine_bg_items::bg_w1_s0_0, Z3_symbolInfos_, Z3_doorInfos_, Z3_shutterInfos_, Z3_hoverButtonInfos_,
+             Z3_pressureButtonInfos_,
+             helper::tilemap::IndexRect({71, 2}, bn::size{57, 49}, bg_w1_s0_0.map_item().dimensions()), Z3_signInfos_,
+             Z3_exitInfos_, Z3_entranceInfos_),
+    ZoneInfo(bn::affine_bg_items::bg_w1_s0_0, Z4_symbolInfos_, Z4_doorInfos_, Z4_shutterInfos_, Z4_hoverButtonInfos_,
+             Z4_pressureButtonInfos_,
+             helper::tilemap::IndexRect({45, 52}, bn::size{83, 20}, bg_w1_s0_0.map_item().dimensions()), Z4_signInfos_,
+             Z4_exitInfos_, Z4_entranceInfos_, blackHole),
 };
 
 constexpr int blackHoleCount_ = [] {
@@ -268,8 +387,8 @@ constexpr int blackHoleCount_ = [] {
 
 static_assert(blackHoleCount_ <= 1, "There are more than one blackHole!");
 
-constexpr StageInfo w1_s0_(stage::Id::W1_S0, "Tutorial", "Welcome to Symbol★Merged!", "튜토리얼", "환영하오,낯선이여.",
-                           false, bn::music_items::music_detour, zoneInfos_);
+constexpr StageInfo w1_s0_(stage::Id::W1_S0, "Tutorial", "Welcome to Symbol★Merged!", "튜토리얼",
+                           "문양★합쳐짐에 어서옵쇼!", false, bn::music_items::music_detour, zoneInfos_);
 
 } // namespace
 
