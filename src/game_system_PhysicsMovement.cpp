@@ -346,8 +346,7 @@ void ClampVelocity_(entity::IPhysicsEntity& entity)
 
 } // namespace
 
-PhysicsMovement::PhysicsMovement(scene::GameState& state)
-    : ISystem(state), isGravityReversed_(state_.player.GetGravityReversed())
+PhysicsMovement::PhysicsMovement(scene::GameState& state) : ISystem(state)
 {
 }
 
@@ -411,7 +410,7 @@ void PhysicsMovement::PlayerKeyboardHandle_()
                 // state_.player.SetGrounded(false);
                 state_.player.InitJumpAction();
                 bn::sound_items::sfx_symbol_jump.play(constant::volume::sfx_symbol_jump);
-                if (isGravityReversed_)
+                if (state_.player.GetGravityReversed())
                 {
                     if (-SYMBOL_JUMP_VEL > velocity.y())
                         velocity.set_y(-SYMBOL_JUMP_VEL);
@@ -427,14 +426,14 @@ void PhysicsMovement::PlayerKeyboardHandle_()
             if (symbol.GetAbilityState() == AbilityState::READY_TO_USE)
             {
                 SetAbilityStateOfCertainTypeSymbols_(SymType::VV, AbilityState::NOT_READY);
-                isGravityReversed_ = !isGravityReversed_;
                 bn::sound_items::sfx_gravity_reverse.play(constant::volume::sfx_gravity_reverse);
-                state_.player.SetGravityReversed(isGravityReversed_);
+                state_.player.SetGravityReversed(!state_.player.GetGravityReversed());
                 if (state_.symbolsInHands[0])
                     state_.symbolsInHands[0]->ToggleGravityReversed();
                 if (state_.symbolsInHands[1])
                     state_.symbolsInHands[1]->ToggleGravityReversed();
-                velocity = {velocity.x(), isGravityReversed_ ? -GRAVITY_REVERSE_INIT_VEL : GRAVITY_REVERSE_INIT_VEL};
+                velocity = {velocity.x(),
+                            state_.player.GetGravityReversed() ? -GRAVITY_REVERSE_INIT_VEL : GRAVITY_REVERSE_INIT_VEL};
             }
             break;
         case SymType::UP:
@@ -536,7 +535,7 @@ void PhysicsMovement::PlayerKeyboardHandle_()
         // state_.player.SetGrounded(false);
         state_.player.InitJumpAction();
         bn::sound_items::sfx_player_jump.play(constant::volume::sfx_player_jump);
-        if (isGravityReversed_)
+        if (state_.player.GetGravityReversed())
         {
             if (-PRESS_A_JUMP_VEL > velocity.y())
                 velocity.set_y(-PRESS_A_JUMP_VEL);
@@ -613,10 +612,9 @@ void PhysicsMovement::PlayerCollision_()
                     if (state_.symbolsInHands[1])
                         state_.symbolsInHands[1]->SetVisible(true);
                     state_.player.SetPosition(state_.player.GetLastSafePosition());
-                    if (isGravityReversed_ != state_.player.GetLastSafeGravityIsReversed())
+                    if (state_.player.GetGravityReversed() != state_.player.GetLastSafeGravityIsReversed())
                     {
-                        isGravityReversed_ = state_.player.GetLastSafeGravityIsReversed();
-                        state_.player.SetGravityReversed(isGravityReversed_);
+                        state_.player.SetGravityReversed(state_.player.GetLastSafeGravityIsReversed());
                         if (state_.symbolsInHands[0])
                             state_.symbolsInHands[0]->ToggleGravityReversed();
                         if (state_.symbolsInHands[1])
@@ -630,11 +628,11 @@ void PhysicsMovement::PlayerCollision_()
             });
             break;
         case PushbackDirection::UP:
-            if (!nextGrounded && !isGravityReversed_)
+            if (!nextGrounded && !state_.player.GetGravityReversed())
                 nextGrounded = true;
             break;
         case PushbackDirection::DOWN:
-            if (!nextGrounded && isGravityReversed_)
+            if (!nextGrounded && state_.player.GetGravityReversed())
                 nextGrounded = true;
             break;
         case PushbackDirection::LEFT:
@@ -672,7 +670,7 @@ void PhysicsMovement::PlayerCollision_()
     if (nextGrounded && nextSafe && state_.player.GetControllable())
     {
         state_.player.SetLastSafePosition(state_.player.GetPosition());
-        state_.player.SetLastSafeGravityIsReversed(isGravityReversed_);
+        state_.player.SetLastSafeGravityIsReversed(state_.player.GetGravityReversed());
     }
 }
 

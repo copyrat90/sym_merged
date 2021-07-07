@@ -105,6 +105,7 @@ void ZoneSwitch::SwitchToNextZone_(bool isRestartCurrentZone)
         state_.initialHoverButtonsOfCurrentZone.clear();
         state_.initialPressureButtonsOfCurrentZone.clear();
 
+        state_.initialPlayerGravityReversed = state_.player.GetGravityReversed();
         for (const auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
         {
             state_.initialSymbolsOfCurrentZone.push_back(symbol);
@@ -140,13 +141,13 @@ void ZoneSwitch::SwitchToNextZone_(bool isRestartCurrentZone)
     // Restart current zone
     else
     {
-        // WIP: Add symbols of zones, symbols in hands
         state_.symbolsOfZones[state_.currentZoneIdx].clear();
         state_.doorsOfZones[state_.currentZoneIdx].clear();
         state_.shuttersOfZones[state_.currentZoneIdx].clear();
         state_.hoverButtonsOfZones[state_.currentZoneIdx].clear();
         state_.pressureButtonsOfZones[state_.currentZoneIdx].clear();
 
+        state_.player.SetGravityReversed(state_.initialPlayerGravityReversed);
         for (const auto& symbol : state_.initialSymbolsOfCurrentZone)
             state_.symbolsOfZones[state_.currentZoneIdx].push_back(symbol);
         state_.symbolsInHands[0] = state_.initialSymbolsInHandsOnCurrentZone[0];

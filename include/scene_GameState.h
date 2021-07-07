@@ -69,6 +69,7 @@ struct GameState
 
     // store initial state of current zone
     // to copy back when restarting current zone.
+    bool initialPlayerGravityReversed;
     game::stage::ZoneInfo::ExitInfo initialExitInfo;
     bn::list<game::entity::Symbol, STAGE_SYMBOL_MAX_COUNT> initialSymbolsOfCurrentZone;
     bn::array<bn::optional<game::entity::Symbol>, 2> initialSymbolsInHandsOnCurrentZone;

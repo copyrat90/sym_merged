@@ -59,6 +59,7 @@ Game::Game(scene::Param& sceneParam)
                               {},
                               -1,
                               bn::nullopt,
+                              state_.stageInfo.isPlayerGravityReversedByDefault,
                               {{0, 0, 0, 0}, 0, 0},
                               {},
                               {},
@@ -144,6 +145,7 @@ Game::Game(scene::Param& sceneParam)
     state_.initialHoverButtonsOfCurrentZone.clear();
     state_.initialPressureButtonsOfCurrentZone.clear();
 
+    state_.initialPlayerGravityReversed = state_.player.GetGravityReversed();
     for (const auto& symbol : state_.symbolsOfZones[state_.currentZoneIdx])
     {
         state_.initialSymbolsOfCurrentZone.push_back(symbol);
