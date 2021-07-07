@@ -223,7 +223,7 @@ constexpr bn::span<ZoneInfo::ButtonInfo> Z3_hoverButtonInfos_ = {
 };
 
 constexpr ZoneInfo::ButtonInfo Z3_pressureButtonInfos_[] = {
-    {{650 - MAP_DIMENSIONS[0].width() / 2, 104 - MAP_DIMENSIONS[0].height() / 2},
+    {{690 - MAP_DIMENSIONS[0].width() / 2, 104 - MAP_DIMENSIONS[0].height() / 2},
      false,
      0,
      false,
@@ -233,20 +233,25 @@ constexpr ZoneInfo::ButtonInfo Z3_pressureButtonInfos_[] = {
 constexpr bn::array<bn::string_view, 3> Z3_signTexts_English[] = {
     {"For some merged symbols,", "tapping L/R once is enough", "to use its power."},
     {"Some buttons work only with", "certain type of symbol."},
+    {"You can't split a symbol", "if both hands are full.", "Drop one symbol first."},
 };
 
 constexpr bn::array<bn::string_view, 3> Z3_signTexts_Korean[] = {
     {"일부 합친 문양의 경우,", "L/R을 한번만 짧게 눌러도", "능력을 사용할 수 있다."},
     {"일부 버튼은 특정 문양으로", "눌러야만 작동한다."},
+    {"양손이 가득찬 상태론", "문양을 분리할 수 없다.", "먼저 문양 하나를 내려놓자."},
 };
 
 constexpr ZoneInfo::SignInfo Z3_signInfos_[] = {
     {{716 - MAP_DIMENSIONS[0].width() / 2, 358 - MAP_DIMENSIONS[0].height() / 2},
      Z3_signTexts_English[0],
      Z3_signTexts_Korean[0]},
-    {{682 - MAP_DIMENSIONS[0].width() / 2, 93 - MAP_DIMENSIONS[0].height() / 2},
+    {{722 - MAP_DIMENSIONS[0].width() / 2, 93 - MAP_DIMENSIONS[0].height() / 2},
      Z3_signTexts_English[1],
      Z3_signTexts_Korean[1]},
+    {{661 - MAP_DIMENSIONS[0].width() / 2, 93 - MAP_DIMENSIONS[0].height() / 2},
+     Z3_signTexts_English[2],
+     Z3_signTexts_Korean[2]},
 };
 
 constexpr ZoneInfo::ExitInfo Z3_exitInfos_[] = {
@@ -283,12 +288,12 @@ constexpr bn::span<ZoneInfo::ButtonInfo> Z4_pressureButtonInfos_ = {
 
 constexpr bn::array<bn::string_view, 3> Z4_signTexts_English[] = {
     {"Watch out for spikes!", "If you touch them, you will be", "respawned to the last safe place."},
-    {"Entering to the gate on the left,", "This stage will be cleared."},
+    {"Entering to the gate on the left,", "This stage will be cleared.", "Your progress will be saved."},
 };
 
 constexpr bn::array<bn::string_view, 3> Z4_signTexts_Korean[] = {
     {"가시를 주의하자!", "닿으면 마지막으로 서있던", "안전한 곳으로 되돌아간다."},
-    {"왼편의 게이트로 들어가면", "스테이지 클리어이다."},
+    {"왼편의 게이트로 들어가면", "스테이지 클리어이다.", "그러면 진행상황이 저장된다."},
 };
 
 constexpr ZoneInfo::SignInfo Z4_signInfos_[] = {
