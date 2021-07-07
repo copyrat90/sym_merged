@@ -151,10 +151,16 @@ void ZoneSwitch::SwitchToNextZone_(bool isRestartCurrentZone)
             state_.symbolsOfZones[state_.currentZoneIdx].push_back(symbol);
         state_.symbolsInHands[0] = state_.initialSymbolsInHandsOnCurrentZone[0];
         if (state_.symbolsInHands[0])
+        {
             state_.symbolsInHands[0]->AllocateGraphicResource(constant::SYMBOL_Z_ORDER);
+            state_.symbolsInHands[0]->SetCamera(state_.camera);
+        }
         state_.symbolsInHands[1] = state_.initialSymbolsInHandsOnCurrentZone[1];
         if (state_.symbolsInHands[1])
+        {
             state_.symbolsInHands[1]->AllocateGraphicResource(constant::SYMBOL_Z_ORDER);
+            state_.symbolsInHands[1]->SetCamera(state_.camera);
+        }
         for (const auto& door : state_.initialDoorsOfCurrentZone)
             state_.doorsOfZones[state_.currentZoneIdx].push_back(door);
         for (const auto& shutter : state_.initialShuttersOfCurrentZone)
