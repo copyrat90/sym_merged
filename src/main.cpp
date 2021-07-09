@@ -35,11 +35,11 @@ int main()
     bn::bg_palettes::set_transparent_color(constant::TRANSPARENT_BG_COLOR);
 
     scene::Param sceneParam;
-    sceneParam.SetCurrentStage(sym::global::GetCurrentStage());
     // Test
-    // sceneParam.SetCurrentStage(game::stage::Id::W0_S0);
-    // bn::unique_ptr<scene::IScene> scene(new scene::Game(sceneParam));
-    bn::unique_ptr<scene::IScene> scene(new scene::Splash(sceneParam));
+    sceneParam.SetCurrentStage(game::stage::Id::W1_S1);               // test
+    bn::unique_ptr<scene::IScene> scene(new scene::Game(sceneParam)); // test
+    // sceneParam.SetCurrentStage(sym::global::GetCurrentStage()); // release
+    // bn::unique_ptr<scene::IScene> scene(new scene::Splash(sceneParam)); // release
     bn::optional<scene::Type> nextScene;
 
 #ifndef NDEBUG

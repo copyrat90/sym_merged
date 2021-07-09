@@ -16,6 +16,7 @@ enum class Id : uint8_t
 {
     W0_S0, // test map
     W1_S0, // tutorial
+    W1_S1,
     STAGE_ID_TOTAL_COUNT
 };
 

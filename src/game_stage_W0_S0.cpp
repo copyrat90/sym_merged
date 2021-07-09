@@ -102,11 +102,53 @@ constexpr ZoneInfo::SignInfo Z1_signInfos_[] = {
 constexpr ZoneInfo::ExitInfo Z1_exitInfos_[] = {
     {{312 - MAP_DIMENSIONS[0].width() / 2, 928 - MAP_DIMENSIONS[0].height() / 2, 2, 32}, 0, 1},
     {{312 - MAP_DIMENSIONS[0].width() / 2, 792 - MAP_DIMENSIONS[0].height() / 2, 2, 32}, 0, 2},
+    {{552 - MAP_DIMENSIONS[0].width() / 2, 888 - MAP_DIMENSIONS[0].height() / 2, 2, 32}, 2, 0},
+    {{504 - MAP_DIMENSIONS[0].width() / 2, 744 - MAP_DIMENSIONS[0].height() / 2, 32, 2}, 2, 1},
 };
 
 constexpr ZoneInfo::EntranceInfo Z1_entranceInfos_[] = {
     {{345 - MAP_DIMENSIONS[0].width() / 2, 927 - MAP_DIMENSIONS[0].height() / 2}},
     {{332 - MAP_DIMENSIONS[0].width() / 2, 791 - MAP_DIMENSIONS[0].height() / 2}},
+    {{520 - MAP_DIMENSIONS[0].width() / 2, 888 - MAP_DIMENSIONS[0].height() / 2}},
+    {{488 - MAP_DIMENSIONS[0].width() / 2, 793 - MAP_DIMENSIONS[0].height() / 2}},
+};
+
+constexpr ZoneInfo::SymbolInfo Z2_symbolInfos_[] = {
+    {{88 - MAP_DIMENSIONS[0].width() / 2, 686 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::BAR, false},
+    {{109 - MAP_DIMENSIONS[0].width() / 2, 686 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::XOR, false},
+};
+
+constexpr bn::span<ZoneInfo::DoorInfo> Z2_doorInfos_ = {
+
+};
+
+constexpr ZoneInfo::ShutterInfo Z2_shutterInfos_[] = {
+    {{319 - MAP_DIMENSIONS[0].width() / 2, 264 - MAP_DIMENSIONS[0].height() / 2}, false, 0},
+    {{329 - MAP_DIMENSIONS[0].width() / 2, 264 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
+    {{12 - MAP_DIMENSIONS[0].width() / 2, 272 - MAP_DIMENSIONS[0].height() / 2}, true, 0},
+    {{22 - MAP_DIMENSIONS[0].width() / 2, 272 - MAP_DIMENSIONS[0].height() / 2}, true, 1},
+};
+
+constexpr bn::span<ZoneInfo::ButtonInfo> Z2_hoverButtonInfos_ = {
+
+};
+
+constexpr bn::span<ZoneInfo::ButtonInfo> Z2_pressureButtonInfos_ = {
+
+};
+
+constexpr bn::span<ZoneInfo::SignInfo> Z2_signInfos_ = {
+
+};
+
+constexpr ZoneInfo::ExitInfo Z2_exitInfos_[] = {
+    {{0 - MAP_DIMENSIONS[0].width() / 2, 688 - MAP_DIMENSIONS[0].height() / 2, 2, 32}, 1, 2},
+    {{712 - MAP_DIMENSIONS[0].width() / 2, 736 - MAP_DIMENSIONS[0].height() / 2, 32, 2}, 1, 3},
+};
+
+constexpr ZoneInfo::EntranceInfo Z2_entranceInfos_[] = {
+    {{33 - MAP_DIMENSIONS[0].width() / 2, 688 - MAP_DIMENSIONS[0].height() / 2}},
+    {{728 - MAP_DIMENSIONS[0].width() / 2, 686 - MAP_DIMENSIONS[0].height() / 2}},
 };
 
 constexpr ZoneInfo::BlackHoleInfo blackHole = {
@@ -122,6 +164,10 @@ constexpr ZoneInfo zoneInfos_[] = {
              Z1_pressureButtonInfos_,
              helper::tilemap::IndexRect({39, 93}, bn::size{30, 29}, bg_w0_s0_0.map_item().dimensions()), Z1_signInfos_,
              Z1_exitInfos_, Z1_entranceInfos_),
+    ZoneInfo(bn::affine_bg_items::bg_w0_s0_0, Z2_symbolInfos_, Z2_doorInfos_, Z2_shutterInfos_, Z2_hoverButtonInfos_,
+             Z2_pressureButtonInfos_,
+             helper::tilemap::IndexRect({0, 50}, bn::size{128, 42}, bg_w0_s0_0.map_item().dimensions()), Z2_signInfos_,
+             Z2_exitInfos_, Z2_entranceInfos_),
 };
 
 constexpr int blackHoleCount_ = [] {
