@@ -279,7 +279,8 @@ void TriggerInteraction::InteractPressureButtonsAndEntities_()
         if ((!prevButtonOn && currentButtonOn) || (prevButtonOn && !currentButtonOn))
         {
             button.ToggleButtonOn();
-            bn::sound_items::sfx_pressure_button_toggle.play(constant::volume::sfx_pressure_button_toggle);
+            if (!state_.transition.IsOngoing())
+                bn::sound_items::sfx_pressure_button_toggle.play(constant::volume::sfx_pressure_button_toggle);
             ToggleOpenedPressureButtonAssociatedOpenables_(buttonIdx);
         }
     }
