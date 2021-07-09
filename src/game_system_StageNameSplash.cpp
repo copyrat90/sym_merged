@@ -157,18 +157,29 @@ void StageNameSplash::RedrawSprites()
     textGen->generate(namePosX_, NAME_POS_Y, stageName, nameSprites_);
     textGen->set_palette_item(prevPal);
     textGen->generate(subNamePosX_, SUB_NAME_POS_Y, stageSubName, subNameSprites_);
+    const bool isBlendingEnabled =
+        !!(state_.transition.GetBlendingAppliedItems() & Transition::AppliedItems::STAGE_NAME_SPLASH);
+    const bool isMosaicEnabled =
+        !!(state_.transition.GetMosaicAppliedItems() & Transition::AppliedItems::STAGE_NAME_SPLASH);
     for (auto& sprite : nameSprites_)
     {
-        sprite.set_blending_enabled(true);
-        sprite.set_mosaic_enabled(true);
+        sprite.set_blending_enabled(isBlendingEnabled);
+        sprite.set_mosaic_enabled(isMosaicEnabled);
         sprite.set_z_order(constant::STAGE_NAME_SPLASH_Z_ORDER);
     }
     for (auto& sprite : subNameSprites_)
     {
-        sprite.set_blending_enabled(true);
-        sprite.set_mosaic_enabled(true);
+        sprite.set_blending_enabled(isBlendingEnabled);
+        sprite.set_mosaic_enabled(isMosaicEnabled);
         sprite.set_z_order(constant::STAGE_NAME_SPLASH_Z_ORDER);
     }
+}
+
+bn::pair<bn::vector<bn::sprite_ptr, StageNameSplash::SENTENCE_SPRITE_SIZE>&,
+         bn::vector<bn::sprite_ptr, StageNameSplash::SENTENCE_SPRITE_SIZE>&>
+StageNameSplash::GetNameAndSubNameSprites()
+{
+    return {nameSprites_, subNameSprites_};
 }
 
 } // namespace sym::game::system

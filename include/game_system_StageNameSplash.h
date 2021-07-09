@@ -4,6 +4,7 @@
 
 #include <bn_fixed.h>
 #include <bn_sprite_ptr.h>
+#include <bn_utility.h>
 #include <bn_vector.h>
 
 namespace sym::game::system
@@ -20,6 +21,9 @@ public:
     void RedrawSprites();
 
     static constexpr int SENTENCE_SPRITE_SIZE = 8;
+
+    bn::pair<bn::vector<bn::sprite_ptr, SENTENCE_SPRITE_SIZE>&, bn::vector<bn::sprite_ptr, SENTENCE_SPRITE_SIZE>&>
+    GetNameAndSubNameSprites();
 
 private:
     enum class State

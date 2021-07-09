@@ -185,6 +185,11 @@ void Transition::SetBlendingAppliedItems(AppliedItems appliedItems)
         textMsg.set_blending_enabled(!!(appliedItems & AppliedItems::SIGN_MESSAGES));
     if (state_.blackHole)
         state_.blackHole->SetBlendingEnabled(!!(appliedItems & AppliedItems::BLACK_HOLE));
+    auto pair = state_.stageNameSplash.GetNameAndSubNameSprites();
+    for (auto& textMsg : pair.first)
+        textMsg.set_blending_enabled(!!(appliedItems & AppliedItems::STAGE_NAME_SPLASH));
+    for (auto& textMsg : pair.second)
+        textMsg.set_blending_enabled(!!(appliedItems & AppliedItems::STAGE_NAME_SPLASH));
     // WARN: Menu option is not modified here.
 
     if (!!(appliedItems & AppliedItems::SPRITES_OF_ZONES) != !!(blendingAppliedItems_ & AppliedItems::SPRITES_OF_ZONES))
@@ -219,6 +224,11 @@ void Transition::SetMosaicAppliedItems(AppliedItems appliedItems)
         textMsg.set_mosaic_enabled(!!(appliedItems & AppliedItems::SIGN_MESSAGES));
     if (state_.blackHole)
         state_.blackHole->SetMosaicEnabled(!!(appliedItems & AppliedItems::BLACK_HOLE));
+    auto pair = state_.stageNameSplash.GetNameAndSubNameSprites();
+    for (auto& textMsg : pair.first)
+        textMsg.set_mosaic_enabled(!!(appliedItems & AppliedItems::STAGE_NAME_SPLASH));
+    for (auto& textMsg : pair.second)
+        textMsg.set_mosaic_enabled(!!(appliedItems & AppliedItems::STAGE_NAME_SPLASH));
     // WARN: Menu option is not modified here.
 
     if (!!(appliedItems & AppliedItems::SPRITES_OF_ZONES) != !!(mosaicAppliedItems_ & AppliedItems::SPRITES_OF_ZONES))
