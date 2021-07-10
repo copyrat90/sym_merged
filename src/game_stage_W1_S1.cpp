@@ -271,7 +271,7 @@ constexpr ZoneInfo::EntranceInfo Z4_entranceInfos_[] = {
 // };
 
 constexpr ZoneInfo::BlackHoleInfo blackHole = {
-    {840 - MAP_DIMENSIONS[0].width() / 2, 672 - MAP_DIMENSIONS[0].height() / 2},
+    {840 - MAP_DIMENSIONS[1].width() / 2, 672 - MAP_DIMENSIONS[1].height() / 2},
 };
 
 constexpr ZoneInfo zoneInfos_[] = {

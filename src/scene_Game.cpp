@@ -30,6 +30,8 @@ constexpr int FADE_IN_UPDATE_COUNT = 30;
         return game::stage::Get_W1_S0();
     case stage::Id::W1_S1:
         return game::stage::Get_W1_S1();
+    case stage::Id::W1_S2:
+        return game::stage::Get_W1_S2();
     default:
         BN_ERROR("Invalid stage::Id : ", static_cast<int>(stageId));
         break;

@@ -36,10 +36,10 @@ int main()
 
     scene::Param sceneParam;
     // Test
-    sceneParam.SetCurrentStage(game::stage::Id::W1_S1);               // test
-    bn::unique_ptr<scene::IScene> scene(new scene::Game(sceneParam)); // test
-    // sceneParam.SetCurrentStage(sym::global::GetCurrentStage()); // release
-    // bn::unique_ptr<scene::IScene> scene(new scene::Splash(sceneParam)); // release
+    // sceneParam.SetCurrentStage(game::stage::Id::W1_S2);               // test
+    // bn::unique_ptr<scene::IScene> scene(new scene::Game(sceneParam)); // test
+    sceneParam.SetCurrentStage(sym::global::GetCurrentStage());         // release
+    bn::unique_ptr<scene::IScene> scene(new scene::Splash(sceneParam)); // release
     bn::optional<scene::Type> nextScene;
 
 #ifndef NDEBUG
