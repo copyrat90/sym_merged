@@ -309,7 +309,7 @@ constexpr int blackHoleCount_ = [] {
 
 static_assert(blackHoleCount_ <= 1, "There are more than one blackHole!");
 
-constexpr StageInfo w1_s1_(stage::Id::W1_S1, "Stage 1", "Reuse", "스테이지 1", "재사용", false,
+constexpr StageInfo w1_s1_(stage::Id::W1_S1, "Stage 1", "Recombination", "스테이지 1", "재조합", false,
                            bn::music_items::music_oh_well, zoneInfos_);
 
 } // namespace
