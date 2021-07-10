@@ -74,6 +74,7 @@ constexpr ZoneInfo::ExitInfo Z0_exitInfos_[] = {
 
 constexpr ZoneInfo::EntranceInfo Z0_entranceInfos_[] = {
     {{65 - MAP_DIMENSIONS[0].width() / 2, 111 - MAP_DIMENSIONS[0].height() / 2}},
+    {{380 - MAP_DIMENSIONS[0].width() / 2, 112 - MAP_DIMENSIONS[0].height() / 2}},
 };
 
 // Zone 1
