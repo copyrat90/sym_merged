@@ -136,7 +136,7 @@ bn::pair<TriggerInteraction::EntityType, TriggerInteraction::Hand> TriggerIntera
     if (!state_.symbolsInHands[1] && state_.rKeyLastingCount >= state_.lKeyLastingCount)
     {
         buttonInteractRange = state_.player.GetRightButtonInteractRange();
-        symbolInteractRange = state_.player.GetRightButtonInteractRange();
+        symbolInteractRange = state_.player.GetRightSymbolPickupRange();
         interactHand = Hand::RIGHT;
     }
     else if (!state_.symbolsInHands[0] && state_.rKeyLastingCount < state_.lKeyLastingCount)
