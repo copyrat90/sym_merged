@@ -1,8 +1,11 @@
 # Symbol★Merged
 
-A puzzle platformer game for the [GBA](https://en.wikipedia.org/wiki/Game_Boy_Advance) where you can merge items(symbols) in hands.
+A puzzle platformer game for the [GBA](https://en.wikipedia.org/wiki/Game_Boy_Advance) where you can merge items(symbols) in hands, and use the superpower of the merged symbol.
+
+![](showcase/plus.gif) ![](showcase/vv.gif) 
 
 Currently in early alpha stage.
+[You can check out the demo on itch.io](https://copyrat90.itch.io/sym-merged)
 
 
 ## License

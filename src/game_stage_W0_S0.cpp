@@ -144,11 +144,44 @@ constexpr bn::span<ZoneInfo::SignInfo> Z2_signInfos_ = {
 constexpr ZoneInfo::ExitInfo Z2_exitInfos_[] = {
     {{0 - MAP_DIMENSIONS[0].width() / 2, 688 - MAP_DIMENSIONS[0].height() / 2, 2, 32}, 1, 2},
     {{712 - MAP_DIMENSIONS[0].width() / 2, 736 - MAP_DIMENSIONS[0].height() / 2, 32, 2}, 1, 3},
+    {{1024 - MAP_DIMENSIONS[0].width() / 2, 480 - MAP_DIMENSIONS[0].height() / 2, 2, 224}, 3, 0},
 };
 
 constexpr ZoneInfo::EntranceInfo Z2_entranceInfos_[] = {
     {{33 - MAP_DIMENSIONS[0].width() / 2, 688 - MAP_DIMENSIONS[0].height() / 2}},
     {{728 - MAP_DIMENSIONS[0].width() / 2, 686 - MAP_DIMENSIONS[0].height() / 2}},
+};
+
+constexpr bn::span<ZoneInfo::SymbolInfo> Z3_symbolInfos_ = {
+
+};
+
+constexpr bn::span<ZoneInfo::DoorInfo> Z3_doorInfos_ = {
+
+};
+
+constexpr bn::span<ZoneInfo::ShutterInfo> Z3_shutterInfos_ = {
+
+};
+
+constexpr bn::span<ZoneInfo::ButtonInfo> Z3_hoverButtonInfos_ = {
+
+};
+
+constexpr bn::span<ZoneInfo::ButtonInfo> Z3_pressureButtonInfos_ = {
+
+};
+
+constexpr bn::span<ZoneInfo::SignInfo> Z3_signInfos_ = {
+
+};
+
+constexpr bn::span<ZoneInfo::ExitInfo> Z3_exitInfos_ = {
+
+};
+
+constexpr ZoneInfo::EntranceInfo Z3_entranceInfos_[] = {
+    {{19 - MAP_DIMENSIONS[0].width() / 2, 258 - MAP_DIMENSIONS[0].height() / 2}},
 };
 
 constexpr ZoneInfo::BlackHoleInfo blackHole = {
@@ -168,6 +201,10 @@ constexpr ZoneInfo zoneInfos_[] = {
              Z2_pressureButtonInfos_,
              helper::tilemap::IndexRect({0, 50}, bn::size{128, 42}, bg_w0_s0_0.map_item().dimensions()), Z2_signInfos_,
              Z2_exitInfos_, Z2_entranceInfos_),
+    ZoneInfo(bn::affine_bg_items::bg_w0_s0_0, Z3_symbolInfos_, Z3_doorInfos_, Z3_shutterInfos_, Z3_hoverButtonInfos_,
+             Z3_pressureButtonInfos_,
+             helper::tilemap::IndexRect({0, 20}, bn::size{30, 20}, bg_w0_s0_0.map_item().dimensions()), Z3_signInfos_,
+             Z3_exitInfos_, Z3_entranceInfos_),
 };
 
 constexpr int blackHoleCount_ = [] {
