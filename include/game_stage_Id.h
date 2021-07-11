@@ -18,6 +18,7 @@ enum class Id : uint8_t
     W1_S0, // tutorial
     W1_S1,
     W1_S2,
+    W1_S3,
     STAGE_ID_TOTAL_COUNT
 };
 

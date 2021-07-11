@@ -114,7 +114,7 @@ constexpr ZoneInfo::EntranceInfo Z1_entranceInfos_[] = {
 };
 
 constexpr ZoneInfo::SymbolInfo Z2_symbolInfos_[] = {
-    {{88 - MAP_DIMENSIONS[0].width() / 2, 686 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::BAR, false},
+    {{88 - MAP_DIMENSIONS[0].width() / 2, 686 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::XOR, false},
     {{109 - MAP_DIMENSIONS[0].width() / 2, 686 - MAP_DIMENSIONS[0].height() / 2}, entity::Symbol::Type::XOR, false},
 };
 
@@ -127,14 +127,15 @@ constexpr ZoneInfo::ShutterInfo Z2_shutterInfos_[] = {
     {{329 - MAP_DIMENSIONS[0].width() / 2, 264 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
     {{12 - MAP_DIMENSIONS[0].width() / 2, 272 - MAP_DIMENSIONS[0].height() / 2}, true, 0},
     {{22 - MAP_DIMENSIONS[0].width() / 2, 272 - MAP_DIMENSIONS[0].height() / 2}, true, 1},
+    {{204 - MAP_DIMENSIONS[0].width() / 2, 504 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
 };
 
 constexpr bn::span<ZoneInfo::ButtonInfo> Z2_hoverButtonInfos_ = {
 
 };
 
-constexpr bn::span<ZoneInfo::ButtonInfo> Z2_pressureButtonInfos_ = {
-
+constexpr ZoneInfo::ButtonInfo Z2_pressureButtonInfos_[] = {
+    {{327 - MAP_DIMENSIONS[0].width() / 2, 456 - MAP_DIMENSIONS[0].height() / 2}, false, 0, true, bn::nullopt},
 };
 
 constexpr bn::span<ZoneInfo::SignInfo> Z2_signInfos_ = {
