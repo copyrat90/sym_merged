@@ -528,6 +528,18 @@ void PhysicsMovement::PlayerKeyboardHandle_()
     {
         symbolAbilityRelease(*state_.symbolsInHands[1]);
     }
+    // left symbol ability: Cancel
+    if ((mergeOngoing || bn::keypad::start_pressed()) && state_.symbolsInHands[0] &&
+        state_.symbolsInHands[0]->GetAbilityState() == entity::Symbol::AbilityState::USING)
+    {
+        symbolAbilityRelease(*state_.symbolsInHands[0]);
+    }
+    // right symbol ability: Cancel
+    if ((mergeOngoing || bn::keypad::start_pressed()) && state_.symbolsInHands[1] &&
+        state_.symbolsInHands[1]->GetAbilityState() == entity::Symbol::AbilityState::USING)
+    {
+        symbolAbilityRelease(*state_.symbolsInHands[1]);
+    }
 
     if (!mergeOngoing && bn::keypad::a_pressed() && state_.player.GetGrounded() && !pressAJumping_)
     {
