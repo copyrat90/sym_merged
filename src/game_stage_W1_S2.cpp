@@ -121,7 +121,7 @@ constexpr ZoneInfo::ExitInfo Z1_exitInfos_[] = {
 };
 
 constexpr ZoneInfo::EntranceInfo Z1_entranceInfos_[] = {
-    {{40 - MAP_DIMENSIONS[0].width() / 2, 898 - MAP_DIMENSIONS[0].height() / 2}},
+    {{24 - MAP_DIMENSIONS[0].width() / 2, 898 - MAP_DIMENSIONS[0].height() / 2}},
     {{215 - MAP_DIMENSIONS[0].width() / 2, 992 - MAP_DIMENSIONS[0].height() / 2}},
     {{215 - MAP_DIMENSIONS[0].width() / 2, 898 - MAP_DIMENSIONS[0].height() / 2}},
     {{24 - MAP_DIMENSIONS[0].width() / 2, 992 - MAP_DIMENSIONS[0].height() / 2}},
