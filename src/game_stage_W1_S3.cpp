@@ -183,6 +183,7 @@ constexpr ZoneInfo::ShutterInfo Z3_shutterInfos_[] = {
     {{802 - MAP_DIMENSIONS[0].width() / 2, 368 - MAP_DIMENSIONS[0].height() / 2}, false, 0},
     {{800 - MAP_DIMENSIONS[0].width() / 2, 464 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
     {{852 - MAP_DIMENSIONS[0].width() / 2, 632 - MAP_DIMENSIONS[0].height() / 2}, false, 1},
+    {{586 - MAP_DIMENSIONS[0].width() / 2, 368 - MAP_DIMENSIONS[0].height() / 2}, true, 1},
 };
 
 constexpr ZoneInfo::ButtonInfo Z3_hoverButtonInfos_[] = {
@@ -190,10 +191,10 @@ constexpr ZoneInfo::ButtonInfo Z3_hoverButtonInfos_[] = {
 };
 
 constexpr ZoneInfo::ButtonInfo Z3_pressureButtonInfos_[] = {
-    {{762 - MAP_DIMENSIONS[0].width() / 2, 640 - MAP_DIMENSIONS[0].height() / 2},
+    {{762 - MAP_DIMENSIONS[0].width() / 2, 608 - MAP_DIMENSIONS[0].height() / 2},
      false,
      1,
-     false,
+     true,
      entity::Symbol::Type::VV},
 };
 
@@ -250,7 +251,7 @@ constexpr int blackHoleCount_ = [] {
 
 static_assert(blackHoleCount_ <= 1, "There are more than one blackHole!");
 
-constexpr StageInfo w1_s3_(stage::Id::W1_S3, "Final Stage", "Once Again", "마지막 스테이지", "한 번 더", false,
+constexpr StageInfo w1_s3_(stage::Id::W1_S3, "Final Stage", "Once Again", "마지막 스테이지", "다시 한번", false,
                            bn::music_items::music_fruity_radioactivity, zoneInfos_);
 
 } // namespace

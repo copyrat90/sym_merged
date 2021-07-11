@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#00ff00" nextlayerid="10" nextobjectid="208">
+<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#00ff00" nextlayerid="10" nextobjectid="209">
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer id="1" name="ACTUAL STAGE MAP" width="128" height="128">
   <data encoding="csv">
@@ -350,7 +350,7 @@
    <object id="194" name="~vv" x="723.333" y="838.667"/>
    <object id="195" name="hoverBtn0" x="754" y="843"/>
    <object id="196" name="shutter1" x="852" y="632"/>
-   <object id="198" name="pressBtn1@" x="762" y="640">
+   <object id="198" name="pressBtn1@" x="762" y="608">
     <properties>
      <property name="sym" value="vv"/>
     </properties>
@@ -374,6 +374,7 @@
      <property name="Ent" value="Z0_Ent4"/>
     </properties>
    </object>
+   <object id="208" name="~shutter1" x="586" y="368"/>
   </objectgroup>
   <objectgroup id="9" name="Zone Boundary" locked="1">
    <object id="160" x="8.5" y="16" width="544" height="471.5">
