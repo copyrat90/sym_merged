@@ -4,6 +4,8 @@ A puzzle platformer game for the [GBA](https://en.wikipedia.org/wiki/Game_Boy_Ad
 
 ![](showcase/plus.gif) ![](showcase/vv.gif) 
 
+Supported languages : English, 한국어(Korean)
+
 Currently in early alpha stage.
 [You can check out the demo on itch.io](https://copyrat90.itch.io/sym-merged)
 
