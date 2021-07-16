@@ -50,10 +50,10 @@ constexpr bn::array<bn::string_view, 3> Z0_signTexts_English[] = {
 };
 
 constexpr bn::array<bn::string_view, 3> Z0_signTexts_Korean[] = {
-    {"방향키:이동"},
-    {"A:점프"},
-    {"L/R:왼/오른손 사용", "당장은 아무 효과도 없다."},
-    {"L/R:스위치 누르기", "스위치에 가까운 손으로", "작동시켜보자."},
+    {"방향키 : 이동"},
+    {"A : 점프"},
+    {"L/R : 왼/오른손 사용", "당장은 아무 효과도 없다."},
+    {"L/R : 스위치 누르기", "스위치에 가까운 손으로", "작동시켜보자."},
 };
 
 constexpr ZoneInfo::SignInfo Z0_signInfos_[] = {
@@ -109,10 +109,10 @@ constexpr bn::array<bn::string_view, 3> Z1_signTexts_English[] = {
 };
 
 constexpr bn::array<bn::string_view, 3> Z1_signTexts_Korean[] = {
-    {"L/R:문양 집기"},
+    {"L/R : 문양 집기"},
     {"스위치의 번호와 같은", "번호의 문이 열린다."},
     {"문양을 든 손으론", "스위치를 누르지 못한다.", "반대쪽 손을 사용하자."},
-    {"아래+L/R:내려놓기", "버튼 위에 문양을 올려놓자."},
+    {"아래 + L/R : 내려놓기", "버튼 위에 문양을 올려놓자."},
 };
 
 constexpr ZoneInfo::SignInfo Z1_signInfos_[] = {
@@ -173,10 +173,10 @@ constexpr bn::array<bn::string_view, 3> Z2_signTexts_English[] = {
 };
 
 constexpr bn::array<bn::string_view, 3> Z2_signTexts_Korean[] = {
-    {"L/R꾹눌러 합친 문양의", "능력 사용(낙하 속력 감소)"},
-    {"B꾹눌러 양손 문양 합치기", "양손에 문양을 하나씩 들고", "하나로 합쳐보자."},
-    {"B꾹눌러 문양 분리하기"},
-    {"스타트:메뉴 열기", "망친 경우,메뉴를 열어", "재시작 할 수 있다."},
+    {"L/R 꾹눌러 합친 문양의", "능력 사용 (낙하 속력 감소)"},
+    {"B 꾹눌러 양손 문양 합치기", "양손에 문양을 하나씩 들고", "하나로 합쳐보자."},
+    {"B 꾹눌러 문양 분리하기"},
+    {"스타트 : 메뉴 열기", "망친 경우, 메뉴를 열어", "재시작 할 수 있다."},
 };
 
 constexpr ZoneInfo::SignInfo Z2_signInfos_[] = {
@@ -237,7 +237,7 @@ constexpr bn::array<bn::string_view, 3> Z3_signTexts_English[] = {
 };
 
 constexpr bn::array<bn::string_view, 3> Z3_signTexts_Korean[] = {
-    {"일부 합친 문양의 경우,", "L/R을 한번만 짧게 눌러도", "능력을 사용할 수 있다."},
+    {"일부 합친 문양의 경우,", "L/R 을 한번만 짧게 눌러도", "능력을 사용할 수 있다."},
     {"일부 버튼은 특정 문양으로", "눌러야만 작동한다."},
     {"양손이 가득찬 상태론", "문양을 분리할 수 없다.", "먼저 문양 하나를 내려놓자."},
 };

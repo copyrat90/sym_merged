@@ -32,7 +32,7 @@ constexpr bn::fixed MENU_OPTION_DY = 20;
 constexpr bn::string_view MENU_STRINGS_ENG[Menu::MENU_OPTION_TOTAL_COUNT] = {"Continue", "Restart this room",
                                                                              "Restart the stage", "언 어 : English"};
 constexpr bn::string_view MENU_STRINGS_KOR[Menu::MENU_OPTION_TOTAL_COUNT] = {"계속하기", "현재 방 재시작",
-                                                                             "스테이지 재시작", "뷁웱:한국어"};
+                                                                             "스테이지 재시작", "Lang : 한국어"};
 
 constexpr bn::fixed_point CURSOR_OFFSET_ENG = {-13, -2};
 constexpr bn::fixed_point CURSOR_OFFSET_KOR = {-13, -1};

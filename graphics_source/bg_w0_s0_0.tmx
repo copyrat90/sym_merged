@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#00ff00" nextlayerid="10" nextobjectid="65">
+<map version="1.5" tiledversion="1.7.0" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#00ff00" nextlayerid="10" nextobjectid="66">
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer id="1" name="ACTUAL STAGE MAP" width="128" height="128">
   <data encoding="csv">
@@ -133,7 +133,7 @@
 51,51,51,51,51,27,27,28,27,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,51,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <group id="5" name="MUST DISABLE BEFORE EXPORT" visible="0">
+ <group id="5" name="MUST DISABLE BEFORE EXPORT">
   <layer id="4" name="Numeric Helper" width="128" height="128" locked="1">
    <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -341,6 +341,12 @@
    <object id="56" name="Z3_Ent0" x="19" y="258"/>
    <object id="62" name="~pressBtn0" x="327.045" y="456"/>
    <object id="63" name="shutter0" x="204.045" y="504"/>
+   <object id="65" name="sign" x="432" y="928">
+    <properties>
+     <property name="eng" value="&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;, &quot;abcdefghijklmnopqrstuvwxyz&quot;"/>
+     <property name="kor" value="&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;, &quot;abcdefghijklmnopqrstuvwxyz&quot;"/>
+    </properties>
+   </object>
   </objectgroup>
   <objectgroup id="9" name="Zone Boundary" locked="1">
    <object id="24" x="0" y="744" width="312" height="280">

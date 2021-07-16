@@ -156,7 +156,7 @@ struct TextGenManager
             }
             if (!hangeul)
             {
-                hangeul = new bn::sprite_text_generator(font::fixed_16x16_hamchorom);
+                hangeul = new bn::sprite_text_generator(font::variable_16x16_hamchorom);
                 hangeul->set_alignment(constant::DEFAULT_TEXT_GEN_ALIGN);
             }
             break;
