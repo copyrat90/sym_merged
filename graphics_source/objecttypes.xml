@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objecttypes>
+ <objecttype name="" color="#a0a0a4"/>
+ <objecttype name="BlackHole" color="#de3920"/>
+ <objecttype name="Door" color="#673ca4">
+  <property name="destinationZoneIndex" type="int" default="-1"/>
+  <property name="entranceOfZoneIndex" type="int" default="-1"/>
+  <property name="isOpenedByDefault" type="bool" default="false"/>
+  <property name="textSpriteNumber" type="int" default="-1"/>
+ </objecttype>
+ <objecttype name="Entrance" color="#ad06e5">
+  <property name="entranceIndex" type="int" default="-1"/>
+ </objecttype>
+ <objecttype name="Exit" color="#673ca4">
+  <property name="destinationZoneIndex" type="int" default="-1"/>
+  <property name="entranceOfZoneIndex" type="int" default="-1"/>
+ </objecttype>
+ <objecttype name="HoverButton" color="#d4d4d4">
+  <property name="isOnByDefault" type="bool" default="false"/>
+  <property name="textSpriteNumber" type="int" default="-1"/>
+ </objecttype>
+ <objecttype name="PressureButton" color="#d4d4d4">
+  <property name="isOnByDefault" type="bool" default="false"/>
+  <property name="isVerticallyReversed" type="bool" default="false"/>
+  <property name="requiredSymbolType" type="string"/>
+  <property name="textSpriteNumber" type="int" default="-1"/>
+ </objecttype>
+ <objecttype name="Shutter" color="#d4d4d4">
+  <property name="isOpenedByDefault" type="bool" default="false"/>
+  <property name="textSpriteNumber" type="int" default="-1"/>
+ </objecttype>
+ <objecttype name="Sign" color="#107b9c">
+  <property name="engMessage" type="string"/>
+  <property name="korMessage" type="string"/>
+ </objecttype>
+ <objecttype name="Symbol" color="#ffa451">
+  <property name="isGravityReversedByDefault" type="bool" default="false"/>
+  <property name="symbolType" type="string"/>
+ </objecttype>
+</objecttypes>

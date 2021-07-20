@@ -10,3 +10,7 @@ build/
 # release stuff
 *.zip
 release/licenses/
+
+# stage codegen
+stage_codegen/*.h
+stage_codegen/*.cpp

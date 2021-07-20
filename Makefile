@@ -21,15 +21,15 @@ TARGET      :=  $(notdir $(CURDIR))
 BUILD       :=  build
 LIBBUTANO   :=  D:/Library/butano/butano
 PYTHON      :=  python
-SOURCES     :=  src
-INCLUDES    :=  include
+SOURCES     :=  src stage_codegen
+INCLUDES    :=  include stage_codegen
 DATA        :=
 GRAPHICS    :=  graphics
 AUDIO       :=  audio
 ROMTITLE    :=  sym_merged
 ROMCODE     :=  2SME
 USERFLAGS   :=
-EXTTOOL     :=
+EXTTOOL     :=  @$(PYTHON) -B stage_codegen/stage-codegen.py --build=stage_codegen
 
 #---------------------------------------------------------------------------------------------------------------------
 # Export absolute butano path:
