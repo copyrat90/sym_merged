@@ -13,6 +13,10 @@
 # USERFLAGS is a list of additional compiler flags:
 #     Pass -flto to enable link-time optimization.
 #     Pass -O0 to improve debugging.
+# USERLIBDIRS is a list of additional directories containing libraries.
+#     Each libraries directory must contains include and lib subdirectories.
+# USERLIBS is a list of additional libraries to link with the project.
+# USERBUILD is a list of additional directories to remove when cleaning the project.
 # EXTTOOL is an optional command executed before processing audio, graphics and code files.
 #
 # All directories are specified relative to the project directory where the makefile is found.
@@ -21,15 +25,18 @@ TARGET      :=  $(notdir $(CURDIR))
 BUILD       :=  build
 LIBBUTANO   :=  D:/Library/butano/butano
 PYTHON      :=  python
-SOURCES     :=  src stage_codegen
-INCLUDES    :=  include stage_codegen
+SOURCES     :=  src stage_codegen/src
+INCLUDES    :=  include stage_codegen/include
 DATA        :=
 GRAPHICS    :=  graphics
 AUDIO       :=  audio
 ROMTITLE    :=  sym_merged
 ROMCODE     :=  2SME
 USERFLAGS   :=
-EXTTOOL     :=  @$(PYTHON) -B stage_codegen/stage-codegen.py --build=stage_codegen
+USERLIBDIRS :=  
+USERLIBS    :=  
+USERBUILD   :=  stage_codegen
+EXTTOOL     :=  @$(PYTHON) -B stage-codegen.py --build=$(USERBUILD)
 
 #---------------------------------------------------------------------------------------------------------------------
 # Export absolute butano path:

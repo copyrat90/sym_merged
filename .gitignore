@@ -12,5 +12,4 @@ build/
 release/licenses/
 
 # stage codegen
-stage_codegen/*.h
-stage_codegen/*.cpp
+stage_codegen/

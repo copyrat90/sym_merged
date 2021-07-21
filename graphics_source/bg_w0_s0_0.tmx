@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.5" tiledversion="1.7.1" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#00ff00" nextlayerid="19" nextobjectid="203">
+<map version="1.5" tiledversion="1.7.1" orientation="orthogonal" renderorder="right-down" width="128" height="128" tilewidth="8" tileheight="8" infinite="0" backgroundcolor="#00ff00" nextlayerid="19" nextobjectid="208">
  <tileset firstgid="1" source="tileset.tsx"/>
  <group id="10" name="Zone Tilemap">
   <properties>
@@ -824,8 +824,9 @@
       <property name="symbolType" value="BAR"/>
      </properties>
     </object>
-    <object id="166" name="xor" type="Symbol" x="127" y="974">
+    <object id="166" name="xor" type="Symbol" x="127" y="923">
      <properties>
+      <property name="isGravityReversedByDefault" type="bool" value="true"/>
       <property name="symbolType" value="XOR"/>
      </properties>
     </object>
@@ -894,7 +895,13 @@
       <property name="textSpriteNumber" type="int" value="2"/>
      </properties>
     </object>
-    <object id="179" name="BLACKHOLE" type="BlackHole" x="64" y="856"/>
+    <object id="179" name="BLACK_HOLE" type="BlackHole" x="64" y="856"/>
+    <object id="207" name="sign" type="Sign" x="154.667" y="961.333">
+     <properties>
+      <property name="engMessage" value="&quot;Hello, gbadev!&quot;"/>
+      <property name="korMessage" value="&quot;안녕, gbadev!&quot;"/>
+     </properties>
+    </object>
    </objectgroup>
   </group>
  </group>
