@@ -30,7 +30,7 @@ public:
     void ResetLKeyPress();
     void ResetRKeyPress();
 
-    bn::vector<bn::sprite_ptr, 20>& GetSignMessageTextSprites();
+    bn::vector<bn::sprite_ptr, 32>& GetSignMessageTextSprites();
 
     void RedrawSignMessages();
 
@@ -48,7 +48,7 @@ private:
     };
 
     bn::optional<int> collidedSignIdx_ = bn::nullopt;
-    bn::vector<bn::sprite_ptr, 20> tooltipTextSprites_;
+    bn::vector<bn::sprite_ptr, 32> tooltipTextSprites_;
 
     [[nodiscard]] bn::pair<EntityType, Hand> GetNearestInteractableFromPlayer_(
         bn::ilist<entity::Symbol>::iterator& outSymbolIter, int& outHoverButtonIdx);

@@ -306,7 +306,7 @@ void TriggerInteraction::ResetRKeyPress()
     state_.rKeyLastingCount = -1;
 }
 
-bn::vector<bn::sprite_ptr, 20>& TriggerInteraction::GetSignMessageTextSprites()
+bn::vector<bn::sprite_ptr, 32>& TriggerInteraction::GetSignMessageTextSprites()
 {
     return tooltipTextSprites_;
 }
