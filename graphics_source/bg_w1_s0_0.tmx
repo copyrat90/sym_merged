@@ -881,8 +881,8 @@
     </object>
     <object id="163" name="sign" type="Sign" x="716" y="358">
      <properties>
-      <property name="engMessage" value="&quot;For some merged symbols,&quot;, &quot;tapping L/R once is enough&quot;, &quot;to use its power.&quot;"/>
-      <property name="korMessage" value="&quot;일부 합친 문양의 경우,&quot;, &quot;L/R 을 한번만 짧게 눌러도&quot;, &quot;능력을 사용할 수 있다.&quot;"/>
+      <property name="engMessage" value="&quot;For some merged symbols,&quot;, &quot;tapping A/S once is enough&quot;, &quot;to use its power.&quot;"/>
+      <property name="korMessage" value="&quot;일부 합친 문양의 경우,&quot;, &quot;A/S 을 한번만 짧게 눌러도&quot;, &quot;능력을 사용할 수 있다.&quot;"/>
      </properties>
     </object>
     <object id="164" name="xor" type="Symbol" x="909.5" y="198.167">
@@ -966,14 +966,14 @@
     </object>
     <object id="150" name="sign" type="Sign" x="146" y="352">
      <properties>
-      <property name="engMessage" value="&quot;Hold B: Merge 2 symbols in hands&quot;, &quot;Pick up 1 symbol in each hand&quot;, &quot;and try merging them.&quot;"/>
-      <property name="korMessage" value="&quot;B 꾹눌러 양손 문양 합치기&quot;, &quot;양손에 문양을 하나씩 들고&quot;, &quot;하나로 합쳐보자.&quot;"/>
+      <property name="engMessage" value="&quot;Hold Z: Merge 2 symbols in hands&quot;, &quot;Pick up 1 symbol in each hand&quot;, &quot;and try merging them.&quot;"/>
+      <property name="korMessage" value="&quot;Z 꾹눌러 양손 문양 합치기&quot;, &quot;양손에 문양을 하나씩 들고&quot;, &quot;하나로 합쳐보자.&quot;"/>
      </properties>
     </object>
     <object id="151" name="sign" type="Sign" x="99" y="311">
      <properties>
-      <property name="engMessage" value="&quot;Hold L/R: Use merged symbol's&quot;, &quot;power (Fall down slowly)&quot;"/>
-      <property name="korMessage" value="&quot;L/R 꾹눌러 합친 문양의&quot;, &quot;능력 사용 (낙하 속력 감소)&quot;"/>
+      <property name="engMessage" value="&quot;Hold A/S: Use merged symbol's&quot;, &quot;power (Fall down slowly)&quot;"/>
+      <property name="korMessage" value="&quot;A/S 꾹눌러 합친 문양의&quot;, &quot;능력 사용 (낙하 속력 감소)&quot;"/>
      </properties>
     </object>
     <object id="152" name="Z2_Ent1" type="Entrance" x="292" y="264">
@@ -993,8 +993,8 @@
     </object>
     <object id="155" name="sign" type="Sign" x="256" y="264">
      <properties>
-      <property name="engMessage" value="&quot;Hold B: Split the symbol&quot;"/>
-      <property name="korMessage" value="&quot;B 꾹눌러 문양 분리하기&quot;"/>
+      <property name="engMessage" value="&quot;Hold Z: Split the symbol&quot;"/>
+      <property name="korMessage" value="&quot;Z 꾹눌러 문양 분리하기&quot;"/>
      </properties>
     </object>
     <object id="156" name="pressBtn0" type="PressureButton" x="233" y="272">
@@ -1009,8 +1009,8 @@
     </object>
     <object id="158" name="sign" type="Sign" x="68" y="272">
      <properties>
-      <property name="engMessage" value="&quot;Start: Open the menu&quot;, &quot;If you mess up, you can always&quot;, &quot;open the menu and restart.&quot;"/>
-      <property name="korMessage" value="&quot;스타트: 메뉴 열기&quot;, &quot;망친 경우, 메뉴를 열어&quot;, &quot;재시작 할 수 있다.&quot;"/>
+      <property name="engMessage" value="&quot;Enter: Open the menu&quot;, &quot;If you mess up, you can always&quot;, &quot;open the menu and restart.&quot;"/>
+      <property name="korMessage" value="&quot;Enter: 메뉴 열기&quot;, &quot;망친 경우, 메뉴를 열어&quot;, &quot;재시작 할 수 있다.&quot;"/>
      </properties>
     </object>
     <object id="159" name="~shutter0" type="Shutter" x="12" y="272">
@@ -1040,14 +1040,14 @@
     </object>
     <object id="134" name="sign" type="Sign" x="384" y="112">
      <properties>
-      <property name="engMessage" value="&quot;L/R: Pick up a symbol&quot;"/>
-      <property name="korMessage" value="&quot;L/R: 문양 집기&quot;"/>
+      <property name="engMessage" value="&quot;A/S: Pick up a symbol&quot;"/>
+      <property name="korMessage" value="&quot;A/S: 문양 집기&quot;"/>
      </properties>
     </object>
     <object id="135" name="sign" type="Sign" x="470" y="56">
      <properties>
-      <property name="engMessage" value="&quot;Down+L/R: Put the symbol down&quot;,&quot;Try putting a symbol on a button.&quot;"/>
-      <property name="korMessage" value="&quot;아래 + L/R: 내려놓기&quot;,&quot;버튼 위에 문양을 올려놓자.&quot;"/>
+      <property name="engMessage" value="&quot;Down+A/S: Put the symbol down&quot;,&quot;Try putting a symbol on a button.&quot;"/>
+      <property name="korMessage" value="&quot;아래 + A/S: 내려놓기&quot;,&quot;버튼 위에 문양을 올려놓자.&quot;"/>
      </properties>
     </object>
     <object id="136" name="pressBtn1" type="PressureButton" x="490" y="64">
@@ -1113,20 +1113,20 @@
     </object>
     <object id="125" name="sign" type="Sign" x="105" y="133">
      <properties>
-      <property name="engMessage" value="&quot;A: Jump&quot;"/>
-      <property name="korMessage" value="&quot;A: 점프&quot;"/>
+      <property name="engMessage" value="&quot;X: Jump&quot;"/>
+      <property name="korMessage" value="&quot;X: 점프&quot;"/>
      </properties>
     </object>
     <object id="126" name="sign" type="Sign" x="165" y="113">
      <properties>
-      <property name="engMessage" value="&quot;L/R: Use Left/Right hand&quot;,&quot;Doesn't do anything right now.&quot;"/>
-      <property name="korMessage" value="&quot;L/R: 왼/오른손 사용&quot;,&quot;당장은 아무 효과도 없다.&quot;"/>
+      <property name="engMessage" value="&quot;A/S: Use Left/Right hand&quot;,&quot;Doesn't do anything right now.&quot;"/>
+      <property name="korMessage" value="&quot;A/S: 왼/오른손 사용&quot;,&quot;당장은 아무 효과도 없다.&quot;"/>
      </properties>
     </object>
     <object id="127" name="sign" type="Sign" x="218" y="113">
      <properties>
-      <property name="engMessage" value="&quot;L/R: Toggle a switch&quot;,&quot;Try toggling a switch&quot;,&quot;with the hand near to it.&quot;"/>
-      <property name="korMessage" value="&quot;L/R: 스위치 누르기&quot;,&quot;스위치에 가까운 손으로&quot;,&quot;작동시켜보자.&quot;"/>
+      <property name="engMessage" value="&quot;A/S: Toggle a switch&quot;,&quot;Try toggling a switch&quot;,&quot;with the hand near to it.&quot;"/>
+      <property name="korMessage" value="&quot;A/S: 스위치 누르기&quot;,&quot;스위치에 가까운 손으로&quot;,&quot;작동시켜보자.&quot;"/>
      </properties>
     </object>
     <object id="128" name="Z0_Exit0" type="Exit" x="304" y="112" width="2" height="32">
