@@ -22,12 +22,12 @@ https://mgba.io/
 
 You can check out the source code of this game on the GitHub repo (link below)
 https://github.com/copyrat90/sym_merged
-Source code is licensed under MIT/Expat license.
+Source code is licensed under the MIT/Expat license.
 
 
 This game uses the Butano engine, which is Modern C++ game engine for the GBA.
 https://github.com/GValiente/butano
-Butano is licensed under zlib license.
+Butano is licensed under the zlib license.
 
 Without Butano engine, I couldn't have come this far.
 Thanks for developing this awesome engine, GValiente!

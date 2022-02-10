@@ -12,7 +12,7 @@ Currently in early alpha stage.
 
 ## Dependencies
 
-This program uses [Butano](https://github.com/GValiente/butano), which is licensed under zlib license.
+This program uses [Butano](https://github.com/GValiente/butano), which is licensed under the zlib license.
 
 
 ## Build
@@ -39,6 +39,6 @@ That should do it, now do `make -j16` and see what happens.
 
 
 ## License
-Source code is licensed under MIT/Expat license.
+Source code is licensed under the MIT/Expat license.
 
 License of assets differ from each other, check the individual license on `licenses/asset` folder.
