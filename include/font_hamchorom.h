@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bn_sprite_font.h>
+#include <bn_utf8_characters_map.h>
 
 #include "bn_sprite_items_font_hamchorom.h"
 
@@ -10,7 +11,7 @@ namespace sym::font
 namespace
 {
 
-inline constexpr bn::string_view variable_16x16_hamchorom_utf8_chars[] = {
+inline constexpr bn::utf8_character variable_16x16_hamchorom_utf8_chars[] = {
     "★",  "가", "각", "간", "갇", "갈", "갉", "갊", "감", "갑", "값", "갓", "갔", "강", "갖", "갗", "같", "갚", "갛",
     "개", "객", "갠", "갤", "갬", "갭", "갯", "갰", "갱", "갸", "갹", "갼", "걀", "걋", "걍", "걔", "걘", "걜", "거",
     "걱", "건", "걷", "걸", "걺", "검", "겁", "것", "겄", "겅", "겆", "겉", "겊", "겋", "게", "겐", "겔", "겜", "겝",
@@ -224,10 +225,16 @@ inline constexpr int8_t variable_16x16_hamchorom_widths[] = {
     16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16,
 };
 
+inline constexpr bn::span<const bn::utf8_character> variable_16x16_hamchorom_utf8_chars_span(
+    variable_16x16_hamchorom_utf8_chars);
+
+inline constexpr auto variable_16x16_hamchorom_utf8_chars_span_map =
+    bn::utf8_characters_map<variable_16x16_hamchorom_utf8_chars_span>();
+
 } // anonymous namespace
 
 inline constexpr bn::sprite_font variable_16x16_hamchorom(bn::sprite_items::font_hamchorom,
-                                                          variable_16x16_hamchorom_utf8_chars,
+                                                          variable_16x16_hamchorom_utf8_chars_span_map.reference(),
                                                           variable_16x16_hamchorom_widths);
 
 } // namespace sym::font
