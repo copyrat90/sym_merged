@@ -22,7 +22,7 @@ INumberTextEntity::INumberTextEntity(INumberTextEntity&& other)
 
 INumberTextEntity& INumberTextEntity::operator=(INumberTextEntity&& other)
 {
-    INumberTextEntity::operator=(bn::move(other));
+    IEntity::operator=(bn::move(other));
     textNumber_ = other.textNumber_;
     relativeNumberTextPosition_ = other.relativeNumberTextPosition_;
     return *this;
