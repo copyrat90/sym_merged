@@ -1,4 +1,7 @@
 
+# editor settings
+.vscode/
+
 # build output 
 build/
 *.elf
