@@ -1,0 +1,28 @@
+
+# editors
+.vscode/
+.qtc_clangd/
+
+# python
+.venv/
+__pycache__/
+
+# build output
+build*/
+*.elf
+*.gba
+
+# save file for testing
+*.sav
+
+# ldtk backups
+levels/sym_merged/backups/
+
+# misc (derived from butano)
+*.creator
+*.user
+*.files
+*.includes
+*.config
+*.cflags
+*.cxxflags

@@ -1,0 +1,6 @@
+[submodule "butano"]
+	path = butano
+	url = https://github.com/GValiente/butano.git
+[submodule "butano-ldtk"]
+	path = butano-ldtk
+	url = https://github.com/copyrat90/butano-ldtk.git
