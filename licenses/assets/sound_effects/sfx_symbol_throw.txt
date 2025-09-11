@@ -1,0 +1,6 @@
+Sound name : Throwing / Whip Effect
+Made by : denao270
+Link : https://freesound.org/people/denao270/sounds/346373/
+License : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
+
+This sound is embedded into GBA, thus modified to 22050Hz, 8bit PCM.

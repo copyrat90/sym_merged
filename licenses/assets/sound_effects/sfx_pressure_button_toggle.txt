@@ -1,0 +1,6 @@
+Sound name : button
+Made by : Leszek_Szary
+Link : https://freesound.org/people/Leszek_Szary/sounds/171521/
+License : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
+
+This sound is embedded into GBA, thus modified to 22050Hz, 8bit PCM.

@@ -1,0 +1,6 @@
+Sound name : Jump_C_05
+Made by : cabled_mess
+Link : https://freesound.org/people/cabled_mess/sounds/350905/
+License : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
+
+This sound is embedded into GBA, thus modified to 22050Hz, 8bit PCM.

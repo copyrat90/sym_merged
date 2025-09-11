@@ -1,0 +1,7 @@
+Sound name : umbrella_open.wav
+Made by : ekfink
+Link : https://freesound.org/people/ekfink/sounds/235494/
+License : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
+
+This sound is embedded into GBA, thus modified to 22050Hz, 8bit PCM.
+The sound has been slightly cut.

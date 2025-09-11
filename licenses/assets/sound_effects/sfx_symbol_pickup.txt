@@ -1,0 +1,6 @@
+Sound name : Bubble Pop
+Made by : elmasmalo1
+Link : https://freesound.org/people/elmasmalo1/sounds/376968/
+License : CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
+
+This sound is embedded into GBA, thus modified to 22050Hz, 8bit PCM.

@@ -1,0 +1,6 @@
+Sound name : Pop (made by DuffyBro)
+Made by : DuffyBro
+Link : https://freesound.org/people/DuffyBro/sounds/319107/
+License : https://creativecommons.org/publicdomain/zero/1.0/
+
+This sound is embedded into GBA, thus modified to 22050Hz, 8bit PCM.

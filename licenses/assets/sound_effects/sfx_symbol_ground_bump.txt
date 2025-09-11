@@ -1,0 +1,6 @@
+Sound name : drop04.wav
+Made by : newagesoup
+Link : https://freesound.org/people/newagesoup/sounds/339358/
+License : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
+
+This sound is embedded into GBA, thus modified to 22050Hz, 8bit PCM.

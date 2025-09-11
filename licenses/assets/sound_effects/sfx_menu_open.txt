@@ -1,0 +1,6 @@
+Sound name : UI Cute Select Major 6th
+Made by : plasterbrain
+Link : https://freesound.org/people/plasterbrain/sounds/396193/
+License : CC0 1.0 (https://creativecommons.org/publicdomain/zero/1.0/)
+
+This sound is embedded into GBA, thus modified to 22050Hz, 8bit PCM.
