@@ -1,6 +1,10 @@
 // SPDX-FileCopyrightText: Copyright 2021-2025 Guyeon Yu <copyrat90@gmail.com>
 // SPDX-License-Identifier: MIT
 
+#include "fx/transitions.h"
+#include "scn/scene_stack.h"
+#include "scn/splash.h"
+
 #include "ldtk_core.h"
 
 #include <bn_core.h>
@@ -14,8 +18,17 @@ int main()
     // This game uses some DMG music, so we're setting its volume to FULL
     bn::dmg_music::set_master_volume(bn::dmg_music_master_volume::FULL);
 
+    // Transitions manager to deal with actions for transparency, mosaic, intensity, etc.
+    sym::fx::transitions transitions;
+
+    // The scene stack
+    sym::scn::scene_stack scene_stack;
+    scene_stack.reserve_push<sym::scn::splash>(transitions);
+
     while (true)
     {
+        scene_stack.update();
+        transitions.update();
         bn::core::update();
     }
 }

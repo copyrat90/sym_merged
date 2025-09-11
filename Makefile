@@ -39,7 +39,7 @@ LIBBUTANO   	:=  butano/butano
 BUILDLDTK   	:=  build_ldtk
 LIBBUTANOLDTK	:=  butano-ldtk
 PYTHON      	:=  python
-SOURCES     	:=  src $(LIBBUTANOLDTK)/src $(BUILDLDTK)/src
+SOURCES     	:=  src src/scn src/fx $(LIBBUTANOLDTK)/src $(BUILDLDTK)/src
 INCLUDES    	:=  include $(LIBBUTANOLDTK)/include $(BUILDLDTK)/include
 DATA        	:=  
 GRAPHICS    	:=  graphics $(BUILDLDTK)/graphics
@@ -60,6 +60,16 @@ DEFAULTLIBS 	:=
 STACKTRACE  	:=  YES
 USERBUILD   	:=  $(BUILDLDTK)
 EXTTOOL     	:=  @$(PYTHON) -B $(LIBBUTANOLDTK)/tools/butano_ldtk.py --input=levels/sym_merged.ldtk --build=$(BUILDLDTK)
+
+SYM_DEVBUILD	:=  
+ifneq ($(strip $(SYM_DEVBUILD)),)
+	SOURCES 	+=  src/dev butano/common/src
+	INCLUDES	+=  butano/common/include
+	GRAPHICS	+=  butano/common/graphics
+	USERFLAGS	+=  -DSYM_DEVBUILD=true
+else
+	USERFLAGS	+=  -DSYM_DEVBUILD=false
+endif
 
 #---------------------------------------------------------------------------------------------------------------------
 # Export absolute butano path:
