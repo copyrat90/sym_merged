@@ -3,10 +3,12 @@
 
 #include "scn/title.h"
 
+#include <bn_string_view.h>
+
 namespace sym::scn
 {
 
-title::title(fx::transitions& transitions) : _transitions(transitions)
+title::title(fx::transitions& transitions, sys::save_data& save_data) : _transitions(transitions), _save_data(save_data)
 {
 }
 

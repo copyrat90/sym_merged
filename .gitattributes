@@ -1,2 +1,5 @@
 # Normalize EOL for all files that Git considers text files.
 * text=auto eol=lf
+
+include/sys/crc32.h linguist-vendored
+src/sys/crc32.cpp linguist-vendored
