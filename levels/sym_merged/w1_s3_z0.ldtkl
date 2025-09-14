@@ -68,7 +68,10 @@
 					"height": 32,
 					"defUid": 87,
 					"px": [387,231],
-					"fieldInstances": [{ "__identifier": "music", "__type": "String", "__value": "", "__tile": null, "defUid": 134, "realEditorValues": [] }],
+					"fieldInstances": [{ "__identifier": "bgm", "__type": "LocalEnum.music_kind", "__value": "fruity_radioactivity", "__tile": null, "defUid": 169, "realEditorValues": [{
+						"id": "V_String",
+						"params": ["fruity_radioactivity"]
+					}] }],
 					"__worldX": 2571,
 					"__worldY": 2255
 				},

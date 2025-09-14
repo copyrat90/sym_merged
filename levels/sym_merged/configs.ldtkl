@@ -229,6 +229,206 @@
 					],
 					"__worldX": -190,
 					"__worldY": -140
+				},
+				{
+					"__identifier": "stages_lut",
+					"__grid": [20,50],
+					"__pivot": [0.5,0.5],
+					"__tags": [],
+					"__tile": { "tilesetUid": 6, "x": 144, "y": 32, "w": 16, "h": 16 },
+					"__smartColor": "#808080",
+					"iid": "aec3aca0-8560-11f0-aa7b-b307558493cd",
+					"width": 16,
+					"height": 16,
+					"defUid": 162,
+					"px": [20,50],
+					"fieldInstances": [{ "__identifier": "stage_starts", "__type": "Array<EntityRef>", "__value": [
+						{
+							"entityIid": "c6726320-8560-11f0-8e54-0bdc751daf90",
+							"layerIid": "463a14d0-8560-11f0-b418-6d9c2d761939",
+							"levelIid": "6d733290-8560-11f0-8b04-99d259cbb8af",
+							"worldIid": "6d72bd60-8560-11f0-8b04-dda022154d33"
+						},
+						{
+							"entityIid": "1b371760-8560-11f0-a833-69f865d0477d",
+							"layerIid": "faa2c841-8560-11f0-b418-c5edf7183e9e",
+							"levelIid": "faa2c840-8560-11f0-b418-cf844e939027",
+							"worldIid": "6d72bd60-8560-11f0-8b04-dda022154d33"
+						},
+						{
+							"entityIid": "b65ce740-8560-11f0-8de5-ed05149a6692",
+							"layerIid": "e0983d01-8560-11f0-b418-790fe600ff6b",
+							"levelIid": "e0983d00-8560-11f0-b418-65a280a6fe46",
+							"worldIid": "6d72bd60-8560-11f0-8b04-dda022154d33"
+						},
+						{
+							"entityIid": "44d62c40-8560-11f0-b452-e738d4f09792",
+							"layerIid": "70138f71-8560-11f0-9cdf-d78a5cca27f2",
+							"levelIid": "70138f70-8560-11f0-9cdf-fbafec36ff73",
+							"worldIid": "6d72bd60-8560-11f0-8b04-dda022154d33"
+						}
+					], "__tile": null, "defUid": 163, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["c6726320-8560-11f0-8e54-0bdc751daf90"]
+					}, {
+						"id": "V_String",
+						"params": ["1b371760-8560-11f0-a833-69f865d0477d"]
+					}, {
+						"id": "V_String",
+						"params": ["b65ce740-8560-11f0-8de5-ed05149a6692"]
+					}, {
+						"id": "V_String",
+						"params": ["44d62c40-8560-11f0-b452-e738d4f09792"]
+					} ] }],
+					"__worldX": -220,
+					"__worldY": -110
+				},
+				{
+					"__identifier": "audio_configs",
+					"__grid": [20,80],
+					"__pivot": [0.5,0.5],
+					"__tags": [],
+					"__tile": { "tilesetUid": 6, "x": 16, "y": 400, "w": 16, "h": 16 },
+					"__smartColor": "#808080",
+					"iid": "605c10c0-8560-11f0-84bd-b79278eac598",
+					"width": 16,
+					"height": 16,
+					"defUid": 165,
+					"px": [20,80],
+					"fieldInstances": [
+						{ "__identifier": "music_names", "__type": "Array<String>", "__value": [ "music_detour", "music_oh_well", "music_autang", "music_fruity_radioactivity", "music_past" ], "__tile": null, "defUid": 167, "realEditorValues": [
+							{
+								"id": "V_String",
+								"params": ["music_detour"]
+							},
+							{
+								"id": "V_String",
+								"params": ["music_oh_well"]
+							},
+							{
+								"id": "V_String",
+								"params": ["music_autang"]
+							},
+							{
+								"id": "V_String",
+								"params": ["music_fruity_radioactivity"]
+							},
+							{
+								"id": "V_String",
+								"params": ["music_past"]
+							}
+						] },
+						{ "__identifier": "music_volumes", "__type": "Array<Float>", "__value": [0.5,0.25,0.125,0.15,0.2], "__tile": null, "defUid": 168, "realEditorValues": [
+							{ "id": "V_Float", "params": [0.5] },
+							{ "id": "V_Float", "params": [0.25] },
+							{ "id": "V_Float", "params": [0.125] },
+							{ "id": "V_Float", "params": [0.15] },
+							{ "id": "V_Float", "params": [0.2] }
+						] },
+						{ "__identifier": "sound_names", "__type": "Array<String>", "__value": [
+							"sfx_menu_open",
+							"sfx_menu_cursor",
+							"sfx_menu_select",
+							"sfx_player_jump",
+							"sfx_symbol_pickup",
+							"sfx_symbol_drop",
+							"sfx_symbol_ground_bump",
+							"sfx_hover_button_toggle",
+							"sfx_pressure_button_toggle",
+							"sfx_player_damage",
+							"sfx_symbol_merge",
+							"sfx_error",
+							"sfx_umbrella_open",
+							"sfx_symbol_jump",
+							"sfx_gravity_reverse",
+							"sfx_enter_black_hole"
+						], "__tile": null, "defUid": 170, "realEditorValues": [
+							{
+								"id": "V_String",
+								"params": ["sfx_menu_open"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_menu_cursor"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_menu_select"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_player_jump"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_symbol_pickup"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_symbol_drop"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_symbol_ground_bump"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_hover_button_toggle"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_pressure_button_toggle"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_player_damage"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_symbol_merge"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_error"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_umbrella_open"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_symbol_jump"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_gravity_reverse"]
+							},
+							{
+								"id": "V_String",
+								"params": ["sfx_enter_black_hole"]
+							}
+						] },
+						{ "__identifier": "sound_volumes", "__type": "Array<Float>", "__value": [1,1,1,1,0.5,1,1,1,1,0.5,0.75,1,1,1,1,1], "__tile": null, "defUid": 171, "realEditorValues": [
+							null,
+							null,
+							null,
+							null,
+							{ "id": "V_Float", "params": [0.5] },
+							null,
+							null,
+							null,
+							null,
+							{ "id": "V_Float", "params": [0.5] },
+							{ "id": "V_Float", "params": [0.75] },
+							null,
+							null,
+							null,
+							null,
+							null
+						] }
+					],
+					"__worldX": -220,
+					"__worldY": -80
 				}
 			]
 		},

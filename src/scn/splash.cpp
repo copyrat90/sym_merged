@@ -47,6 +47,7 @@ splash::splash(fx::transitions& transitions, sys::save_data& save_data)
     bn::music::stop();
     bn::dmg_music::stop();
 
+    bn::dmg_music::set_master_volume(bn::dmg_music_master_volume::HALF);
     bn::dmg_music_items::dmg_music_signature_sound.play(1, false);
 
     _transitions.set_alpha(fx::transitions::kinds::TRANSPARENCY, 1);

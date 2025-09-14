@@ -9,15 +9,11 @@
 #include "ldtk_core.h"
 
 #include <bn_core.h>
-#include <bn_dmg_music.h>
 
 int main()
 {
     bn::core::init();
     ldtk::core::init();
-
-    // This game uses some DMG music, so we're setting its volume to FULL
-    bn::dmg_music::set_master_volume(bn::dmg_music_master_volume::FULL);
 
     // Transitions manager to deal with actions for transparency, mosaic, intensity, etc.
     sym::fx::transitions transitions;

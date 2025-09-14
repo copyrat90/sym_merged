@@ -68,7 +68,10 @@
 					"height": 32,
 					"defUid": 87,
 					"px": [66,95],
-					"fieldInstances": [{ "__identifier": "music", "__type": "String", "__value": "", "__tile": null, "defUid": 134, "realEditorValues": [] }],
+					"fieldInstances": [{ "__identifier": "bgm", "__type": "LocalEnum.music_kind", "__value": "autang", "__tile": null, "defUid": 169, "realEditorValues": [{
+						"id": "V_String",
+						"params": ["autang"]
+					}] }],
 					"__worldX": 2538,
 					"__worldY": -401
 				},
