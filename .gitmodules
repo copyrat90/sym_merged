@@ -4,3 +4,6 @@
 [submodule "butano-ldtk"]
 	path = butano-ldtk
 	url = https://github.com/copyrat90/butano-ldtk.git
+[submodule "iso-butano"]
+	path = iso-butano
+	url = https://github.com/copyrat90/iso-butano.git

@@ -7,12 +7,17 @@
 
 #include <cstdint>
 
-namespace sym::sys
+namespace ibn
 {
 
 class bit_stream_measurer;
 class bit_stream_writer;
 class bit_stream_reader;
+
+} // namespace ibn
+
+namespace sym::sys
+{
 
 class save_data final
 {
@@ -40,9 +45,9 @@ public:
     void set_stage_index(std::uint8_t);
 
 public: // `sram_rw` uses these to save/load
-    void measure(bit_stream_measurer& measurer) const;
-    void write(bit_stream_writer& writer) const;
-    void read(bit_stream_reader& reader);
+    void measure(ibn::bit_stream_measurer& measurer) const;
+    void write(ibn::bit_stream_writer& writer) const;
+    void read(ibn::bit_stream_reader& reader);
 
 private:
     lang _lang;

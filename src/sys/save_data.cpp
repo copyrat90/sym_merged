@@ -3,7 +3,7 @@
 
 #include "sys/save_data.h"
 
-#include "sys/sram_rw.h"
+#include "ibn_sram_rw.h"
 
 #include <type_traits>
 
@@ -50,7 +50,7 @@ void save_data::reset_stage()
 
 void save_data::load()
 {
-    sys::sram_rw rw(SAVE_MAGIC, SAVE_LOCATION_0, SAVE_LOCATION_1);
+    ibn::sram_rw rw(SAVE_MAGIC, SAVE_LOCATION_0, SAVE_LOCATION_1);
 
     // If read fails, it might be halfway-loaded (inconsistent state),
     // so we reset again.
@@ -60,7 +60,7 @@ void save_data::load()
 
 void save_data::save()
 {
-    sys::sram_rw rw(SAVE_MAGIC, SAVE_LOCATION_0, SAVE_LOCATION_1);
+    ibn::sram_rw rw(SAVE_MAGIC, SAVE_LOCATION_0, SAVE_LOCATION_1);
     rw.write(*this);
 }
 
@@ -104,7 +104,7 @@ void save_data::set_stage_index(std::uint8_t stage_index)
     _stage_index = stage_index;
 }
 
-void save_data::measure(bit_stream_measurer& measurer) const
+void save_data::measure(ibn::bit_stream_measurer& measurer) const
 {
     measurer
         .write(_lang, LANG_MIN, LANG_MAX)                  // [0..31]: 5 bits
@@ -114,7 +114,7 @@ void save_data::measure(bit_stream_measurer& measurer) const
         .write(FOOTER);                                    // 0xDEADCAFE: 32 bits
 }
 
-void save_data::write(bit_stream_writer& writer) const
+void save_data::write(ibn::bit_stream_writer& writer) const
 {
     writer
         .write(_lang, LANG_MIN, LANG_MAX)                  // [0..31]: 5 bits
@@ -124,7 +124,7 @@ void save_data::write(bit_stream_writer& writer) const
         .write(FOOTER);                                    // 0xDEADCAFE: 32 bits
 }
 
-void save_data::read(bit_stream_reader& reader)
+void save_data::read(ibn::bit_stream_reader& reader)
 {
     std::uint32_t footer = 0;
 
