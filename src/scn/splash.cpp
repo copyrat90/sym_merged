@@ -41,8 +41,10 @@ auto create_bg_anim() -> bn::regular_bg_cached_animate_action<2>
 
 } // namespace
 
-splash::splash(fx::transitions& transitions, sys::save_data& save_data)
-    : _transitions(transitions), _save_data(save_data), _bg_anim(create_bg_anim())
+splash::splash(fx::transitions& transitions, sys::save_data& save_data,
+               ibn::subject<void(ldtk::gen::lang_kind)>& lang_changed, sys::text_generators& text_generators)
+    : _transitions(transitions), _save_data(save_data), _lang_changed(lang_changed), _text_generators(text_generators),
+      _bg_anim(create_bg_anim())
 {
     bn::music::stop();
     bn::dmg_music::stop();
@@ -101,7 +103,7 @@ void splash::update_fade_out(scene_stack& scene_stack_)
     if (_transitions.done())
     {
         scene_stack_.reserve_pop();
-        scene_stack_.reserve_push<title>(_transitions, _save_data);
+        scene_stack_.reserve_push<title>(_transitions, _save_data, _lang_changed, _text_generators);
     }
 }
 

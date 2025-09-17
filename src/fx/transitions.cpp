@@ -25,6 +25,10 @@ void transitions::update()
             _sprites_mosaic_action->update();
         if (_bgs_mosaic_action.has_value())
             _bgs_mosaic_action->update();
+        if (_music_volume_action.has_value())
+            _music_volume_action->update();
+        if (_sound_volume_action.has_value())
+            _sound_volume_action->update();
 
         ++_current_update;
 
@@ -45,6 +49,10 @@ void transitions::set_alpha(kinds flags, bn::fixed alpha)
         bn::sprites_mosaic::set_stretch(alpha);
     if (!!(flags & kinds::BGS_MOSAIC))
         bn::bgs_mosaic::set_stretch(alpha);
+    if (!!(flags & kinds::MUSIC_VOLUME))
+        bn::music::set_volume(1 - alpha); // inverted
+    if (!!(flags & kinds::SOUND_VOLUME))
+        bn::sound::set_master_volume(1 - alpha); // inverted
 }
 
 void transitions::start(kinds flags, int duration_updates, bn::fixed final_alpha)
@@ -67,6 +75,10 @@ void transitions::start(kinds flags, int duration_updates, bn::fixed final_alpha
         _sprites_mosaic_action.emplace(duration_updates, final_alpha);
     if (!!(flags & kinds::BGS_MOSAIC))
         _bgs_mosaic_action.emplace(duration_updates, final_alpha);
+    if (!!(flags & kinds::MUSIC_VOLUME))
+        _music_volume_action.emplace(duration_updates, 1 - final_alpha); // inverted
+    if (!!(flags & kinds::SOUND_VOLUME))
+        _sound_volume_action.emplace(duration_updates, 1 - final_alpha); // inverted
 
     _current_update = 0;
     _duration_updates = duration_updates;
@@ -87,6 +99,8 @@ void transitions::clear()
     _intensity_action.reset();
     _sprites_mosaic_action.reset();
     _bgs_mosaic_action.reset();
+    _music_volume_action.reset();
+    _sound_volume_action.reset();
 }
 
 } // namespace sym::fx

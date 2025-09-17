@@ -124,18 +124,18 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [577,112],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "Watch out for spikes!\nIf you touch them, you will be\nrespawned to the last safe place.", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": [
-								"Watch out for spikes!\\nIf you touch them, you will be\\nrespawned to the last safe place."
-							]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "가시를 주의하자!\n닿으면 마지막으로 서있던\n안전한 곳으로 되돌아간다.", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["가시를 주의하자!\\n닿으면 마지막으로 서있던\\n안전한 곳으로 되돌아간다."]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [
+						"Watch out for spikes!\nIf you touch them, you will be\nrespawned to the last safe place.",
+						"가시를 주의하자!\n닿으면 마지막으로 서있던\n안전한 곳으로 되돌아간다."
+					], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": [
+							"Watch out for spikes!\\nIf you touch them, you will be\\nrespawned to the last safe place."
+						]
+					}, {
+						"id": "V_String",
+						"params": ["가시를 주의하자!\\n닿으면 마지막으로 서있던\\n안전한 곳으로 되돌아간다."]
+					} ] }],
 					"__worldX": 817,
 					"__worldY": -232
 				},
@@ -151,18 +151,18 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [162,112],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "Entering to the gate on the left,\nThis stage will be cleared.\nYour progress will be saved.", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": [
-								"Entering to the gate on the left,\\nThis stage will be cleared.\\nYour progress will be saved."
-							]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "왼편의 게이트로 들어가면\n스테이지 클리어이다.\n그러면 진행상황이 저장된다.", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["왼편의 게이트로 들어가면\\n스테이지 클리어이다.\\n그러면 진행상황이 저장된다."]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [
+						"Entering to the gate on the left,\nThis stage will be cleared.\nYour progress will be saved.",
+						"왼편의 게이트로 들어가면\n스테이지 클리어이다.\n그러면 진행상황이 저장된다."
+					], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": [
+							"Entering to the gate on the left,\\nThis stage will be cleared.\\nYour progress will be saved."
+						]
+					}, {
+						"id": "V_String",
+						"params": ["왼편의 게이트로 들어가면\\n스테이지 클리어이다.\\n그러면 진행상황이 저장된다."]
+					} ] }],
 					"__worldX": 402,
 					"__worldY": -232
 				},

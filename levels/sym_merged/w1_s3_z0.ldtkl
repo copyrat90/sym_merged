@@ -287,16 +287,13 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [440,238],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "Restart is your friend.", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["Restart is your friend."]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "재시작은 여러분의 친구다.", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["재시작은 여러분의 친구다."]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [ "Restart is your friend.", "재시작은 여러분의 친구다." ], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["Restart is your friend."]
+					}, {
+						"id": "V_String",
+						"params": ["재시작은 여러분의 친구다."]
+					} ] }],
 					"__worldX": 2624,
 					"__worldY": 2262
 				},

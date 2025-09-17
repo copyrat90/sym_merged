@@ -148,16 +148,13 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [80,96],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "L/R: Pick up a symbol", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["L/R: Pick up a symbol"]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "L/R: 문양 집기", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["L/R: 문양 집기"]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [ "L/R: Pick up a symbol", "L/R: 문양 집기" ], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["L/R: Pick up a symbol"]
+					}, {
+						"id": "V_String",
+						"params": ["L/R: 문양 집기"]
+					} ] }],
 					"__worldX": 384,
 					"__worldY": 96
 				},
@@ -195,16 +192,13 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [140,64],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "Switches open the doors\nwith the same number.", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["Switches open the doors\\nwith the same number."]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "스위치의 번호와 같은\n번호의 문이 열린다.", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["스위치의 번호와 같은\\n번호의 문이 열린다."]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [ "Switches open the doors\nwith the same number.", "스위치의 번호와 같은\n번호의 문이 열린다." ], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["Switches open the doors\\nwith the same number."]
+					}, {
+						"id": "V_String",
+						"params": ["스위치의 번호와 같은\\n번호의 문이 열린다."]
+					} ] }],
 					"__worldX": 444,
 					"__worldY": 64
 				},
@@ -220,18 +214,18 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [75,40],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "You can't press a switch with\nthe hand holding a symbol.\nTry using the other hand.", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": [
-								"You can't press a switch with\\nthe hand holding a symbol.\\nTry using the other hand."
-							]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "문양을 든 손으론\n스위치를 누르지 못한다.\n반대쪽 손을 사용하자.", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["문양을 든 손으론\\n스위치를 누르지 못한다.\\n반대쪽 손을 사용하자."]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [
+						"You can't press a switch with\nthe hand holding a symbol.\nTry using the other hand.",
+						"문양을 든 손으론\n스위치를 누르지 못한다.\n반대쪽 손을 사용하자."
+					], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": [
+							"You can't press a switch with\\nthe hand holding a symbol.\\nTry using the other hand."
+						]
+					}, {
+						"id": "V_String",
+						"params": ["문양을 든 손으론\\n스위치를 누르지 못한다.\\n반대쪽 손을 사용하자."]
+					} ] }],
 					"__worldX": 379,
 					"__worldY": 40
 				},
@@ -247,16 +241,16 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [166,40],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "Down+L/R: Put the symbol down\nTry putting a symbol on a button.", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["Down+L/R: Put the symbol down\\nTry putting a symbol on a button."]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "아래 + L/R: 내려놓기\n버튼 위에 문양을 올려놓자.", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["아래 + L/R: 내려놓기\\n버튼 위에 문양을 올려놓자."]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [
+						"Down+L/R: Put the symbol down\nTry putting a symbol on a button.",
+						"아래 + L/R: 내려놓기\n버튼 위에 문양을 올려놓자."
+					], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["Down+L/R: Put the symbol down\\nTry putting a symbol on a button."]
+					}, {
+						"id": "V_String",
+						"params": ["아래 + L/R: 내려놓기\\n버튼 위에 문양을 올려놓자."]
+					} ] }],
 					"__worldX": 470,
 					"__worldY": 40
 				},

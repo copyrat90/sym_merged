@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "sys/lang.h"
+#include "ldtk_gen_enums.h"
 
 #include <cstdint>
 
@@ -32,8 +32,9 @@ public:
     void save();
 
 public:
-    auto language() const -> lang;
-    void set_language(lang);
+    auto language() const -> ldtk::gen::lang_kind;
+    void set_language(ldtk::gen::lang_kind);
+    void set_next_language();
 
     bool demo_cleared() const;
     void set_demo_cleared(bool);
@@ -50,7 +51,7 @@ public: // `sram_rw` uses these to save/load
     void read(ibn::bit_stream_reader& reader);
 
 private:
-    lang _lang;
+    ldtk::gen::lang_kind _lang;
     bool _demo_cleared;
     std::uint8_t _world_index;
     std::uint8_t _stage_index;

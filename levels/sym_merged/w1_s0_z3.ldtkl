@@ -234,16 +234,16 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [148,342],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "For some merged symbols,\ntapping L/R once is enough\nto use its power.", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["For some merged symbols,\\ntapping L/R once is enough\\nto use its power."]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "일부 합친 문양의 경우,\nL/R 을 한번만 짧게 눌러도\n능력을 사용할 수 있다.", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["일부 합친 문양의 경우,\\nL/R 을 한번만 짧게 눌러도\\n능력을 사용할 수 있다."]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [
+						"For some merged symbols,\ntapping L/R once is enough\nto use its power.",
+						"일부 합친 문양의 경우,\nL/R 을 한번만 짧게 눌러도\n능력을 사용할 수 있다."
+					], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["For some merged symbols,\\ntapping L/R once is enough\\nto use its power."]
+					}, {
+						"id": "V_String",
+						"params": ["일부 합친 문양의 경우,\\nL/R 을 한번만 짧게 눌러도\\n능력을 사용할 수 있다."]
+					} ] }],
 					"__worldX": 1052,
 					"__worldY": 30
 				},
@@ -281,16 +281,13 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [154,77],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "Some buttons work only with\ncertain type of symbol.", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["Some buttons work only with\\ncertain type of symbol."]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "일부 버튼은 특정 문양으로\n눌러야만 작동한다.", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["일부 버튼은 특정 문양으로\\n눌러야만 작동한다."]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [ "Some buttons work only with\ncertain type of symbol.", "일부 버튼은 특정 문양으로\n눌러야만 작동한다." ], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["Some buttons work only with\\ncertain type of symbol."]
+					}, {
+						"id": "V_String",
+						"params": ["일부 버튼은 특정 문양으로\\n눌러야만 작동한다."]
+					} ] }],
 					"__worldX": 1058,
 					"__worldY": -235
 				},
@@ -306,16 +303,16 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [93,77],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "You can't split a symbol\nif both hands are full.\nDrop one symbol first.", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["You can't split a symbol\\nif both hands are full.\\nDrop one symbol first."]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "양손이 가득찬 상태론\n문양을 분리할 수 없다.\n먼저 문양 하나를 내려놓자.", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["양손이 가득찬 상태론\\n문양을 분리할 수 없다.\\n먼저 문양 하나를 내려놓자."]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [
+						"You can't split a symbol\nif both hands are full.\nDrop one symbol first.",
+						"양손이 가득찬 상태론\n문양을 분리할 수 없다.\n먼저 문양 하나를 내려놓자."
+					], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["You can't split a symbol\\nif both hands are full.\\nDrop one symbol first."]
+					}, {
+						"id": "V_String",
+						"params": ["양손이 가득찬 상태론\\n문양을 분리할 수 없다.\\n먼저 문양 하나를 내려놓자."]
+					} ] }],
 					"__worldX": 997,
 					"__worldY": -235
 				}

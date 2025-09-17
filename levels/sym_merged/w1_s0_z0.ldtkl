@@ -127,16 +127,13 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [50,117],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "Arrow: Move", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["Arrow: Move"]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "방향키: 이동", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["방향키: 이동"]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [ "Arrow: Move", "방향키: 이동" ], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["Arrow: Move"]
+					}, {
+						"id": "V_String",
+						"params": ["방향키: 이동"]
+					} ] }],
 					"__worldX": 50,
 					"__worldY": 117
 				},
@@ -152,16 +149,13 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [105,117],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "A: Jump", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["A: Jump"]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "A: 점프", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["A: 점프"]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [ "A: Jump", "A: 점프" ], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["A: Jump"]
+					}, {
+						"id": "V_String",
+						"params": ["A: 점프"]
+					} ] }],
 					"__worldX": 105,
 					"__worldY": 117
 				},
@@ -177,16 +171,16 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [165,97],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "L/R: Use Left/Right hand\nDoesn't do anything right now.", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["L/R: Use Left/Right hand\\nDoesn't do anything right now."]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "L/R: 왼/오른손 사용\n당장은 아무 효과도 없다.", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["L/R: 왼/오른손 사용\\n당장은 아무 효과도 없다."]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [
+						"L/R: Use Left/Right hand\nDoesn't do anything right now.",
+						"L/R: 왼/오른손 사용\n당장은 아무 효과도 없다."
+					], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["L/R: Use Left/Right hand\\nDoesn't do anything right now."]
+					}, {
+						"id": "V_String",
+						"params": ["L/R: 왼/오른손 사용\\n당장은 아무 효과도 없다."]
+					} ] }],
 					"__worldX": 165,
 					"__worldY": 97
 				},
@@ -202,16 +196,16 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [218,97],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "L/R: Toggle a switch\nTry toggling a switch\nwith the hand near to it.", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["L/R: Toggle a switch\\nTry toggling a switch\\nwith the hand near to it."]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "L/R: 스위치 누르기\n스위치에 가까운 손으로\n작동시켜보자.", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["L/R: 스위치 누르기\\n스위치에 가까운 손으로\\n작동시켜보자."]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [
+						"L/R: Toggle a switch\nTry toggling a switch\nwith the hand near to it.",
+						"L/R: 스위치 누르기\n스위치에 가까운 손으로\n작동시켜보자."
+					], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["L/R: Toggle a switch\\nTry toggling a switch\\nwith the hand near to it."]
+					}, {
+						"id": "V_String",
+						"params": ["L/R: 스위치 누르기\\n스위치에 가까운 손으로\\n작동시켜보자."]
+					} ] }],
 					"__worldX": 218,
 					"__worldY": 97
 				},

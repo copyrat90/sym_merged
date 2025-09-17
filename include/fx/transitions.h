@@ -7,7 +7,9 @@
 
 #include <bn_bgs_mosaic_actions.h>
 #include <bn_blending_actions.h>
+#include <bn_music_actions.h>
 #include <bn_optional.h>
+#include <bn_sound_actions.h>
 #include <bn_sprites_mosaic_actions.h>
 
 #include <cstdint>
@@ -29,8 +31,10 @@ public:
         INTENSITY = (1 << 2),
         SPRITES_MOSAIC = (1 << 3),
         BGS_MOSAIC = (1 << 4),
+        MUSIC_VOLUME = (1 << 5),
+        SOUND_VOLUME = (1 << 6),
 
-        ALL = FADE | TRANSPARENCY | INTENSITY | SPRITES_MOSAIC | BGS_MOSAIC
+        ALL = FADE | TRANSPARENCY | INTENSITY | SPRITES_MOSAIC | BGS_MOSAIC | MUSIC_VOLUME | SOUND_VOLUME
     };
 
 public:
@@ -38,15 +42,15 @@ public:
 
 public:
     /// @brief Helper function to set the alpha values for many effects once.
-    /// @note Keep in mind that the transition alpha value is inverted.
-    /// (`0` being fully visible, `1` being fully transparent.)
+    /// @note Keep in mind that the transparency/volume alpha value is inverted.
+    /// (`0` being fully visible/audible, `1` being fully transparent/muted.)
     /// @param flags Effect kind(s) to apply the alpha value.
     /// @param alpha Alpha value to apply. `[0..1]`
     void set_alpha(kinds flags, bn::fixed alpha);
 
     /// @brief Starts a transition from the current alpha value to the final alpha value.
-    /// @note Keep in mind that the transition alpha value is inverted.
-    /// (`0` being fully visible, `1` being fully transparent.)
+    /// @note Keep in mind that the transparency/volume alpha value is inverted.
+    /// (`0` being fully visible/audible, `1` being fully transparent/muted.)
     /// @param flags Effect kind(s) to transit.
     /// @param duration_updates Number of times that the transitions must be updated to complete.
     /// @param final_alpha Final alpha value when the transitions are done. `[0..1]`
@@ -68,6 +72,8 @@ private:
     bn::optional<bn::blending_intensity_alpha_to_action> _intensity_action;
     bn::optional<bn::sprites_mosaic_stretch_to_action> _sprites_mosaic_action;
     bn::optional<bn::bgs_mosaic_stretch_to_action> _bgs_mosaic_action;
+    bn::optional<bn::music_volume_to_action> _music_volume_action;
+    bn::optional<bn::sound_master_volume_to_action> _sound_volume_action;
 };
 
 ENUM_AS_FLAGS(transitions::kinds);

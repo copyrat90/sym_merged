@@ -17,9 +17,11 @@ constexpr bn::string_view SAVE_MAGIC = "SYMM2";
 constexpr unsigned SAVE_LOCATION_0 = 0;
 constexpr unsigned SAVE_LOCATION_1 = 10240;
 
-constexpr auto LANG_MIN = static_cast<lang>(0);
-constexpr auto LANG_MAX = static_cast<lang>(31);
-static_assert(lang::LANG_COUNT <= LANG_MAX);
+constexpr auto LANG_MIN = static_cast<ldtk::gen::lang_kind>(0);
+constexpr auto LANG_MAX = static_cast<ldtk::gen::lang_kind>(31);
+static_assert(static_cast<ldtk::gen::lang_kind>(
+                  static_cast<std::underlying_type_t<ldtk::gen::lang_kind>>(ldtk::gen::lang_kind::max_count) - 1) <=
+              LANG_MAX);
 
 constexpr std::uint8_t WORLD_IDX_MIN = 1;
 constexpr std::uint8_t WORLD_IDX_MAX = 31;
@@ -37,7 +39,7 @@ save_data::save_data()
 
 void save_data::reset()
 {
-    _lang = lang::ENG;
+    _lang = ldtk::gen::lang_kind::eng;
     _demo_cleared = false;
     reset_stage();
 }
@@ -64,14 +66,19 @@ void save_data::save()
     rw.write(*this);
 }
 
-auto save_data::language() const -> lang
+auto save_data::language() const -> ldtk::gen::lang_kind
 {
     return _lang;
 }
 
-void save_data::set_language(lang lang_)
+void save_data::set_language(ldtk::gen::lang_kind lang_)
 {
     _lang = lang_;
+}
+
+void save_data::set_next_language()
+{
+    _lang = static_cast<ldtk::gen::lang_kind>(((int)_lang + 1) % (int)ldtk::gen::lang_kind::max_count);
 }
 
 bool save_data::demo_cleared() const

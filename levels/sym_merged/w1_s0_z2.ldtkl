@@ -230,16 +230,16 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [68,88],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "Start: Open the menu\nIf you mess up, you can always\nopen the menu and restart.", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["Start: Open the menu\\nIf you mess up, you can always\\nopen the menu and restart."]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "스타트: 메뉴 열기\n망친 경우, 메뉴를 열어\n재시작 할 수 있다.", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["스타트: 메뉴 열기\\n망친 경우, 메뉴를 열어\\n재시작 할 수 있다."]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [
+						"Start: Open the menu\nIf you mess up, you can always\nopen the menu and restart.",
+						"스타트: 메뉴 열기\n망친 경우, 메뉴를 열어\n재시작 할 수 있다."
+					], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["Start: Open the menu\\nIf you mess up, you can always\\nopen the menu and restart."]
+					}, {
+						"id": "V_String",
+						"params": ["스타트: 메뉴 열기\\n망친 경우, 메뉴를 열어\\n재시작 할 수 있다."]
+					} ] }],
 					"__worldX": 628,
 					"__worldY": 40
 				},
@@ -255,18 +255,18 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [146,168],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "Hold B: Merge 2 symbols in hands\nPick up 1 symbol in each hand\nand try merging them.", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": [
-								"Hold B: Merge 2 symbols in hands\\nPick up 1 symbol in each hand\\nand try merging them."
-							]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "B 꾹눌러 양손 문양 합치기\n양손에 문양을 하나씩 들고\n하나로 합쳐보자.", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["B 꾹눌러 양손 문양 합치기\\n양손에 문양을 하나씩 들고\\n하나로 합쳐보자."]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [
+						"Hold B: Merge 2 symbols in hands\nPick up 1 symbol in each hand\nand try merging them.",
+						"B 꾹눌러 양손 문양 합치기\n양손에 문양을 하나씩 들고\n하나로 합쳐보자."
+					], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": [
+							"Hold B: Merge 2 symbols in hands\\nPick up 1 symbol in each hand\\nand try merging them."
+						]
+					}, {
+						"id": "V_String",
+						"params": ["B 꾹눌러 양손 문양 합치기\\n양손에 문양을 하나씩 들고\\n하나로 합쳐보자."]
+					} ] }],
 					"__worldX": 706,
 					"__worldY": 120
 				},
@@ -282,16 +282,16 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [99,127],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "Hold L/R: Use merged symbol's\npower (Fall down slowly)", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["Hold L/R: Use merged symbol's\\npower (Fall down slowly)"]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "L/R 꾹눌러 합친 문양의\n능력 사용 (낙하 속력 감소)", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["L/R 꾹눌러 합친 문양의\\n능력 사용 (낙하 속력 감소)"]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [
+						"Hold L/R: Use merged symbol's\npower (Fall down slowly)",
+						"L/R 꾹눌러 합친 문양의\n능력 사용 (낙하 속력 감소)"
+					], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["Hold L/R: Use merged symbol's\\npower (Fall down slowly)"]
+					}, {
+						"id": "V_String",
+						"params": ["L/R 꾹눌러 합친 문양의\\n능력 사용 (낙하 속력 감소)"]
+					} ] }],
 					"__worldX": 659,
 					"__worldY": 79
 				},
@@ -307,16 +307,13 @@
 					"height": 16,
 					"defUid": 5,
 					"px": [256,80],
-					"fieldInstances": [
-						{ "__identifier": "msg_eng", "__type": "String", "__value": "Hold B: Split the symbol", "__tile": null, "defUid": 75, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["Hold B: Split the symbol"]
-						}] },
-						{ "__identifier": "msg_kor", "__type": "String", "__value": "B 꾹눌러 문양 분리하기", "__tile": null, "defUid": 76, "realEditorValues": [{
-							"id": "V_String",
-							"params": ["B 꾹눌러 문양 분리하기"]
-						}] }
-					],
+					"fieldInstances": [{ "__identifier": "msgs", "__type": "Array<String>", "__value": [ "Hold B: Split the symbol", "B 꾹눌러 문양 분리하기" ], "__tile": null, "defUid": 175, "realEditorValues": [ {
+						"id": "V_String",
+						"params": ["Hold B: Split the symbol"]
+					}, {
+						"id": "V_String",
+						"params": ["B 꾹눌러 문양 분리하기"]
+					} ] }],
 					"__worldX": 816,
 					"__worldY": 32
 				},

@@ -429,6 +429,78 @@
 					],
 					"__worldX": -220,
 					"__worldY": -80
+				},
+				{
+					"__identifier": "system_texts",
+					"__grid": [20,110],
+					"__pivot": [0.5,0.5],
+					"__tags": [],
+					"__tile": { "tilesetUid": 6, "x": 16, "y": 32, "w": 16, "h": 16 },
+					"__smartColor": "#808080",
+					"iid": "8553b180-8560-11f0-81c1-33fda3da9d6d",
+					"width": 16,
+					"height": 16,
+					"defUid": 176,
+					"px": [20,110],
+					"fieldInstances": [
+						{ "__identifier": "title_options", "__type": "Array<String>", "__value": [
+							"Start",
+							"언 어 : English",
+							"Thanks",
+							"시작",
+							"Lang : 한국어",
+							"감사인사"
+						], "__tile": null, "defUid": 178, "realEditorValues": [
+							{
+								"id": "V_String",
+								"params": ["Start"]
+							},
+							{
+								"id": "V_String",
+								"params": ["언 어 : English"]
+							},
+							{
+								"id": "V_String",
+								"params": ["Thanks"]
+							},
+							{
+								"id": "V_String",
+								"params": ["시작"]
+							},
+							{
+								"id": "V_String",
+								"params": ["Lang : 한국어"]
+							},
+							{
+								"id": "V_String",
+								"params": ["감사인사"]
+							}
+						] },
+						{ "__identifier": "title_options_positions", "__type": "Array<Float>", "__value": [0,0,0,20,0,40], "__tile": null, "defUid": 180, "realEditorValues": [
+							null,
+							{ "id": "V_Float", "params": [0] },
+							null,
+							{ "id": "V_Float", "params": [20] },
+							null,
+							{ "id": "V_Float", "params": [40] }
+						] },
+						{ "__identifier": "title_options_cursor_left_offset", "__type": "Array<Float>", "__value": [-13,-2,-13,-1], "__tile": null, "defUid": 183, "realEditorValues": [ { "id": "V_Float", "params": [-13] }, { "id": "V_Float", "params": [-2] }, { "id": "V_Float", "params": [-13] }, { "id": "V_Float", "params": [-1] } ] },
+						{ "__identifier": "demo_end_notes", "__type": "Array<String>", "__value": [
+							"That's it for this demo.\nThanks for playing!\n\nPress R to restart from start\nPress any key else to\ngo back to title screen",
+							"데모는 여기까지입니다.\n플레이해주셔서 감사합니다!\n\nR키 눌러 처음부터 재시작\n다른 아무 키나 눌러\n타이틀 화면으로 돌아가기"
+						], "__tile": null, "defUid": 179, "realEditorValues": [ {
+							"id": "V_String",
+							"params": [
+								"That's it for this demo.\\nThanks for playing!\\n\\nPress R to restart from start\\nPress any key else to\\ngo back to title screen"
+							]
+						}, {
+							"id": "V_String",
+							"params": ["데모는 여기까지입니다.\\n플레이해주셔서 감사합니다!\\n\\nR키 눌러 처음부터 재시작\\n다른 아무 키나 눌러\\n타이틀 화면으로 돌아가기"]
+						} ] },
+						{ "__identifier": "demo_end_notes_position", "__type": "Array<Float>", "__value": [0,-50], "__tile": null, "defUid": 182, "realEditorValues": [ null, { "id": "V_Float", "params": [-50] } ] }
+					],
+					"__worldX": -220,
+					"__worldY": -50
 				}
 			]
 		},
