@@ -3,10 +3,12 @@
 
 #pragma once
 
+// This supports newline character (`\n`)
+#include "ibn_sprite_text_generator.h"
+
 #include "ldtk_gen_enums.h"
 
 #include <bn_array.h>
-#include <bn_sprite_text_generator.h>
 
 #include <cstdint>
 
@@ -18,7 +20,7 @@ class text_generators final
 public:
     text_generators();
 
-    auto get(ldtk::gen::lang_kind) -> bn::sprite_text_generator&;
+    auto get(ldtk::gen::lang_kind) -> ibn::sprite_text_generator&;
 
 public:
     enum class text_color : std::uint8_t
@@ -26,6 +28,7 @@ public:
         WHITE,
         GRAY,
         CYAN,
+        YELLOW,
 
         MAX_COUNT
     };
@@ -33,7 +36,7 @@ public:
     static auto get_palette(text_color) -> const bn::sprite_palette_item&;
 
 private:
-    bn::array<bn::sprite_text_generator, (int)ldtk::gen::lang_kind::max_count> _generators;
+    bn::array<ibn::sprite_text_generator, (int)ldtk::gen::lang_kind::max_count> _generators;
 };
 
 } // namespace sym::sys

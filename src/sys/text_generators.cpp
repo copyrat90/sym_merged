@@ -8,6 +8,7 @@
 
 #include <bn_assert.h>
 
+#include "bn_sprite_items_spr_cursor_star.h"
 #include "bn_sprite_palette_items_pal_text_cyan.h"
 #include "bn_sprite_palette_items_pal_text_gray.h"
 
@@ -21,14 +22,15 @@ constexpr const bn::sprite_palette_item* PALETTES_LUT[(int)text_generators::text
     &bn::sprite_items::font_m6x11.palette_item(),
     &bn::sprite_palette_items::pal_text_gray,
     &bn::sprite_palette_items::pal_text_cyan,
+    &bn::sprite_items::spr_cursor_star.palette_item(),
 };
 
 } // namespace
 
 text_generators::text_generators()
     : _generators{
-          bn::sprite_text_generator(font::m6x11),
-          bn::sprite_text_generator(font::hamchorom),
+          ibn::sprite_text_generator(font::m6x11),
+          ibn::sprite_text_generator(font::hamchorom),
       }
 {
     for (auto& gen : _generators)
@@ -42,7 +44,7 @@ text_generators::text_generators()
     }
 }
 
-auto text_generators::get(ldtk::gen::lang_kind lang) -> bn::sprite_text_generator&
+auto text_generators::get(ldtk::gen::lang_kind lang) -> ibn::sprite_text_generator&
 {
     BN_ASSERT(lang < ldtk::gen::lang_kind::max_count, "Invalid lang: ", (int)lang);
 

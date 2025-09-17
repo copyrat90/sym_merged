@@ -486,18 +486,25 @@
 						] },
 						{ "__identifier": "title_options_cursor_left_offset", "__type": "Array<Float>", "__value": [-13,-2,-13,-1], "__tile": null, "defUid": 183, "realEditorValues": [ { "id": "V_Float", "params": [-13] }, { "id": "V_Float", "params": [-2] }, { "id": "V_Float", "params": [-13] }, { "id": "V_Float", "params": [-1] } ] },
 						{ "__identifier": "demo_end_notes", "__type": "Array<String>", "__value": [
-							"That's it for this demo.\nThanks for playing!\n\nPress R to restart from start\nPress any key else to\ngo back to title screen",
-							"데모는 여기까지입니다.\n플레이해주셔서 감사합니다!\n\nR키 눌러 처음부터 재시작\n다른 아무 키나 눌러\n타이틀 화면으로 돌아가기"
+							"That's it for this demo.\nThanks for playing!",
+							"Press R to restart from start\nPress any key else to\ngo back to title screen",
+							"데모는 여기까지입니다.\n플레이해주셔서 감사합니다!",
+							"R키 눌러 처음부터 재시작\n다른 아무 키나 눌러\n타이틀 화면으로 돌아가기"
 						], "__tile": null, "defUid": 179, "realEditorValues": [ {
 							"id": "V_String",
-							"params": [
-								"That's it for this demo.\\nThanks for playing!\\n\\nPress R to restart from start\\nPress any key else to\\ngo back to title screen"
-							]
+							"params": ["That's it for this demo.\\nThanks for playing!"]
 						}, {
 							"id": "V_String",
-							"params": ["데모는 여기까지입니다.\\n플레이해주셔서 감사합니다!\\n\\nR키 눌러 처음부터 재시작\\n다른 아무 키나 눌러\\n타이틀 화면으로 돌아가기"]
+							"params": ["Press R to restart from start\\nPress any key else to\\ngo back to title screen"]
+						}, {
+							"id": "V_String",
+							"params": ["데모는 여기까지입니다.\\n플레이해주셔서 감사합니다!"]
+						}, {
+							"id": "V_String",
+							"params": ["R키 눌러 처음부터 재시작\\n다른 아무 키나 눌러\\n타이틀 화면으로 돌아가기"]
 						} ] },
-						{ "__identifier": "demo_end_notes_position", "__type": "Array<Float>", "__value": [0,-50], "__tile": null, "defUid": 182, "realEditorValues": [ null, { "id": "V_Float", "params": [-50] } ] }
+						{ "__identifier": "demo_end_notes_position", "__type": "Array<Float>", "__value": [0,-50], "__tile": null, "defUid": 182, "realEditorValues": [ null, { "id": "V_Float", "params": [-50] } ] },
+						{ "__identifier": "demo_end_notes_line_spacing", "__type": "Float", "__value": 20, "__tile": null, "defUid": 184, "realEditorValues": [{ "id": "V_Float", "params": [20] }] }
 					],
 					"__worldX": -220,
 					"__worldY": -50

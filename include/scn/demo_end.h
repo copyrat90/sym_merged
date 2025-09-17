@@ -7,6 +7,9 @@
 
 #include "ibn_observer.h"
 
+#include <bn_sprite_ptr.h>
+#include <bn_vector.h>
+
 #include "ldtk_gen_enums.h"
 
 namespace sym::fx
@@ -31,7 +34,23 @@ public:
     bool update(scene_stack&) override;
 
 private:
-    void on_lang_changed(ldtk::gen::lang_kind);
+    void update_fade_in();
+    void update_ready();
+    void update_fade_out(scene_stack&);
+
+    void transit_to_ready();
+    void transit_to_fade_out();
+
+private:
+    void draw_texts(ldtk::gen::lang_kind);
+
+private:
+    enum class state : std::uint8_t
+    {
+        FADE_IN,
+        READY,
+        FADE_OUT,
+    };
 
 private:
     fx::transitions& _transitions;
@@ -39,7 +58,11 @@ private:
     ibn::subject<void(ldtk::gen::lang_kind)>& _lang_changed;
     sys::text_generators& _text_generators;
 
-    ibn::observer<void(ldtk::gen::lang_kind)> _lang_changed_observer;
+    state _state = state::FADE_IN;
+
+    bool _restart_game = false;
+
+    bn::vector<bn::sprite_ptr, 32> _text_sprites;
 };
 
 } // namespace sym::scn
